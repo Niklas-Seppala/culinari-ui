@@ -1,0 +1,68 @@
+#user-menu-view {
+  padding: 0.3rem;
+  background-color: var(--bg-white);
+  width: 9.5rem;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--white-border);
+  box-shadow: var(--white-shadow);
+  overflow-x: hidden;
+}
+
+.menu-item {
+  border-bottom: 1px solid var(--white-border);
+  margin: 0 0.3rem 0.3rem 0.3rem;
+}
+
+.menu-item.top {
+  margin-top: 0.3rem;
+}
+
+.menu-item span {
+  white-space: nowrap;
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  transition: margin-left 0.2s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  margin-left: 0.8rem;
+}
+
+.menu-btn span {
+  font-size: 0.8rem;
+}
+
+.profile {
+  display: flex;
+}
+
+.stats {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-left: 0.5rem;
+}
+
+.profile .stats .stat {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+#avatar {
+  height: 80px;
+  width: 80px;
+  box-shadow: var(--white-shadow);
+  border: 1px solid var(--font-on-light);
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}

@@ -2,15 +2,27 @@ import './SearchView.css';
 import { View } from '../View';
 
 export class SearchView extends View {
-  dom = {
-    parent: undefined,
-    root: undefined,
-    search: undefined,
-  };
+  constructor(parent) {
+    super();
+    this.#build(parent);
+  }
 
   state = {
     value: '',
   };
+
+  clear() {
+    this.search.value = '';
+    this.#onClear.forEach(handler => handler(this.state));
+  }
+
+  render(state) {
+    if (state) this.state = state;
+    if (this.state) {
+      this.search.value = this.state.value;
+    }
+    return this;
+  }
 
   #onSearch = [];
   #onClear = [];
@@ -25,12 +37,9 @@ export class SearchView extends View {
     },
   };
 
-  clear() {
-    this.dom.search.value = '';
-    this.#onClear.forEach(handler => handler(this.state));
-  }
+  #build(parent) {
+    this.parent = View.genericParent(parent)
 
-  #build() {
     const searchBar = document.createElement('div');
     searchBar.classList.add('search-bar');
     searchBar.id = 'search-view';
@@ -46,25 +55,7 @@ export class SearchView extends View {
     });
 
     searchBar.appendChild(searchText);
-    this.dom.root = searchBar;
-    this.dom.search = searchText;
-  }
-
-  #setState(state) {
-    if (state) this.state = state;
-    if (this.state) {
-      this.dom.search.value = this.state.value;
-    }
-  }
-
-  render(state) {
-    this.#setState(state);
-    return this;
-  }
-
-  constructor(parent) {
-    super();
-    this.dom.parent = View.genericParent(parent)
-    this.#build();
+    this.root = searchBar;
+    this.search = searchText;
   }
 }

@@ -2,30 +2,28 @@ import './TopMenu.css';
 import { View } from '../View';
 
 class ContentNavView extends View {
+  constructor(parent) {
+    super();
+    this.#build(parent);
+  }
+
+  #buttons = [];
   on = {
     talkedClicked: listener => this.#buttons[0][1].push(listener),
     latestClicked: listener => this.#buttons[1][1].push(listener),
     likedClicked: listener => this.#buttons[2][1].push(listener),
   };
 
-  dom = {
-    parent: undefined,
-    root: undefined,
-    talked: undefined,
-    latest: undefined,
-    liked: undefined,
-  };
-
-  #buttons = [];
-  #bind() {
-    this.dom.root = document.getElementById('content-nav');
-    this.dom.talked = document.getElementById('nav-talked');
-    this.dom.latest = document.getElementById('nav-latest');
-    this.dom.liked = document.getElementById('nav-liked');
+  #build() {
+    this.parent = View.genericParent(parent);
+    this.root = document.getElementById('content-nav');
+    this.talked = document.getElementById('nav-talked');
+    this.latest = document.getElementById('nav-latest');
+    this.liked = document.getElementById('nav-liked');
     this.#buttons = [
-      [this.dom.talked, []],
-      [this.dom.latest, []],
-      [this.dom.liked, []],
+      [this.talked, []],
+      [this.latest, []],
+      [this.liked, []],
     ];
 
     this.#buttons.forEach(btn => {
@@ -37,11 +35,6 @@ class ContentNavView extends View {
     });
   }
 
-  constructor(parent) {
-    super();
-    this.dom.parent = View.genericParent(parent);
-    this.#bind();
-  }
 
   highlight(btn) {
     this.#buttons.forEach(button =>
@@ -52,13 +45,10 @@ class ContentNavView extends View {
 }
 
 export class TopMenuView extends View {
-  dom = {
-    parent: undefined,
-    root: undefined,
-    contentNav: undefined,
-    search: undefined,
-    userMenu: undefined,
-  };
+  constructor(parent) {
+    super();
+    this.#build();
+  }
 
   #menuListeners = [];
   #searchListeners = [];
@@ -67,22 +57,17 @@ export class TopMenuView extends View {
     searchClicked: listener => this.#searchListeners.push(listener),
   };
 
-  #bind() {
-    this.dom.root = document.getElementById('nav-panel');
-    this.dom.contentNav = new ContentNavView(this.dom.root);
-    this.dom.search = document.getElementById('search-btn');
-    this.dom.search.addEventListener('click', e =>
+  #build(parent) {
+    this.parent = View.genericParent(parent);
+    this.root = document.getElementById('nav-panel');
+    this.contentNav = new ContentNavView(this.root);
+    this.search = document.getElementById('search-btn');
+    this.search.addEventListener('click', e =>
       this.#searchListeners.forEach(listener => listener(e))
     );
-    this.dom.userMenu = document.getElementById('menu-btn');
-    this.dom.userMenu.addEventListener('click', e =>
+    this.userMenu = document.getElementById('menu-btn');
+    this.userMenu.addEventListener('click', e =>
       this.#menuListeners.forEach(listener => listener(e))
     );
-  }
-
-  constructor(parent) {
-    super();
-    this.dom.parent = View.genericParent(parent);
-    this.#bind();
   }
 }

@@ -2,13 +2,10 @@ import './UserMenuView.css';
 import { View } from '../View';
 
 class AnonymousMenuView extends View {
-  dom = {
-    parent: undefined,
-    root: document.getElementById('anon-menu'),
-    register: document.getElementById('register-btn'),
-    login: document.getElementById('login-btn'),
-    about: document.getElementById('about-btn')
-  };
+  constructor(parent) {
+    super();
+    this.#build(parent);
+  }
 
   #aboutListeners = []
   #registerListeners = []
@@ -19,69 +16,64 @@ class AnonymousMenuView extends View {
     loginClicked: listener => this.#loginListeners.push(listener)
   }
 
-  #bind() {
-    this.dom.about.addEventListener('click', e => {
+  #build(parent) {
+    this.parent = View.genericParent(parent)
+    this.root = document.getElementById('anon-menu');
+    this.register = document.getElementById('register-btn');
+    this.login = document.getElementById('login-btn');
+    this.about = document.getElementById('about-btn');
+
+    this.about.addEventListener('click', e => {
       this.#aboutListeners.forEach(listener => listener(e))
     })
-    this.dom.login.addEventListener('click', e => {
+    this.login.addEventListener('click', e => {
       this.#loginListeners.forEach(listener => listener(e))
     })
-    this.dom.register.addEventListener('click', e => {
+    this.register.addEventListener('click', e => {
       this.#registerListeners.forEach(listener => listener(e))
     })
-  }
-
-  constructor(parent) {
-    super();
-    this.dom.parent = View.genericParent(parent)
-    this.#bind();
   }
 }
 
 class ProfileView extends View {
-  dom = {
-    parent: undefined,
-    root: document.getElementById('profile'),
-    avatar: document.getElementById('avatar'),
-    username: document.getElementById('profile-username'),
-    likes: document.getElementById('profile-likes'),
-    comments: document.getElementById('profile-comments'),
-    forks: document.getElementById('profile-forks'),
-  }
-
   constructor(parent) {
     super();
-    this.dom.parent = View.genericParent(parent)
-  }
-
-  #setState(state) {
-    if (state) this.state = state;
-    if (this.state) {
-      this.dom.avatar.src = this.state.avatar
-      this.dom.username.textContent = this.state.username;
-      this.dom.likes.textContent = this.state.likes;
-      this.dom.comments.textContent = this.state.comments;
-      this.dom.forks.textContent = this.state.forks;
-    }
+    this.#build(parent)
   }
 
   render(state) {
     this.#setState(state);
     return this;
   }
+
+  #setState(state) {
+    if (state) this.state = state;
+    if (this.state) {
+      this.avatar.src = this.state.avatar
+      this.username.textContent = this.state.username;
+      this.likes.textContent = this.state.likes;
+      this.comments.textContent = this.state.comments;
+      this.forks.textContent = this.state.forks;
+    }
+  }
+  
+  #build(parent) {
+    this.parent = View.genericParent(parent)
+    this.root = document.getElementById('profile');
+    this.avatar = document.getElementById('avatar');
+    this.username = document.getElementById('profile-username');
+    this.likes = document.getElementById('profile-likes');
+    this.comments = document.getElementById('profile-comments');
+    this.forks = document.getElementById('profile-forks');
+  }
 }
 
 class LoggedMenuView extends View {
-  dom = {
-    parent: undefined,
-    root: document.getElementById('user-menu'),
-    profile: undefined,
-    myRecipes: document.getElementById('my-recipes-btn'),
-    newRecipe: document.getElementById('new-recipe-btn'),
-    friends: document.getElementById('friends-btn'),
-    logout: document.getElementById('logout-btn'),
+  constructor(parent) {
+    super();
+    this.#build(parent);
   }
-
+  
   #myRecipeHandlers = []
   #newRecipeHandlers = []
   #friendHandlers = []
@@ -93,37 +85,36 @@ class LoggedMenuView extends View {
     logoutClicked: f => this.#logoutHandlers.push(f)
   }
 
-  #bind() {
-    this.dom.friends.addEventListener('click', e => this.#friendHandlers.forEach(f => f(e)))
-    this.dom.newRecipe.addEventListener('click', e => this.#newRecipeHandlers.forEach(f => f(e)))
-    this.dom.myRecipes.addEventListener('click', e => this.#myRecipeHandlers.forEach(f => f(e)))
-    this.dom.logout.addEventListener('click', e => this.#logoutHandlers.forEach(f => f(e)))
-  }
+  #build(parent) {
+    this.parent = View.genericParent(parent)
+    this.profile = new ProfileView(this)
+    this.root = document.getElementById('user-menu');
+    this.myRecipes = document.getElementById('my-recipes-btn');
+    this.newRecipe = document.getElementById('new-recipe-btn');
+    this.friends = document.getElementById('friends-btn');
+    this.logout = document.getElementById('logout-btn');
 
-  constructor(parent) {
-    super();
-    this.dom.parent = View.genericParent(parent)
-    this.dom.profile = new ProfileView(this)
-    this.#bind();
+    this.friends.addEventListener('click', e => this.#friendHandlers.forEach(f => f(e)))
+    this.newRecipe.addEventListener('click', e => this.#newRecipeHandlers.forEach(f => f(e)))
+    this.myRecipes.addEventListener('click', e => this.#myRecipeHandlers.forEach(f => f(e)))
+    this.logout.addEventListener('click', e => this.#logoutHandlers.forEach(f => f(e)))
   }
 }
 
 export class UserMenuView extends View {
-  dom = {
-    parent: undefined,
-    root: document.getElementById('user-menu-view'),
-    anonymous: undefined,
-    logged: undefined
-  }
-
   constructor(parent) {
     super();
-    this.dom.parent = View.genericParent(parent);
-    this.dom.anonymous = new AnonymousMenuView(this)
-    this.dom.logged = new LoggedMenuView(this)
+    this.#build(parent)
   }
 
   get profile() {
-    return this.dom.logged.dom.profile
+    return this.logged.profile
+  }
+
+  #build(parent) {
+    this.root = document.getElementById('user-menu-view');
+    this.parent = View.genericParent(parent);
+    this.anonymous = new AnonymousMenuView(this)
+    this.logged = new LoggedMenuView(this)
   }
 }

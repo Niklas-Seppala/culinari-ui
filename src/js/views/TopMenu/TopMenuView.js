@@ -3,8 +3,8 @@ import { View } from '../View';
 
 class ContentNavView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent);
+    super(parent);
+    this.#build();
   }
 
   #buttons = [];
@@ -15,7 +15,6 @@ class ContentNavView extends View {
   };
 
   #build() {
-    this.parent = View.genericParent(parent);
     this.root = document.getElementById('content-nav');
     this.talked = document.getElementById('nav-talked');
     this.latest = document.getElementById('nav-latest');
@@ -46,7 +45,7 @@ class ContentNavView extends View {
 
 export class TopMenuView extends View {
   constructor(parent) {
-    super();
+    super(parent);
     this.#build();
   }
 
@@ -57,8 +56,7 @@ export class TopMenuView extends View {
     searchClicked: listener => this.#searchListeners.push(listener),
   };
 
-  #build(parent) {
-    this.parent = View.genericParent(parent);
+  #build() {
     this.root = document.getElementById('nav-panel');
     this.contentNav = new ContentNavView(this.root);
     this.search = document.getElementById('search-btn');

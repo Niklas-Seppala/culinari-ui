@@ -3,8 +3,8 @@ import { View } from '../View';
 
 class AnonymousMenuView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent);
+    super(parent);
+    this.#build();
   }
 
   #aboutListeners = []
@@ -16,8 +16,7 @@ class AnonymousMenuView extends View {
     loginClicked: listener => this.#loginListeners.push(listener)
   }
 
-  #build(parent) {
-    this.parent = View.genericParent(parent)
+  #build() {
     this.root = document.getElementById('anon-menu');
     this.register = document.getElementById('register-btn');
     this.login = document.getElementById('login-btn');
@@ -37,8 +36,8 @@ class AnonymousMenuView extends View {
 
 class ProfileView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent)
+    super(parent);
+    this.#build()
   }
 
   render(state) {
@@ -57,8 +56,7 @@ class ProfileView extends View {
     }
   }
   
-  #build(parent) {
-    this.parent = View.genericParent(parent)
+  #build() {
     this.root = document.getElementById('profile');
     this.avatar = document.getElementById('avatar');
     this.username = document.getElementById('profile-username');
@@ -70,8 +68,8 @@ class ProfileView extends View {
 
 class LoggedMenuView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent);
+    super(parent);
+    this.#build();
   }
   
   #myRecipeHandlers = []
@@ -85,8 +83,7 @@ class LoggedMenuView extends View {
     logoutClicked: f => this.#logoutHandlers.push(f)
   }
 
-  #build(parent) {
-    this.parent = View.genericParent(parent)
+  #build() {
     this.profile = new ProfileView(this)
     this.root = document.getElementById('user-menu');
     this.myRecipes = document.getElementById('my-recipes-btn');
@@ -103,17 +100,16 @@ class LoggedMenuView extends View {
 
 export class UserMenuView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent)
+    super(parent);
+    this.#build()
   }
 
   get profile() {
     return this.logged.profile
   }
 
-  #build(parent) {
+  #build() {
     this.root = document.getElementById('user-menu-view');
-    this.parent = View.genericParent(parent);
     this.anonymous = new AnonymousMenuView(this)
     this.logged = new LoggedMenuView(this)
   }

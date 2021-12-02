@@ -3,7 +3,7 @@ import { UserMenuView } from "./views/UserMenu/UserMenuView";
 
 const main = () => {
 
-  const topMenu = new TopMenuView(document.getElementById('top-panel-view'));
+  const topMenu = new TopMenuView('top-panel-view');
   // Content navigation clicks.
   topMenu.contentNav.on.talkedClicked(e => console.log('talked') )
   topMenu.contentNav.on.likedClicked(e => console.log('liked'))
@@ -12,7 +12,7 @@ const main = () => {
   topMenu.on.searchClicked(e => console.log('search'))
   topMenu.on.userMenuClicked(e => console.log('menu'))
 
-  const userMenu = new UserMenuView(document.getElementsByTagName('main').item(0));
+  const userMenu = new UserMenuView('main');
   // Set profile state.
   userMenu.profile.render({
     username: 'Markoboy',
@@ -21,6 +21,8 @@ const main = () => {
     comments: 12,
     forks: 666
   })
+
+  userMenu.detach();
 
   // Menu click events.
   userMenu.anonymous.on.aboutClicked(e => console.log('about'))

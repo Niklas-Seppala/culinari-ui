@@ -7,8 +7,9 @@ export class View {
     return this.root.parentNode === this.parent
   }
 
-  constructor() {
+  constructor(parent) {
     this.state = undefined;
+    this.parent = View.genericParent(parent);
   }
 
   detach() {
@@ -25,8 +26,7 @@ export class View {
       return this;
     }
 
-    let target = parent;
-    if (parent instanceof View) target = parent.root;
+    const target = View.genericParent(parent);
 
     if (this.parent) {
       // Parent exists, detach and attach to new parent.
@@ -43,6 +43,13 @@ export class View {
   }
 
   static genericParent(parent) {
-    return parent instanceof View ? parent.root : parent;
+    let result = parent;
+    if (typeof parent === 'string') {
+      let element = document.getElementById(parent);
+      if (element) result = element;
+    } else if (parent instanceof View) {
+      result = parent.root;
+    }
+    return result;
   }
 }

@@ -3,8 +3,8 @@ import { View } from '../View';
 
 export class SearchView extends View {
   constructor(parent) {
-    super();
-    this.#build(parent);
+    super(parent);
+    this.#build();
   }
 
   state = {
@@ -37,9 +37,7 @@ export class SearchView extends View {
     },
   };
 
-  #build(parent) {
-    this.parent = View.genericParent(parent)
-
+  #build() {
     const searchBar = document.createElement('div');
     searchBar.classList.add('search-bar');
     searchBar.id = 'search-view';

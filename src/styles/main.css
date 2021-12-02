@@ -38,7 +38,7 @@ button {
   color: var(--font-on-light);
 }
 
-#top-panel {
+#top-panel-view {
   width: 100%;
   position: sticky;
   top: 0;

@@ -71,3 +71,8 @@ span.icon-huge {
 .icon-rotate {
   transition: transform 0.3s ease;
 }
+
+.click {
+  user-select: none;
+  cursor: pointer;
+}

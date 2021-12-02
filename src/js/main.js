@@ -1,5 +1,7 @@
+
+import { SearchView } from './views/Search/SearchView';
+
 const main = () => {
-  console.log('hello world from main.js');
 };
 
 window.onload = main;

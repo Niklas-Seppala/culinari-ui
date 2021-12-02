@@ -4,15 +4,18 @@ export class View {
     parent: undefined
   }
 
+  get isAttached() {
+    if (!this.dom.root || !this.dom.parent) return false;
+    return this.dom.root.parentNode === this.dom.parent
+  }
+
   constructor() {
     this.state = undefined;
-    this.mounted = false;
   }
 
   detach() {
-    if (this.mounted) {
+    if (this.isAttached) {
       this.dom.parent.removeChild(this.dom.root);
-      this.mounted = false;
     }
     return this;
   }
@@ -21,7 +24,6 @@ export class View {
     if (!parent) {
       // No new parent specified, try to attach to current parent.
       this.dom.parent.appendChild(this.dom.root);
-      this.mounted = true;
       return this;
     }
 
@@ -33,14 +35,16 @@ export class View {
       this.detach();
       this.dom.parent = target;
       this.dom.parent.appendChild(this.dom.root);
-      this.mounted = true;
       return this;
     }
 
     // Recieved new parent, attach to it.
     this.dom.parent = target;
     this.dom.parent.appendChild(this.dom.root);
-    this.mounted = true;
     return this;
+  }
+
+  static genericParent(parent) {
+    return parent instanceof View ? parent.dom.root : parent;
   }
 }

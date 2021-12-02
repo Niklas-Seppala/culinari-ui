@@ -64,7 +64,7 @@ export class SearchView extends View {
 
   constructor(parent) {
     super();
-    this.dom.parent = parent instanceof View ? parent.dom.root : parent;
+    this.dom.parent = View.genericParent(parent)
     this.#build();
   }
 }

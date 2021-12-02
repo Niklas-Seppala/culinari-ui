@@ -41,7 +41,6 @@ export class View {
     this.dom.parent = target;
     this.dom.parent.appendChild(this.dom.root);
     this.mounted = true;
-
     return this;
   }
 }

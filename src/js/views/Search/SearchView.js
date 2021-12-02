@@ -15,12 +15,12 @@ export class SearchView extends View {
   #onSearch = [];
   #onClear = [];
   on = {
-    search: cb => {
-      this.#onSearch.push(cb);
+    search: listener => {
+      this.#onSearch.push(listener);
       return this;
     },
-    clear: cb => {
-      this.#onClear.push(cb);
+    clear: listener => {
+      this.#onClear.push(listener);
       return this;
     },
   };

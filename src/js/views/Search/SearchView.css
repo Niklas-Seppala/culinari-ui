@@ -1,0 +1,23 @@
+.search-bar {
+  background-color: var(--bg-white);
+  position: fixed;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 0.5rem 0 0.5rem;
+  border: 1px solid var(--white-border);
+  box-shadow: var(--white-shadow);
+  border-top: none;
+  border-right: none;
+  border-bottom-left-radius: 0.3rem;
+  padding: 0.5rem;
+}
+
+#search-text {
+  border: 1px solid var(--white-border) !important;
+  padding: 0.3rem !important;
+}
+
+input[type='text'] {
+  text-align: center;
+}

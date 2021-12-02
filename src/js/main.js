@@ -22,8 +22,6 @@ const main = () => {
     forks: 666
   })
 
-  userMenu.detach();
-
   // Menu click events.
   userMenu.anonymous.on.aboutClicked(e => console.log('about'))
   userMenu.anonymous.on.loginClicked(e => console.log('login'))

@@ -76,3 +76,9 @@ span.icon-huge {
   user-select: none;
   cursor: pointer;
 }
+
+.icon-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

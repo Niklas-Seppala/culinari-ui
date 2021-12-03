@@ -32,6 +32,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 button {
@@ -43,5 +44,25 @@ button {
   border-radius: 0.3rem;
   border: 1px solid var(--white-border);
   box-shadow: var(--white-shadow);
-  padding: 0.5rem;
+}
+
+.card-content-item {
+  margin: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.card-item-center {
+  align-self: center;
+  display: flex;
+}
+
+.column {
+  flex-direction: column;
+}
+
+p {
+  font-size: 0.9rem;
+}
+
+.display-none {
+  display: none !important;
 }

@@ -41,11 +41,6 @@ class ProfileView extends View {
   }
 
   render(state) {
-    this.#setState(state);
-    return this;
-  }
-
-  #setState(state) {
     if (state) this.state = state;
     if (this.state) {
       this.avatar.src = this.state.avatar
@@ -54,8 +49,9 @@ class ProfileView extends View {
       this.comments.textContent = this.state.comments;
       this.forks.textContent = this.state.forks;
     }
+    return this;
   }
-  
+
   #build() {
     this.root = document.getElementById('profile');
     this.avatar = document.getElementById('avatar');

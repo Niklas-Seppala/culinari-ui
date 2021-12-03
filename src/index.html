@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <link rel="stylesheet" href="styles/main.css" />
   <link rel="stylesheet" href="styles/icons.css" />
-  <link rel="stylesheet" href="styles/usermenu.css" />
   <script src="dist/main.js"></script>
   <title>Culinari</title>
 </head>
@@ -15,24 +14,23 @@
 <body>
   <div id="top-panel-view">
     <header>
-      <div class="main-header header-item">
-        <img src="../icons/logo.png" alt="app-logo" />
+      <div id="main-header">
+        <img id="app-logo" src="../icons/logo.png" alt="app-logo" />
         <h1>Culinari</h1>
       </div>
     </header>
-    <nav>
+    <nav id="nav-panel">
       <img id="menu-btn" class="icon icon-medium icon-hover" src="../icons/more.png" alt="menu-icon" />
-      <div class="content-nav">
-        <button class="nav-btn nav-left">Talked</button>
-        <button class="nav-btn nav-middle">Latest</button>
-        <button id="nav-search" class="nav-btn nav-right">Liked</button>
+      <div id="content-nav">
+        <button id="nav-talked" class="nav-btn nav-left">Talked</button>
+        <button id="nav-latest" class="nav-btn nav-middle">Latest</button>
+        <button id="nav-liked" class="nav-btn nav-right">Liked</button>
       </div>
       <img id="search-btn" class="icon icon-medium icon-hover" src="../icons/search.png" alt="menu-icon" />
     </nav>
   </div>
 
-  <main>
-
+  <main id="main">
     <!-- MENU VIEW -->
     <div id="user-menu-view">
       <div id="anon-menu">
@@ -50,7 +48,7 @@
         </div>
       </div>
       <div id="user-menu">
-        <div class="profile menu-item top">
+        <div id="profile" class="menu-item top">
           <div class="username">
             <img id="avatar" src="../icons/user.png" alt="profile-avatar" />
             <span><b id="profile-username">Username</b></span>

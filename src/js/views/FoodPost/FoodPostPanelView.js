@@ -1,4 +1,4 @@
-import { View, icon } from "../View";
+import { View, icon } from '../View';
 
 export class FoodPostPanelView extends View {
   constructor(parent) {
@@ -10,7 +10,7 @@ export class FoodPostPanelView extends View {
     this.root = document.createElement('div');
     this.root.classList.add('post-panel');
 
-    const css = ['icon-hover']
+    const css = ['icon-hover'];
     this.likes = icon.labeled(icon.type.LIKE, icon.size.SMALL, css);
     this.comments = icon.labeled(icon.type.COMMENT, icon.size.SMALL, css);
     this.forks = icon.labeled(icon.type.FORK, icon.size.SMALL, css);

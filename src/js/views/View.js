@@ -1,10 +1,10 @@
 export class View {
-    root = undefined;
-    parent = undefined;
+  root = undefined;
+  parent = undefined;
 
   get isAttached() {
     if (!this.root || !this.parent) return false;
-    return this.root.parentNode === this.parent
+    return this.root.parentNode === this.parent;
   }
 
   constructor(parent) {
@@ -14,18 +14,18 @@ export class View {
   detach() {
     if (this.isAttached) {
       this.parent.removeChild(this.root);
-      this.#detachListeners.forEach(f => f())
+      this.#detachListeners.forEach(f => f());
     }
     return this;
   }
 
   attach(parent) {
-    this.root.classList.remove('display-none')
+    this.root.classList.remove('display-none');
 
     if (!parent) {
       // No new parent specified, try to attach to current parent.
       this.parent.appendChild(this.root);
-      this.#attachListeners.forEach(f => f())
+      this.#attachListeners.forEach(f => f());
       return this;
     }
 
@@ -35,14 +35,14 @@ export class View {
       this.detach();
       this.parent = target;
       this.parent.appendChild(this.root);
-      this.#attachListeners.forEach(f => f())
+      this.#attachListeners.forEach(f => f());
       return this;
     }
 
     // Recieved new parent, attach to it.
     this.parent = target;
     this.parent.appendChild(this.root);
-    this.#attachListeners.forEach(f => f())
+    this.#attachListeners.forEach(f => f());
     return this;
   }
 
@@ -50,11 +50,11 @@ export class View {
   #detachListeners = [];
   on = {
     attach: listener => {
-      this.#attachListeners.push(listener)
+      this.#attachListeners.push(listener);
       return this;
     },
     detach: listener => {
-      this.#detachListeners.push(listener)
+      this.#detachListeners.push(listener);
       return this;
     },
   };
@@ -91,7 +91,7 @@ const icon = {
     TINY: 'icon-tiny',
     MEDIUM: 'icon-medium',
     LARGE: 'icon-large',
-    HUGE: 'icon-huge'
+    HUGE: 'icon-huge',
   },
 
   labeled: (type, size, css) => {
@@ -99,15 +99,15 @@ const icon = {
     root.classList.add('icon-label', 'column');
 
     const iconElement = document.createElement('img');
-    
-    iconElement.classList.add('icon')
-    iconElement.classList.add(size)
-    css?.forEach(c => iconElement.classList.add(c))
+
+    iconElement.classList.add('icon');
+    iconElement.classList.add(size);
+    css?.forEach(c => iconElement.classList.add(c));
     iconElement.src = icon.src[type][0];
     iconElement.alt = icon.src[type][1];
 
     const label = document.createElement('span');
-    label.classList.add(size)
+    label.classList.add(size);
 
     root.appendChild(iconElement);
     root.appendChild(label);
@@ -117,15 +117,15 @@ const icon = {
     const root = document.createElement('div');
     const iconElem = document.createElement('img');
 
-    iconElem.classList.add('icon')
-    iconElem.classList.add(size)
+    iconElem.classList.add('icon');
+    iconElem.classList.add(size);
 
-    css?.forEach(c => iconElem.classList.add(c))
+    css?.forEach(c => iconElem.classList.add(c));
     iconElem.src = icon.src[type][0];
     iconElem.alt = icon.src[type][1];
     root.appendChild(iconElem);
     return [root];
-  }
+  },
 };
 
-export {icon};
+export { icon };

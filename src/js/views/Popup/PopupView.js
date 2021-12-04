@@ -2,21 +2,12 @@ import './PopupView.css';
 import { View } from '../View';
 
 export class PopupView extends View {
-  constructor(parent) {
+  constructor(parent, header) {
     super(parent);
-    this.#build();
-    this.state = { header: '' };
+    this.#build(header);
   }
 
-  render(state) {
-    if (state) this.state = state;
-    if (this.state) {
-      this.header.textContent = this.state.header;
-    }
-    return this;
-  }
-
-  #build() {
+  #build(header) {
     this.root = document.createElement('div');
     this.root.classList.add('card', 'popup');
 
@@ -28,6 +19,7 @@ export class PopupView extends View {
     this.panel.appendChild(left);
 
     this.header = document.createElement('h2');
+    this.header.textContent = header
     this.panel.appendChild(this.header);
 
     const right = document.createElement('div');

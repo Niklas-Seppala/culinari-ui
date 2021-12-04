@@ -4,7 +4,7 @@
   background-color: var(--bg-white);
   min-width: 330px;
   z-index: 20;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .popup-panel {
@@ -21,7 +21,7 @@
 
 .popup h2 {
   font-size: 1rem;
-  margin: .0rem;
+  margin: 0rem;
 }
 
 .popup-close {

@@ -1,0 +1,129 @@
+form.small {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.file-upload {
+  display: flex;
+  border-radius: 0.3rem;
+  border: 1px dashed var(--white-border);
+  background-color: var(--bg-white);
+  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  align-self: stretch;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  box-shadow: var(--white-shadow);
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.center-label {
+  margin-bottom: 0.1rem;
+  padding: 0.1rem;
+  font-size: 0.9rem;
+}
+
+label {
+  font-size: 0.8rem;
+  margin: 0 0.2rem 0 0.2rem;
+}
+
+input[type='number'] {
+  width: 2rem;
+  text-align: center;
+}
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'] {
+  border-radius: 0.3rem;
+  padding: 0.3rem;
+  text-align: center;
+  border: 1px solid var(--white-border);
+  align-self: stretch;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+
+button[type='submit'] {
+  display: flex;
+  border-radius: 0.3rem;
+  border: 1px solid var(--white-border);
+  background-color: var(--bg-white);
+  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  transition: 0.3s;
+  margin-bottom: 0;
+}
+button[type='submit']:hover {
+  background-color: var(--accent-color);
+  box-shadow: var(--white-shadow-raised);
+}
+
+input[type='submit'] {
+  display: flex;
+  border-radius: 0.3rem;
+  border: 1px solid var(--white-border);
+  background-color: var(--bg-white);
+  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  transition: 0.3s;
+  margin-bottom: 0;
+}
+input[type='submit']:hover {
+  background-color: var(--accent-color);
+  box-shadow: var(--white-shadow-raised);
+}
+
+form h3 {
+  margin: 0 0 1rem 0;
+}
+
+form input {
+  margin-bottom: 0.5rem;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  box-shadow: var(--white-shadow-raised);
+}
+
+input,
+textarea {
+  font-family: inherit;
+  box-shadow: var(--white-shadow);
+}
+
+textarea {
+  align-self: stretch;
+  font-size: 0.9rem;
+  resize: none;
+  height: 3rem;
+  border-radius: 0.3rem;
+  margin-bottom: 0.5rem;
+  padding: 0.3rem;
+}
+
+.multiple-fields {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.3rem;
+    padding-bottom: 0 !important;
+    color: var(--font-phased);
+  }

@@ -1,4 +1,4 @@
-import './FoodPostView.css';
+import './RecipePostView.css';
 import { View, icon, css } from '../View';
 import { RecipePostPanelView } from './RecipePostPanelView';
 

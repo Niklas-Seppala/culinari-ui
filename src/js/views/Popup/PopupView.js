@@ -1,6 +1,10 @@
 import './PopupView.css';
-import { View } from '../View';
+import { View, css, icon } from '../View';
 
+/**
+ * Base class for popup views. Holds the popup root element
+ * and top bar with header and close button.
+ */
 export class PopupView extends View {
   constructor(parent, header) {
     super(parent);
@@ -8,31 +12,24 @@ export class PopupView extends View {
   }
 
   #build(header) {
-    this.root = document.createElement('div');
-    this.root.classList.add('card', 'popup');
+    this.root = View.element('div', css('card', 'popup'));
+    this.panel = View.element('div', css('popup-panel'), this.root);
 
-    this.panel = document.createElement('div');
-    this.panel.classList.add('popup-panel');
+    // Left side padding
+    View.element('div', css('side-padding'), this.panel);
 
-    const left = document.createElement('div');
-    left.classList.add('side-padding');
-    this.panel.appendChild(left);
-
-    this.header = document.createElement('h2');
+    // Popup header
+    this.header = View.element('h2', null, this.panel);
     this.header.textContent = header;
-    this.panel.appendChild(this.header);
 
-    const right = document.createElement('div');
-    right.classList.add('side-padding');
-    this.panel.appendChild(right);
-
-    const close = document.createElement('img');
-    close.classList.add('icon', 'icon-hover', 'icon-tiny', 'popup-close');
-    close.alt = 'close window';
-    close.src = '../icons/close.png';
-    close.addEventListener('click', () => this.detach());
-    right.appendChild(close);
-
-    this.root.appendChild(this.panel);
+    // Close icon on the right side.
+    const right = View.element('div', css('side-padding'), this.panel);
+    const ic = icon.plain(
+      icon.type.CLOSE,
+      icon.size.TINY,
+      css('icon-hover', 'popup-close')
+    );
+    ic.addEventListener('click', () => this.detach());
+    right.appendChild(ic);
   }
 }

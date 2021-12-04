@@ -1,7 +1,8 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
+import { css, View, icon } from '../View';
 
-const input = (type, name, id, placeholder, value) => {
+export const input = (type, name, id, placeholder, value) => {
   let input;
   if (type === 'textarea') {
     input = document.createElement('textarea');
@@ -19,33 +20,24 @@ const input = (type, name, id, placeholder, value) => {
 };
 
 const timeInput = text => {
-  const root = document.createElement('div');
-  root.classList.add('multiple-fields', 'card');
-
-  const label = document.createElement('label');
-  label.classList.add('center-label');
+  const root = View.element('div', css('multiple-fields', 'card'));
+  const label = View.element('label', css('center-label'));
   label.textContent = text;
 
-  const inputWrapper = document.createElement('div');
+  const inputWrapper = View.element('div');
 
-  const hours = document.createElement('input');
-  hours.type = 'number';
-  hours.value = '0';
-  const hourLabel = document.createElement('label');
+  const hours = input('number', 'timeHours', null, null, '0');
+  const hourLabel = View.element('label');
   hourLabel.textContent = 'Hour';
 
-  const mins = document.createElement('input');
-  mins.type = 'number';
-  mins.value = '0';
+  const mins = input('number', 'timeMins', null, null, '0');
   const minsLabel = document.createElement('label');
   minsLabel.textContent = 'Min';
 
   inputWrapper.appendChild(hours);
-  hours.name = 'timeHours';
   inputWrapper.appendChild(hourLabel);
 
   inputWrapper.appendChild(mins);
-  mins.name = 'timeMins';
   inputWrapper.appendChild(minsLabel);
 
   root.appendChild(label);
@@ -62,37 +54,29 @@ const dynamicInput = (type, name, id, ph, value, ord) => {
   asd.addEventListener('change', e => {
     if (!e.target.handled) {
       const newInput = dynamicInput(type, name, id, ph, value, ord + 1);
-      // this.dom.form[name].push(newInput);
       e.target.parentNode.insertBefore(newInput, e.target.nextSibling);
       e.target.handled = true;
     }
   });
 
-  asd.multipart = true;
   return asd;
 };
 
-const fileInput = (name, id, fileTypes, icon, label) => {
+const fileInput = (name, id, fileTypes, label) => {
   const root = document.createElement('label');
   root.for = name;
   root.className = 'file-upload';
 
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.id = id;
-  input.name = name;
-  input.accept = fileTypes;
+  const file = input('file', name, id, null, null);
+  file.accept = fileTypes;
 
-  const img = document.createElement('img');
-  img.src = icon;
-  img.classList.add('icon', 'icon-large');
-  img.alt = 'upload image';
+  const iconElem = icon.plain(icon.type.FILE, icon.size.LARGE);
+  console.log(iconElem);
 
-  root.appendChild(input);
-  root.appendChild(img);
+  root.appendChild(file);
+  root.appendChild(iconElem);
   root.appendChild(document.createTextNode(label));
 
-  root.multipart = true;
   return root;
 };
 
@@ -135,7 +119,7 @@ export class RegisterFormView extends FormView {
   }
 
   #build() {
-    this.form = document.createElement('form');
+    this.form = View.element('form');
     this.username = input('text', 'username', '', 'Username');
     this.email = input('email', 'email', '', 'Email');
     this.password = input('password', 'password', '', 'Password');
@@ -171,7 +155,7 @@ export class LoginFormView extends FormView {
   }
 
   #build() {
-    this.form = document.createElement('form');
+    this.form = View.element('form');
     this.username = input('text', 'username', '', 'Username');
     this.password = input('password', 'password', '', 'Password');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
@@ -197,13 +181,13 @@ export class RecipeFormView extends FormView {
   }
 
   #build() {
-    this.form = document.createElement('form');
+    this.form = View.element('form');
     this.name = input('text', 'name', '', 'Name');
     this.summary = input('textarea', 'summary', '', 'Summary');
     this.instructions = dynamicInput('text', 'instruction', '', 'Instruction', '', 0);
     this.ingredients = dynamicInput('text', 'ingredients', '', 'Ingredient', '', 0);
     this.time = timeInput('Time', 'time');
-    this.files = fileInput('foodImg', '', 'image/*', '../icons/file.png', 'Image');
+    this.files = fileInput('foodImg', '', 'image/*', 'Image');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
 
     this.form.appendChild(this.name);

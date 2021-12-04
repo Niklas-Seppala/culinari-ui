@@ -1,68 +1,73 @@
 import './TopMenu.css';
 import { View } from '../View';
 
+/**
+ * Sub View for TopNavigationView. Contains content navigation
+ * buttons.
+ */
 class ContentNavView extends View {
   constructor(parent) {
     super(parent);
     this.#build();
   }
 
-  #buttons = [];
+  /**
+   * Highlights specified navigation button.
+   * @param {HTMLButtonElement} button 
+   */
+  highlight(button) {
+    this.#buttons.forEach(btn => btn.classList.remove('nav-btn-active'));
+    button.classList.add('nav-btn-active');
+  }
+
+  /** View events */
   on = {
-    talkedClicked: listener => this.#buttons[0][1].push(listener),
-    latestClicked: listener => this.#buttons[1][1].push(listener),
-    likedClicked: listener => this.#buttons[2][1].push(listener),
+    /** @param {(e: Event) => void} listener */
+    talkedClicked: listener => this.delegate('click', listener, this.talked),
+
+    /** @param {(e: Event) => void} listener */
+    latestClicked: listener => this.delegate('click', listener, this.latest),
+
+    /** @param {(e: Event) => void} listener */
+    likedClicked: listener => this.delegate('click', listener, this.liked),
   };
 
+  #buttons = [];
   #build() {
     this.root = document.getElementById('content-nav');
     this.talked = document.getElementById('nav-talked');
     this.latest = document.getElementById('nav-latest');
     this.liked = document.getElementById('nav-liked');
-    this.#buttons = [
-      [this.talked, []],
-      [this.latest, []],
-      [this.liked, []],
-    ];
-
+    this.#buttons = [this.talked, this.latest, this.liked];
     this.#buttons.forEach(btn => {
-      const [button, listeners] = btn;
-      button.addEventListener('click', e => {
-        this.highlight(button);
-        listeners.forEach(listener => listener(e));
-      });
+      btn.addEventListener('click', () => this.highlight(btn));
     });
-  }
-
-  highlight(btn) {
-    this.#buttons.forEach(button => button[0].classList.remove('nav-btn-active'));
-    btn.classList.add('nav-btn-active');
   }
 }
 
+/**
+ * View of the top menu. Contains UI elements for content
+ * browsing and search/menu buttons.
+ */
 export class TopMenuView extends View {
   constructor(parent) {
     super(parent);
     this.#build();
   }
 
-  #menuListeners = [];
-  #searchListeners = [];
+  /** View events */
   on = {
-    userMenuClicked: listener => this.#menuListeners.push(listener),
-    searchClicked: listener => this.#searchListeners.push(listener),
+    /** @param {(e: Event) => void} listener */
+    userMenuClicked: listener => this.delegate('click', listener, this.userMenu),
+
+    /** @param {(e: Event) => void} listener */
+    searchClicked: listener => this.delegate('click', listener, this.search),
   };
 
   #build() {
     this.root = document.getElementById('nav-panel');
     this.contentNav = new ContentNavView(this.root);
     this.search = document.getElementById('search-btn');
-    this.search.addEventListener('click', e =>
-      this.#searchListeners.forEach(listener => listener(e))
-    );
     this.userMenu = document.getElementById('menu-btn');
-    this.userMenu.addEventListener('click', e =>
-      this.#menuListeners.forEach(listener => listener(e))
-    );
   }
 }

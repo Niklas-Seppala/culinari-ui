@@ -1,21 +1,26 @@
 import './SearchView.css';
-import { View } from '../View';
+import { css, View } from '../View';
+import { input } from '../Forms/FormViews';
 
+/**
+ * View for content searching.
+ */
 export class SearchView extends View {
   constructor(parent) {
     super(parent);
     this.#build();
   }
 
-  state = {
-    value: '',
-  };
-
   clear() {
     this.search.value = '';
-    this.#onClear.forEach(handler => handler(this.state));
   }
 
+  /**
+   * Renders current state to browser.
+   * 
+   * @param {{value: string}} state
+   * @returns {this} this
+   */
   render(state) {
     if (state) this.state = state;
     if (this.state) {
@@ -24,36 +29,16 @@ export class SearchView extends View {
     return this;
   }
 
-  #onSearch = [];
-  #onClear = [];
+  /** View events */
   on = {
-    search: listener => {
-      this.#onSearch.push(listener);
-      return this;
-    },
-    clear: listener => {
-      this.#onClear.push(listener);
-      return this;
-    },
+    /** @param {(e: Event) => void} listener */
+    search: listener => this.delegate('click', listener, this.search),
   };
 
   #build() {
-    const searchBar = document.createElement('div');
-    searchBar.classList.add('search-bar');
-    searchBar.id = 'search-view';
-
-    const searchText = document.createElement('input');
-    searchText.type = 'text';
-    searchText.id = 'search-text';
-    searchText.placeholder = 'Search Food';
-
-    searchText.addEventListener('input', _ => {
-      this.state.value = searchText.value;
-      this.#onSearch.forEach(handler => handler(this.state));
-    });
-
-    searchBar.appendChild(searchText);
-    this.root = searchBar;
-    this.search = searchText;
+    this.root = View.element('div', css('search-bar'), null, 'search-view');
+    this.search = input('text', '', 'search-text', 'Search Recipes');
+    this.search.addEventListener('input', _ => (this.state.value = this.search.value));
+    this.root.appendChild(this.search);
   }
 }

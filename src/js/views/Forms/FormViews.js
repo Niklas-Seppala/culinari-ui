@@ -179,6 +179,7 @@ export class LoginFormView extends FormView {
     this.form.appendChild(this.username);
     this.form.appendChild(this.password);
     this.form.appendChild(this.submitBtn);
+    this.root.appendChild(this.form)
 
     this.state = { username: '', password: '' };
     for (const key in this.state) {

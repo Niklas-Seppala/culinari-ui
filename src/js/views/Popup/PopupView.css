@@ -1,0 +1,29 @@
+.popup {
+  position: fixed;
+  top: 5.72rem;
+  background-color: var(--bg-white);
+  min-width: 330px;
+  z-index: 20;
+  padding: .5rem;
+}
+
+.popup-panel {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.side-padding {
+  min-width: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.popup h2 {
+  font-size: 1rem;
+  margin: .0rem;
+}
+
+.popup-close {
+  margin: 0;
+}

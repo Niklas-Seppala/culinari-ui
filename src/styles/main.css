@@ -32,8 +32,37 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 button {
   color: var(--font-on-light);
+}
+
+.card {
+  overflow: hidden;
+  border-radius: 0.3rem;
+  border: 1px solid var(--white-border);
+  box-shadow: var(--white-shadow);
+}
+
+.card-content-item {
+  margin: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.card-item-center {
+  align-self: center;
+  display: flex;
+}
+
+.column {
+  flex-direction: column;
+}
+
+p {
+  font-size: 0.9rem;
+}
+
+.display-none {
+  display: none !important;
 }

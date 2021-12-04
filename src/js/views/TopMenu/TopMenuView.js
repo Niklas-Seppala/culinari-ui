@@ -35,9 +35,7 @@ class ContentNavView extends View {
   }
 
   highlight(btn) {
-    this.#buttons.forEach(button =>
-      button[0].classList.remove('nav-btn-active')
-    );
+    this.#buttons.forEach(button => button[0].classList.remove('nav-btn-active'));
     btn.classList.add('nav-btn-active');
   }
 }

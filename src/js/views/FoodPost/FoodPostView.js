@@ -79,8 +79,6 @@ export class FoodPostView extends View {
     const [expandBtn] = icon.plain(icon.type.EXPAND, icon.size.MEDIUM);
     expandBtn.classList.add('card-item-center');
     this.root.appendChild(expandBtn);
-    expandBtn.addEventListener('click', e =>
-      this.#expandListeners.forEach(f => f())
-    );
+    expandBtn.addEventListener('click', e => this.#expandListeners.forEach(f => f()));
   }
 }

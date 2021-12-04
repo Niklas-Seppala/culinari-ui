@@ -1,93 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/icons.css" />
+    <script src="dist/main.js"></script>
+    <title>Culinari</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <link rel="stylesheet" href="styles/main.css" />
-  <link rel="stylesheet" href="styles/icons.css" />
-  <script src="dist/main.js"></script>
-  <title>Culinari</title>
-</head>
-
-<body>
-  <div id="top-panel-view">
-    <header>
-      <div id="main-header">
-        <img id="app-logo" src="../icons/logo.png" alt="app-logo" />
-        <h1>Culinari</h1>
-      </div>
-    </header>
-    <nav id="nav-panel">
-      <img id="menu-btn" class="icon icon-medium icon-hover" src="../icons/more.png" alt="menu-icon" />
-      <div id="content-nav">
-        <button id="nav-talked" class="nav-btn nav-left">Talked</button>
-        <button id="nav-latest" class="nav-btn nav-middle">Latest</button>
-        <button id="nav-liked" class="nav-btn nav-right">Liked</button>
-      </div>
-      <img id="search-btn" class="icon icon-medium icon-hover" src="../icons/search.png" alt="menu-icon" />
-    </nav>
-  </div>
-
-  <main id="main">
-    <!-- MENU VIEW -->
-    <div id="user-menu-view" class="display-none">
-      <div id="anon-menu">
-        <div class="menu-item menu-btn" id="register-btn">
-          <img class="icon-medium" src="../icons/edit.png" alt="" />
-          <span>Register</span>
+  <body>
+    <div id="top-panel-view">
+      <header>
+        <div id="main-header">
+          <img id="app-logo" src="../icons/logo.png" alt="app-logo" />
+          <h1>Culinari</h1>
         </div>
-        <div class="menu-item menu-btn" id="login-btn">
-          <img class="icon-medium" src="../icons/login.png" alt="" />
-          <span>Login</span>
+      </header>
+      <nav id="nav-panel">
+        <img
+          id="menu-btn"
+          class="icon icon-medium icon-hover"
+          src="../icons/more.png"
+          alt="menu-icon"
+        />
+        <div id="content-nav">
+          <button id="nav-talked" class="nav-btn nav-left">Talked</button>
+          <button id="nav-latest" class="nav-btn nav-middle">Latest</button>
+          <button id="nav-liked" class="nav-btn nav-right">Liked</button>
         </div>
-        <div class="menu-item menu-btn" id="about-btn">
-          <img class="icon-medium" src="../icons/info.png" alt="" />
-          <span>About</span>
-        </div>
-      </div>
-      <div id="user-menu">
-        <div id="profile" class="menu-item top">
-          <div class="username">
-            <img id="avatar" src="../icons/user.png" alt="profile-avatar" />
-            <span><b id="profile-username">Username</b></span>
-          </div>
-          <div class="stats">
-            <div class="stat">
-              <img class="icon-small" src="../icons/heart-filled.png" alt="Like Count" />
-              <span id="profile-likes">13</span>
-            </div>
-            <div class="stat">
-              <img class="icon-small" src="../icons/comment.png" alt="Comment Count" />
-              <span id="profile-comments">32</span>
-            </div>
-            <div class="stat">
-              <img class="icon-small" src="../icons/fork.png" alt="Fork Count" />
-              <span id="profile-forks">6</span>
-            </div>
-          </div>
-        </div>
-        <div class="menu-item menu-btn" id="my-recipes-btn">
-          <img class="icon-medium" src="../icons/recipe.png" alt="My Recipes" />
-          <span>My Recipes</span>
-        </div>
-        <div class="menu-item menu-btn" id="new-recipe-btn">
-          <img class="icon-medium" src="../icons/add.png" alt="New Recipe" />
-          <span>New Recipe</span>
-        </div>
-        <div class="menu-item menu-btn" id="friends-btn">
-          <img class="icon-medium" src="../icons/friends.png" alt="Friends" />
-          <span>Friends</span>
-        </div>
-        <div class="menu-item menu-btn" id="logout-btn">
-          <img class="icon-medium" src="../icons/logout.png" alt="Logout" />
-          <span>Logout</span>
-        </div>
-      </div>
+        <img
+          id="search-btn"
+          class="icon icon-medium icon-hover"
+          src="../icons/search.png"
+          alt="menu-icon"
+        />
+      </nav>
     </div>
 
-  </main>
-</body>
-
+    <main id="main">
+      <!-- MENU VIEW -->
+      <div id="user-menu-view" class="display-none">
+        <div id="anon-menu">
+          <div class="menu-item menu-btn" id="register-btn">
+            <img class="icon-medium" src="../icons/edit.png" alt="" />
+            <span>Register</span>
+          </div>
+          <div class="menu-item menu-btn" id="login-btn">
+            <img class="icon-medium" src="../icons/login.png" alt="" />
+            <span>Login</span>
+          </div>
+          <div class="menu-item menu-btn" id="about-btn">
+            <img class="icon-medium" src="../icons/info.png" alt="" />
+            <span>About</span>
+          </div>
+        </div>
+        <div id="user-menu">
+          <div id="profile" class="menu-item top">
+            <div class="username">
+              <img id="avatar" src="../icons/user.png" alt="profile-avatar" />
+              <span><b id="profile-username">Username</b></span>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <img
+                  class="icon-small"
+                  src="../icons/heart-filled.png"
+                  alt="Like Count"
+                />
+                <span id="profile-likes">13</span>
+              </div>
+              <div class="stat">
+                <img class="icon-small" src="../icons/comment.png" alt="Comment Count" />
+                <span id="profile-comments">32</span>
+              </div>
+              <div class="stat">
+                <img class="icon-small" src="../icons/fork.png" alt="Fork Count" />
+                <span id="profile-forks">6</span>
+              </div>
+            </div>
+          </div>
+          <div class="menu-item menu-btn" id="my-recipes-btn">
+            <img class="icon-medium" src="../icons/recipe.png" alt="My Recipes" />
+            <span>My Recipes</span>
+          </div>
+          <div class="menu-item menu-btn" id="new-recipe-btn">
+            <img class="icon-medium" src="../icons/add.png" alt="New Recipe" />
+            <span>New Recipe</span>
+          </div>
+          <div class="menu-item menu-btn" id="friends-btn">
+            <img class="icon-medium" src="../icons/friends.png" alt="Friends" />
+            <span>Friends</span>
+          </div>
+          <div class="menu-item menu-btn" id="logout-btn">
+            <img class="icon-medium" src="../icons/logout.png" alt="Logout" />
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>

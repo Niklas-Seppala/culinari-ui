@@ -87,18 +87,14 @@ class LoggedMenuView extends View {
     this.friends = document.getElementById('friends-btn');
     this.logout = document.getElementById('logout-btn');
 
-    this.friends.addEventListener('click', e =>
-      this.#friendHandlers.forEach(f => f(e))
-    );
+    this.friends.addEventListener('click', e => this.#friendHandlers.forEach(f => f(e)));
     this.newRecipe.addEventListener('click', e =>
       this.#newRecipeHandlers.forEach(f => f(e))
     );
     this.myRecipes.addEventListener('click', e =>
       this.#myRecipeHandlers.forEach(f => f(e))
     );
-    this.logout.addEventListener('click', e =>
-      this.#logoutHandlers.forEach(f => f(e))
-    );
+    this.logout.addEventListener('click', e => this.#logoutHandlers.forEach(f => f(e)));
   }
 }
 

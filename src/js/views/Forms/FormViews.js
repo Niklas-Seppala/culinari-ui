@@ -1,4 +1,4 @@
-import './Forms.css'
+import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
 
 const input = (type, name, id, placeholder, value) => {
@@ -18,7 +18,7 @@ const input = (type, name, id, placeholder, value) => {
   return input;
 };
 
-const timeInput = (text) => {
+const timeInput = text => {
   const root = document.createElement('div');
   root.classList.add('multiple-fields', 'card');
 
@@ -45,7 +45,7 @@ const timeInput = (text) => {
   inputWrapper.appendChild(hourLabel);
 
   inputWrapper.appendChild(mins);
-  mins.name = 'timeMins'
+  mins.name = 'timeMins';
   inputWrapper.appendChild(minsLabel);
 
   root.appendChild(label);
@@ -61,7 +61,7 @@ const dynamicInput = (type, name, id, ph, value, ord) => {
 
   asd.addEventListener('change', e => {
     if (!e.target.handled) {
-      const newInput = dynamicInput(type, name, id, ph, value, ord+1);
+      const newInput = dynamicInput(type, name, id, ph, value, ord + 1);
       // this.dom.form[name].push(newInput);
       e.target.parentNode.insertBefore(newInput, e.target.nextSibling);
       e.target.handled = true;
@@ -147,7 +147,7 @@ export class RegisterFormView extends FormView {
     this.form.appendChild(this.password);
     this.form.appendChild(this.password2);
     this.form.appendChild(this.submitBtn);
-    this.root.appendChild(this.form)
+    this.root.appendChild(this.form);
 
     this.state = {
       username: '',
@@ -179,7 +179,7 @@ export class LoginFormView extends FormView {
     this.form.appendChild(this.username);
     this.form.appendChild(this.password);
     this.form.appendChild(this.submitBtn);
-    this.root.appendChild(this.form)
+    this.root.appendChild(this.form);
 
     this.state = { username: '', password: '' };
     for (const key in this.state) {
@@ -205,17 +205,17 @@ export class RecipeFormView extends FormView {
     this.time = timeInput('Time', 'time');
     this.files = fileInput('foodImg', '', 'image/*', '../icons/file.png', 'Image');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
-    
+
     this.form.appendChild(this.name);
     this.form.appendChild(this.summary);
     this.form.appendChild(this.instructions);
     this.form.appendChild(this.ingredients);
     this.form.appendChild(this.time);
     this.form.appendChild(this.files);
-    this.form.appendChild(this.submitBtn)
-    this.root.appendChild(this.form)
+    this.form.appendChild(this.submitBtn);
+    this.root.appendChild(this.form);
 
-    const formData = new FormData(this.form)
+    const formData = new FormData(this.form);
     for (var pair of formData.entries()) {
       console.log(pair[0] + ': ' + pair[1]);
     }
@@ -227,6 +227,6 @@ export class RecipeFormView extends FormView {
     instructions: [],
     ingredients: [],
     time: { h: '', min: '' },
-    files: []
-  }
+    files: [],
+  };
 }

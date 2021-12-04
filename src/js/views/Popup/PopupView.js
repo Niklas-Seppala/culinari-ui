@@ -19,7 +19,7 @@ export class PopupView extends View {
     this.panel.appendChild(left);
 
     this.header = document.createElement('h2');
-    this.header.textContent = header
+    this.header.textContent = header;
     this.panel.appendChild(this.header);
 
     const right = document.createElement('div');

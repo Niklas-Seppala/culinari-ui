@@ -17,7 +17,7 @@ export class SearchView extends View {
 
   /**
    * Renders current state to browser.
-   * 
+   *
    * @param {{value: string}} state
    * @returns {this} this
    */
@@ -38,7 +38,7 @@ export class SearchView extends View {
   #build() {
     this.root = View.element('div', css('search-bar'), null, 'search-view');
     this.search = input('text', '', 'search-text', 'Search Recipes');
-    this.state = {value: ''}
+    this.state = { value: '' };
     this.search.addEventListener('input', _ => (this.state.value = this.search.value));
     this.root.appendChild(this.search);
   }

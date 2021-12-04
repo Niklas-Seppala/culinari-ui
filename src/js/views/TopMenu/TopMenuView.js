@@ -13,7 +13,7 @@ class ContentNavView extends View {
 
   /**
    * Highlights specified navigation button.
-   * @param {HTMLButtonElement} button 
+   * @param {HTMLButtonElement} button
    */
   highlight(button) {
     this.#buttons.forEach(btn => btn.classList.remove('nav-btn-active'));

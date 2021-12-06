@@ -1,6 +1,6 @@
 import './SearchView.css';
 import { css, View } from '../View';
-import { input } from '../Forms/FormViews';
+import { input } from '../Forms/inputs';
 
 /**
  * View for content searching.

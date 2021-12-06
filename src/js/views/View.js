@@ -3,7 +3,7 @@
  * keeps track of it's parent, and simplifies
  * attaching and detaching it.
  */
- export class View {
+export class View {
   /** @type {HTMLElement} */
   parent;
   /** @type {HTMLElement} */
@@ -77,7 +77,7 @@
 
   /**
    * Delegates DOM event to specified listener.
-   * 
+   *
    * @param {Event} event
    * @param {((e: Event) => void)} listener
    * @param {HTMLElement} element

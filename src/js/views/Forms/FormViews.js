@@ -58,17 +58,17 @@ class FormView extends PopupView {
     }
   }
 
-  /** @type {[(e) => void]} */
+  /** @type {[(fields:object) => void]} */
   #submitListeners = [];
-  /** @type {[(e) => void]} */
+  /** @type {[(fields:object) => void]} */
   #cancelListeners = [];
   on = {
-    /**  @param {(e) => void} listener */
+    /**  @param {(fields:object) => void} listener */
     submit: listener => {
       this.#submitListeners.push(listener);
       return this;
     },
-    /** @param {(e) => void} listener */
+    /** @param {(fields:object) => void} listener */
     cancel: listener => {
       this.#cancelListeners.push(listener);
       return this;

@@ -3,43 +3,72 @@ import { PopupView } from '../Popup/PopupView';
 import { View } from '../View';
 import { input, fileInput, multiInput, timeInput  } from './inputs';
 
+/**
+ * Base class that holds common methods for all
+ * future form views. 
+ * @extends {PopupView}
+ */
 class FormView extends PopupView {
   constructor(parent, header) {
     super(parent, header);
     super.closeListener = this.cancel.bind(this)
   }
 
+  /**
+   * Gather form's input field values.
+   */
   get formData() {
     throw Error('Unimplemented method');
   }
 
+  /**
+   * Cancels form, aka clears values.
+   */
   cancel() {
     this.#cancelListeners.forEach(f => f(this.formData));
     this.form.reset();
   }
 
+  /**
+   * Adds validator function to this form.
+   * 
+   * @param {(fields: object) => boolean} validator 
+   * @returns {this} this
+   */
   addValidator(validator) {
     this.validator = validator
     return this;
   }
 
-  submit() {
+  /**
+   *  
+   * Runs optional validator function, if form values are
+   * valid, calls subscribed onSubmit listeners.
+   * Clears fields. Optionally closes this form.
+   * 
+   * @param {boolean?} close 
+   */
+  submit(close) {
     if (this.validator ? this.validator.call(this, this.formData) : true) {
       this.#submitListeners.forEach(f => f(this.formData));
       this.form.reset();
-      this.detach();
+      if (close === true) this.detach();
     } else {
       window.alert('invalid')
     }
   }
 
+  /** @type {[(e) => void]} */
   #submitListeners = [];
+  /** @type {[(e) => void]} */
   #cancelListeners = [];
   on = {
+    /**  @param {(e) => void} listener */
     submit: listener => {
       this.#submitListeners.push(listener);
       return this;
     },
+    /** @param {(e) => void} listener */
     cancel: listener => {
       this.#cancelListeners.push(listener);
       return this;
@@ -47,7 +76,11 @@ class FormView extends PopupView {
   };
 }
 
-
+/**
+ * From view for registering to the application.
+ * 
+ * @extends {FormView}
+ */
 export class RegisterFormView extends FormView {
   constructor(parent) {
     super(parent, 'Register');
@@ -86,6 +119,11 @@ export class RegisterFormView extends FormView {
 }
 
 
+/**
+ * Form for logging in as registered user.
+ * 
+ * @extends {FormView}
+ */
 export class LoginFormView extends FormView {
   constructor(parent) {
     super(parent, 'Login');
@@ -118,6 +156,11 @@ export class LoginFormView extends FormView {
 }
 
 
+/**
+ * Form for posting/updating recipe.
+ * 
+ * @extends {FormView}
+ */
 export class RecipeFormView extends FormView {
   constructor(parent) {
     super(parent, 'Post New Recipe');

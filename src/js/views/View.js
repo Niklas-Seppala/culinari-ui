@@ -176,6 +176,7 @@ const icon = {
 
     root.appendChild(iconElement);
     root.appendChild(label);
+    root.classList.add('icon-gutter')
     return { root, label };
   },
 
@@ -198,6 +199,7 @@ const icon = {
     iconElem.src = icon.src[type][0];
     iconElem.alt = icon.src[type][1];
     root.appendChild(iconElem);
+    root.classList.add('icon-gutter')
     return root;
   },
 };

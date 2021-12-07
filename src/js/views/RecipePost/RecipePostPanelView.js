@@ -16,11 +16,7 @@ export class RecipePostPanelView extends View {
     this.likes = icon.labeled(icon.type.LIKE, icon.size.SMALL, classes);
     this.comments = icon.labeled(icon.type.COMMENT, icon.size.SMALL, classes);
     this.forks = icon.labeled(icon.type.FORK, icon.size.SMALL, classes);
-    this.time = icon.labeled(
-      icon.type.TIME,
-      icon.size.SMALL,
-      classes.concat('cooking-time')
-    );
+    this.time = icon.labeled(icon.type.TIME, icon.size.SMALL, classes);
 
     this.root.appendChild(this.likes.root);
     this.root.appendChild(this.comments.root);

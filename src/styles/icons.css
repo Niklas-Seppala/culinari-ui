@@ -35,6 +35,10 @@ span.icon-medium {
   margin: unset;
 }
 
+span {
+  white-space: nowrap;
+}
+
 .icon-large {
   width: 2rem;
   height: 2rem;

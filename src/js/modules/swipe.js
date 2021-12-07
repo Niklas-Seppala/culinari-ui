@@ -19,24 +19,27 @@ let onRightSwipe = null
 
 
 const setTouchEvents = () => {
-  window.addEventListener('touchstart', eArgs => {
-    const [touch] = eArgs.changedTouches;
+
+  window.addEventListener('touchstart', e => {
+    const [touch] = e.changedTouches;
     touchStart.x = touch.screenX;
     touchStart.y = touch.screenY
   });
 
-  window.addEventListener('touchend', eArgs => {
-    const [touch] = eArgs.changedTouches;
+  window.addEventListener('touchend', e => {
+    const [touch] = e.changedTouches;
     touchEnd.x = touch.screenX;
     touchEnd.y = touch.screenY;
 
+    // Calculate distance.
     const distance = {
       x: Math.abs(touchEnd.x - touchStart.x),
       y: Math.abs(touchEnd.y - touchStart.y),
     }
 
+    // Call validator if it exists
     if (touchValidator ? touchValidator.call(this, distance) : true) {
-      touchEnd.x < touchStart.x 
+      touchEnd.x < touchStart.x  // calculate swipe direction.
         ? onLeftSwipe?.call(this, distance) 
         : onRightSwipe?.call(this, distance)
     }
@@ -44,6 +47,7 @@ const setTouchEvents = () => {
 }
 
 /**
+ * Configure horizontal swipe detection.
  * 
  * @param {{
  * left: (dist: {x: number, y: number}) => void,
@@ -60,54 +64,3 @@ const configure = ({left, right, validator}) => {
 }
 
 export default {configure}
-
-
-
-
-
-
-// export default class SwipeHandler {
-//   static handlersSet = false;
-
-//   #touchStartX = -1;
-//   #touchStartY = -1;
-//   #touchEndX = -1;
-//   #touchEndY = -1;
-
-//   constructor({ left, right, minDistX, maxDistY }) {
-//     this.leftSwipe = left;
-//     this.rightSwipe = right;
-//     this.minDistX = minDistX;
-//     this.maxDistY = maxDistY;
-
-//     if (!SwipeHandler.handlersSet) this.#setEvents();
-//   }
-
-//   #setEvents() {
-//     window.addEventListener('touchstart', eArgs => {
-//       const [touch] = eArgs.changedTouches;
-//       this.#touchStartX = touch.screenX;
-//       this.#touchStartY = touch.screenY;
-//     });
-
-//     window.addEventListener('touchend', eArgs => {
-//       const [touch] = eArgs.changedTouches;
-//       this.#touchEndX = touch.screenX;
-//       this.#touchEndY = touch.screenY;
-
-//       if (this.minDistX && this.maxDistY) {
-//         // Gurad against angled vertical scroll.
-//         const distY = Math.abs(this.#touchEndY - this.#touchStartY);
-//         if (distY > this.maxDistY) return;
-
-//         // Check the distance of the swipe.
-//         const dist = Math.abs(this.#touchEndX - this.#touchStartX);
-//         if (dist < this.minDistX) return;
-//       }
-
-//       if (this.#touchEndX < this.#touchStartX) this.rightSwipe?.call();
-//       else this.leftSwipe?.call();
-//     });
-//     SwipeHandler.handlersSet = true;
-//   }
-// }

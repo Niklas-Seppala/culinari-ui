@@ -10,7 +10,7 @@
   root;
 
   constructor(parent) {
-    this.parent = View.genericParent(parent);
+    this.parent = View.resolveParent(parent);
   }
 
   get isAttached() {
@@ -54,24 +54,37 @@
     // Make sure View is visible
     this.visibility = true;
 
-    if (!parent) {
-      // No new parent specified, try to attach to current parent.
-      this.parent.appendChild(this.root);
-      return this;
-    }
+    // Try to detach (if attached)
+    this.detach();
+    if (parent) this.parent = View.resolveParent(parent);
 
-    const parentElement = View.genericParent(parent);
-    if (this.parent) {
-      // Parent exists, detach and attach to new parent.
-      this.detach();
-      this.parent = parentElement;
-      this.parent.appendChild(this.root);
-      return this;
-    }
-
-    // Recieved new parent, attach to it.
-    this.parent = parentElement;
     this.parent.appendChild(this.root);
+    return this;
+  }
+
+  /**
+   * Inject the root of this View to the parent.
+   * of this View.
+   *
+   * @param {number} position injection position
+   * @param {HTMLElement|string} parent id or dom element
+   * @returns {this} this
+   */
+  inject(position, parent) {
+    // Make sure View is visible
+    this.visibility = true;
+
+    // Try to detach (if attached)
+    this.detach();
+    if (parent) this.parent = View.resolveParent(parent);
+
+    if (this.parent.children.length <= position) {
+      // Parent doesnt have enough children to begin with, just append.
+      this.parent.appendChild(this.root)
+    } else {
+      this.parent.insertBefore(this.root, this.parent.children[position]);
+    }
+
     return this;
   }
 
@@ -110,7 +123,7 @@
    * @param {string|View} parent generic parent
    * @returns {HTMLElement} parent dom element
    */
-  static genericParent(parent) {
+  static resolveParent(parent) {
     let result = parent;
     if (typeof parent === 'string') {
       result = document.getElementById(parent);

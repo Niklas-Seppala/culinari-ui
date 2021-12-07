@@ -11,6 +11,8 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: 510px;
+  overflow-y: scroll;
 }
 
 .file-upload {
@@ -112,18 +114,21 @@ textarea {
   align-self: stretch;
   font-size: 0.9rem;
   resize: none;
-  height: 3rem;
+  text-align: center;
+  min-height: 3rem;
   border-radius: 0.3rem;
   margin-bottom: 0.5rem;
   padding: 0.3rem;
 }
 
-.multiple-fields {
+.duration-picker {
   align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin-bottom: 0.3rem;
   padding-bottom: 0 !important;
   color: var(--font-phased);
+  min-height: 4rem;
 }

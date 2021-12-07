@@ -20,7 +20,7 @@ export const input = (type, name, id, placeholder, value) => {
 };
 
 const timeInput = text => {
-  const root = View.element('div', css('multiple-fields', 'card'));
+  const root = View.element('div', css('duration-picker', 'card'));
   const label = View.element('label', css('center-label'));
   label.textContent = text;
 

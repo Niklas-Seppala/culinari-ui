@@ -3,6 +3,7 @@
   top: 5.72rem;
   background-color: var(--bg-white);
   min-width: 330px;
+  max-width: 330px;
   z-index: 20;
   padding: 0.5rem;
 }

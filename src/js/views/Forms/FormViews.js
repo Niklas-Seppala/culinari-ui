@@ -1,121 +1,132 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
-import { css, View, icon } from '../View';
+import { View, css } from '../View';
+import { input, fileInput, multiInput, timeInput } from './inputs';
+import { ValidationResult } from './validators';
 
-export const input = (type, name, id, placeholder, value) => {
-  let input;
-  if (type === 'textarea') {
-    input = document.createElement('textarea');
-  } else {
-    input = document.createElement('input');
-    input.type = type;
-  }
-  input.name = name;
-
-  if (id) input.id = id;
-  if (value) input.value = value;
-  if (placeholder) input.placeholder = placeholder;
-
-  return input;
-};
-
-const timeInput = text => {
-  const root = View.element('div', css('duration-picker', 'card'));
-  const label = View.element('label', css('center-label'));
-  label.textContent = text;
-
-  const inputWrapper = View.element('div');
-
-  const hours = input('number', 'timeHours', null, null, '0');
-  const hourLabel = View.element('label');
-  hourLabel.textContent = 'Hour';
-
-  const mins = input('number', 'timeMins', null, null, '0');
-  const minsLabel = document.createElement('label');
-  minsLabel.textContent = 'Min';
-
-  inputWrapper.appendChild(hours);
-  inputWrapper.appendChild(hourLabel);
-
-  inputWrapper.appendChild(mins);
-  inputWrapper.appendChild(minsLabel);
-
-  root.appendChild(label);
-  root.appendChild(inputWrapper);
-
-  return root;
-};
-
-const dynamicInput = (type, name, id, ph, value, ord) => {
-  const realName = `${name}_${ord}`;
-  const realPh = `${ord + 1}. ${ph}`;
-  const asd = input(type, realName, id, realPh, value);
-
-  asd.addEventListener('change', e => {
-    if (!e.target.handled) {
-      const newInput = dynamicInput(type, name, id, ph, value, ord + 1);
-      e.target.parentNode.insertBefore(newInput, e.target.nextSibling);
-      e.target.handled = true;
-    }
-  });
-
-  return asd;
-};
-
-const fileInput = (name, id, fileTypes, label) => {
-  const root = document.createElement('label');
-  root.for = name;
-  root.className = 'file-upload';
-
-  const file = input('file', name, id, null, null);
-  file.accept = fileTypes;
-
-  const iconElem = icon.plain(icon.type.FILE, icon.size.LARGE);
-  console.log(iconElem);
-
-  root.appendChild(file);
-  root.appendChild(iconElem);
-  root.appendChild(document.createTextNode(label));
-
-  return root;
-};
-
+/**
+ * Base class that holds common methods for all
+ * future form views.
+ * @extends {PopupView}
+ */
 class FormView extends PopupView {
   constructor(parent, header) {
     super(parent, header);
+    super.closeListener = this.cancel.bind(this);
   }
 
-  #submitListeners = [];
-  #cancelListeners = [];
-  on = {
-    submit: listener => this.#submitListeners.push(listener),
-    cancel: listener => this.#cancelListeners.push(listener),
-  };
+  /**
+   * Gather form's input field values.
+   */
+  get formData() {
+    throw Error('Unimplemented method');
+  }
 
+  /**
+   * Cancels form, aka clears values.
+   */
   cancel() {
+    this.#cancelListeners.forEach(f => f(this.formData));
     this.form.reset();
-    this.#cancelListeners.forEach(f => f(this.state));
   }
 
-  submit() {
-    this.form.reset();
-    this.#submitListeners.forEach(f => f(this.state));
+  /**
+   * Adds validator function to this form.
+   *
+   * @param {(fields: object) => ValidationResult} validator
+   * @returns {this} this
+   */
+  addValidator(validator) {
+    this.validator = validator;
+    return this;
   }
 
-  render(state) {
-    if (state) this.state = state;
-    if (this.state) {
-      for (const key in this.state) {
-        this[key].value = this.state[key];
-      }
+  /**
+   *
+   * Runs optional validator function, if form values are
+   * valid, calls subscribed onSubmit listeners.
+   * Clears fields. Optionally closes this form.
+   *
+   * @param {ValidationResult} close
+   */
+  submit(close) {
+    this.#hideErrors();
+
+    let validation; // Validate form if validator exits.
+    if (this.validator) validation = this.validator(this.formData);
+
+    // Take validation result, if exists, if not, run regardless
+    if (validation ? validation.success : true) {
+      this.#submitListeners.forEach(f => f(this.formData));
+      this.form.reset();
+      if (close === true) this.detach();
+    } else {
+      // Render validation errors to DOM.
+      this.#rederValidationErrors(validation);
     }
   }
+
+  /**
+   * Hide any validation errors for this form.
+   */
+  #hideErrors() {
+    const errors = Array.prototype.slice.call(
+      this.form.getElementsByClassName('validation-error')
+    );
+
+    for (let i = 0; i < errors.length; i++)
+      this.form.removeChild(errors[i]);
+  }
+
+  /**
+   * Renders validation errors to the form element.
+   * 
+   * @param {ValidationResult} validation
+   */
+  #rederValidationErrors(validation) {
+    validation.errors.forEach(error => {
+      const errors = View.element('p', css('validation-error'));
+      errors.textContent = error.reason;
+      this.form.insertBefore(errors, this[error.field].nextSibling);
+    });
+  }
+
+  /** @type {[(fields:object) => void]} */
+  #submitListeners = [];
+  /** @type {[(fields:object) => void]} */
+  #cancelListeners = [];
+  on = {
+    /**  @param {(fields:object) => void} listener */
+    submit: listener => {
+      this.#submitListeners.push(listener);
+      return this;
+    },
+    /** @param {(fields:object) => void} listener */
+    cancel: listener => {
+      this.#cancelListeners.push(listener);
+      return this;
+    },
+  };
 }
 
+/**
+ * From view for registering to the application.
+ *
+ * @extends {FormView}
+ */
 export class RegisterFormView extends FormView {
   constructor(parent) {
     super(parent, 'Register');
     this.#build();
+  }
+
+  get formData() {
+    return {
+      username: this.username.value,
+      email: this.email.value,
+      password: this.password.value,
+      password2: this.password2.value,
+    };
   }
 
   #build() {
@@ -133,25 +144,29 @@ export class RegisterFormView extends FormView {
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 
-    this.state = {
-      username: '',
-      email: '',
-      password: '',
-      password2: '',
-    };
-
-    for (const key in this.state) {
-      this[key].addEventListener('change', e => {
-        this.state[key] = e.target.value;
-      });
-    }
+    this.form.addEventListener('submit', e => {
+      e.preventDefault();
+      this.submit();
+    });
   }
 }
 
+/**
+ * Form for logging in as registered user.
+ *
+ * @extends {FormView}
+ */
 export class LoginFormView extends FormView {
   constructor(parent) {
     super(parent, 'Login');
     this.#build();
+  }
+
+  get formData() {
+    return {
+      username: this.username.value,
+      password: this.password.value,
+    };
   }
 
   #build() {
@@ -165,27 +180,54 @@ export class LoginFormView extends FormView {
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 
-    this.state = { username: '', password: '' };
-    for (const key in this.state) {
-      this[key].addEventListener('change', e => {
-        this.state[key] = e.target.value;
-      });
-    }
+    this.form.addEventListener('submit', e => {
+      e.preventDefault();
+      this.submit();
+    });
   }
 }
 
+/**
+ * Form for posting/updating recipe.
+ *
+ * @extends {FormView}
+ */
 export class RecipeFormView extends FormView {
   constructor(parent) {
-    super(parent, 'Post new Recipe');
+    super(parent, 'Post New Recipe');
     this.#build();
+  }
+
+  get formData() {
+    const result = {
+      name: this.name.value,
+      summary: this.summary.value,
+      instructions: [],
+      ingredients: [],
+      time: {
+        hours: this.time.hours.value,
+        mins: this.time.mins.value,
+      },
+      files: this.files.files.files,
+    };
+
+    for (let i = 0; i < this.form.children.length; i++) {
+      const inpt = this.form.children[i];
+      if (inpt.name?.startsWith('instruction') && inpt.value) {
+        result.instructions.push(inpt.value);
+      } else if (inpt.name?.startsWith('ingredient') && inpt.value) {
+        result.ingredients.push(inpt.value);
+      }
+    }
+    return result;
   }
 
   #build() {
     this.form = View.element('form');
     this.name = input('text', 'name', '', 'Name');
     this.summary = input('textarea', 'summary', '', 'Summary');
-    this.instructions = dynamicInput('text', 'instruction', '', 'Instruction', '', 0);
-    this.ingredients = dynamicInput('text', 'ingredients', '', 'Ingredient', '', 0);
+    this.instructions = multiInput('text', 'instruction', '', 'Instruction', '', 0);
+    this.ingredients = multiInput('text', 'ingredients', '', 'Ingredient', '', 0);
     this.time = timeInput('Time', 'time');
     this.files = fileInput('foodImg', '', 'image/*', 'Image');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
@@ -199,18 +241,9 @@ export class RecipeFormView extends FormView {
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 
-    const formData = new FormData(this.form);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    this.form.addEventListener('submit', e => {
+      e.preventDefault();
+      this.submit();
+    });
   }
-
-  state = {
-    name: '',
-    summary: '',
-    instructions: [],
-    ingredients: [],
-    time: { h: '', min: '' },
-    files: [],
-  };
 }

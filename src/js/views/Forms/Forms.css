@@ -6,7 +6,7 @@ form.small {
 }
 
 form {
-  padding: 0.5rem 2rem 0.5rem 2rem;
+  padding: 1rem 3rem 1rem 3rem;
   max-width: 400px;
   display: flex;
   flex-direction: column;
@@ -59,7 +59,7 @@ input[type='password'] {
   border: 1px solid var(--white-border);
   align-self: stretch;
   transition: 0.3s;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 button[type='submit'] {
@@ -112,7 +112,7 @@ textarea {
 
 textarea {
   align-self: stretch;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   resize: none;
   text-align: center;
   min-height: 3rem;
@@ -131,4 +131,16 @@ textarea {
   padding-bottom: 0 !important;
   color: var(--font-phased);
   min-height: 4rem;
+}
+
+.validation-error {
+  background-color: rgba(235, 102, 79, 0.226);
+  font-size: .8rem;
+  text-align: center;
+  align-self: stretch;
+  margin: 0 0 .5rem 0;
+  border: 1px solid rgb(238, 65, 35);
+  border-radius: .3rem;
+  padding: .3rem;
+  box-shadow: var(--white-shadow);
 }

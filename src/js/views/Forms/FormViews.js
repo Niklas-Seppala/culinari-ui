@@ -1,17 +1,18 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
-import { View } from '../View';
-import { input, fileInput, multiInput, timeInput  } from './inputs';
+import { View, css } from '../View';
+import { input, fileInput, multiInput, timeInput } from './inputs';
+import { ValidationResult } from './validators';
 
 /**
  * Base class that holds common methods for all
- * future form views. 
+ * future form views.
  * @extends {PopupView}
  */
 class FormView extends PopupView {
   constructor(parent, header) {
     super(parent, header);
-    super.closeListener = this.cancel.bind(this)
+    super.closeListener = this.cancel.bind(this);
   }
 
   /**
@@ -31,31 +32,63 @@ class FormView extends PopupView {
 
   /**
    * Adds validator function to this form.
-   * 
-   * @param {(fields: object) => boolean} validator 
+   *
+   * @param {(fields: object) => ValidationResult} validator
    * @returns {this} this
    */
   addValidator(validator) {
-    this.validator = validator
+    this.validator = validator;
     return this;
   }
 
   /**
-   *  
+   *
    * Runs optional validator function, if form values are
    * valid, calls subscribed onSubmit listeners.
    * Clears fields. Optionally closes this form.
-   * 
-   * @param {boolean?} close 
+   *
+   * @param {ValidationResult} close
    */
   submit(close) {
-    if (this.validator ? this.validator.call(this, this.formData) : true) {
+    this.#hideErrors();
+
+    let validation; // Validate form if validator exits.
+    if (this.validator) validation = this.validator(this.formData);
+
+    // Take validation result, if exists, if not, run regardless
+    if (validation ? validation.success : true) {
       this.#submitListeners.forEach(f => f(this.formData));
       this.form.reset();
       if (close === true) this.detach();
     } else {
-      window.alert('invalid')
+      // Render validation errors to DOM.
+      this.#rederValidationErrors(validation);
     }
+  }
+
+  /**
+   * Hide any validation errors for this form.
+   */
+  #hideErrors() {
+    const errors = Array.prototype.slice.call(
+      this.form.getElementsByClassName('validation-error')
+    );
+
+    for (let i = 0; i < errors.length; i++)
+      this.form.removeChild(errors[i]);
+  }
+
+  /**
+   * Renders validation errors to the form element.
+   * 
+   * @param {ValidationResult} validation
+   */
+  #rederValidationErrors(validation) {
+    validation.errors.forEach(error => {
+      const errors = View.element('p', css('validation-error'));
+      errors.textContent = error.reason;
+      this.form.insertBefore(errors, this[error.field].nextSibling);
+    });
   }
 
   /** @type {[(fields:object) => void]} */
@@ -78,7 +111,7 @@ class FormView extends PopupView {
 
 /**
  * From view for registering to the application.
- * 
+ *
  * @extends {FormView}
  */
 export class RegisterFormView extends FormView {
@@ -92,8 +125,8 @@ export class RegisterFormView extends FormView {
       username: this.username.value,
       email: this.email.value,
       password: this.password.value,
-      password2: this.password2.value
-    }
+      password2: this.password2.value,
+    };
   }
 
   #build() {
@@ -118,10 +151,9 @@ export class RegisterFormView extends FormView {
   }
 }
 
-
 /**
  * Form for logging in as registered user.
- * 
+ *
  * @extends {FormView}
  */
 export class LoginFormView extends FormView {
@@ -133,8 +165,8 @@ export class LoginFormView extends FormView {
   get formData() {
     return {
       username: this.username.value,
-      password: this.password.value
-    }
+      password: this.password.value,
+    };
   }
 
   #build() {
@@ -155,10 +187,9 @@ export class LoginFormView extends FormView {
   }
 }
 
-
 /**
  * Form for posting/updating recipe.
- * 
+ *
  * @extends {FormView}
  */
 export class RecipeFormView extends FormView {

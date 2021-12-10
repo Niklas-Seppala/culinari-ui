@@ -57,9 +57,6 @@ export class LoggedMenuView extends View {
     newRecipeClicked: listener => this.delegate('click', listener, this.newRecipe),
 
     /** @param {(e: Event) => void} listener */
-    friendsClicked: listener => this.delegate('click', listener, this.friends),
-
-    /** @param {(e: Event) => void} listener */
     logoutClicked: listener => this.delegate('click', listener, this.logout),
   };
 
@@ -68,7 +65,6 @@ export class LoggedMenuView extends View {
     this.root = document.getElementById('user-menu');
     this.myRecipes = document.getElementById('my-recipes-btn');
     this.newRecipe = document.getElementById('new-recipe-btn');
-    this.friends = document.getElementById('friends-btn');
     this.logout = document.getElementById('logout-btn');
   }
 }

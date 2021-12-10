@@ -26,6 +26,10 @@ body {
   background-color: var(--bg-white);
 }
 
+.body-stretch {
+  height: 100%;
+}
+
 main {
   width: 100%;
   flex-grow: 1;
@@ -87,4 +91,11 @@ ol {
 ol li {
   list-style: none;
   border-bottom: 1px solid var(--white-border);
+}
+
+.centered {
+  align-self: center;
+  justify-self: center;
+  flex-grow: 1;
+  display: flex;
 }

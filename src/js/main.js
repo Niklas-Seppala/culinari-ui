@@ -1,16 +1,18 @@
-import { TopMenuView } from './views/TopMenu/TopMenuView';
+import { ContentNavView, TopMenuView } from './views/TopMenu/TopMenuView';
 import { UserMenuView } from './views/UserMenu/UserMenuView';
 import { SearchView } from './views/Search/SearchView';
 import { LoadingView } from './views/Loading/LoadingView';
 import { RecipePostView } from './views/RecipePost/RecipePostView';
-import { RecipeFormView, LoginFormView, RegisterFormView } from './views/Forms/FormViews';
+import { RecipeFormView } from './views/Forms/FormViews';
 import { FlashView } from './views/Flash/FlashView';
 import swipe from './modules/swipe';
 
 // MOCK DATA
 import { recipes } from './mock/recipes';
+import { css, View } from './views/View';
 
 const main = () => {
+  const loading = new LoadingView('main').attach();
   const flash = new FlashView('main');
 
   const forms = {
@@ -47,10 +49,19 @@ const main = () => {
 
   const search = new SearchView('main');
   const topMenu = new TopMenuView('top-panel-view');
+  const browser = new ContentBrowser(topMenu.contentNav);
+
   // Content navigation clicks.
-  topMenu.contentNav.on.talkedClicked(e => console.log('talked'));
-  topMenu.contentNav.on.likedClicked(e => console.log('liked'));
-  topMenu.contentNav.on.latestClicked(e => console.log('latest'));
+  topMenu.contentNav.on.talkedClicked(_ => {
+    if (browser.currentIndex != 0) browser.changeContentByIndex(0);
+  });
+  topMenu.contentNav.on.likedClicked(e => {
+    if (browser.currentIndex != 2) browser.changeContentByIndex(2);
+  });
+  topMenu.contentNav.on.latestClicked(e => {
+    if (browser.currentIndex != 1) browser.changeContentByIndex(1);
+  });
+
   // Search and menu clicks.
   topMenu.on.searchClicked(e => (search.isAttached ? search.detach() : search.attach()));
   topMenu.on.userMenuClicked(e =>
@@ -58,14 +69,54 @@ const main = () => {
   );
 
   swipe.configure({
-    left: dist => console.log(dist, 'left'),
-    right: dist => console.log(dist, 'right'),
+    left: _ => browser.browseLeft(),
+    right: _ => browser.browseRight(),
     validator: dist => dist.x > 80 && dist.y < 50,
   });
 
-  recipes.forEach(recipe => {
-  new RecipePostView('main').attach().render(recipe);
-  })
+  // demo loading view
+  setTimeout(() => {
+    loading.detach();
+    recipes.forEach(recipe => {
+      new RecipePostView(browser.contents).attach().render(recipe);
+    });
+    setTimeout(() => browser.changeContentByIndex(1), 100);
+  }, 1000);
 };
+
+class ContentBrowser {
+  /**
+   *
+   * @param {ContentNavView} contentNav
+   */
+  constructor(contentNav) {
+    this.contents = View.element('div', css('content-page'));
+    View.resolveParent('main').appendChild(this.contents);
+    this.nav = contentNav;
+    this.lastViewIndex = 2;
+  }
+
+  changeContentByIndex(index) {
+    if (index < 0 || index > this.lastViewIndex) return;
+    this.currentIndex = index;
+    this.nav.highlight(this.nav.buttons[index]);
+
+    if (this.contents.classList.contains('fade-in'))
+      this.contents.classList.toggle('fade-in');
+
+    setTimeout(() => {
+      this.contents.classList.toggle('fade-in');
+    }, 300);
+  }
+
+  browseRight() {
+    if (this.currentIndex < this.lastViewIndex)
+      this.changeContentByIndex(++this.currentIndex);
+  }
+
+  browseLeft() {
+    if (this.currentIndex > 0) this.changeContentByIndex(--this.currentIndex);
+  }
+}
 
 window.onload = main;

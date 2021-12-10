@@ -5,7 +5,7 @@ import { View } from '../View';
  * Sub View for TopNavigationView. Contains content navigation
  * buttons.
  */
-class ContentNavView extends View {
+export class ContentNavView extends View {
   constructor(parent) {
     super(parent);
     this.#build();
@@ -16,9 +16,10 @@ class ContentNavView extends View {
    * @param {HTMLButtonElement} button
    */
   highlight(button) {
-    this.#buttons.forEach(btn => btn.classList.remove('nav-btn-active'));
+    this.buttons.forEach(btn => btn.classList.remove('nav-btn-active'));
     button.classList.add('nav-btn-active');
   }
+
 
   /** View events */
   on = {
@@ -32,14 +33,14 @@ class ContentNavView extends View {
     likedClicked: listener => this.delegate('click', listener, this.liked),
   };
 
-  #buttons = [];
+  buttons = [];
   #build() {
     this.root = document.getElementById('content-nav');
     this.talked = document.getElementById('nav-talked');
     this.latest = document.getElementById('nav-latest');
     this.liked = document.getElementById('nav-liked');
-    this.#buttons = [this.talked, this.latest, this.liked];
-    this.#buttons.forEach(btn => {
+    this.buttons = [this.talked, this.latest, this.liked];
+    this.buttons.forEach(btn => {
       btn.addEventListener('click', () => this.highlight(btn));
     });
   }

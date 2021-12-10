@@ -37,8 +37,8 @@ const setTouchEvents = () => {
     // Call validator if it exists
     if (touchValidator ? touchValidator.call(this, distance) : true) {
       touchEnd.x < touchStart.x // calculate swipe direction.
-        ? onLeftSwipe?.call(this, distance)
-        : onRightSwipe?.call(this, distance);
+        ? onRightSwipe?.call(this, distance)
+        : onLeftSwipe?.call(this, distance);
     }
   });
 };

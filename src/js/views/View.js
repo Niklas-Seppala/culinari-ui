@@ -98,7 +98,7 @@ export class View {
 
   /**
    *
-   * @param {HTMLElement|string} parent
+   * @param {HTMLElement|string|View} parent
    */
   constructor(parent) {
     this.parent = View.resolveParent(parent);

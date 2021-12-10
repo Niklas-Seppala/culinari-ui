@@ -15,6 +15,7 @@ html {
   font-size: 16px;
   height: 100vh;
   background-color: var(--bg-white);
+  width: 100vw;
 }
 
 body {
@@ -24,6 +25,7 @@ body {
   display: flex;
   align-items: center;
   background-color: var(--bg-white);
+  height: 100%;
 }
 
 .body-stretch {
@@ -98,4 +100,16 @@ ol li {
   justify-self: center;
   flex-grow: 1;
   display: flex;
+}
+
+.content-page {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.fade-in {
+  opacity: 1;
+}
+.fade-out {
+  opacity: 0;
 }

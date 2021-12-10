@@ -1,0 +1,29 @@
+:root {
+  --flash-error: rgba(253, 170, 155, 0.9);
+  --flash-success: rgba(203, 241, 137, 0.9);
+}
+
+.flash-msg {
+  z-index: 20;
+  width: 100%;
+  box-shadow: var(--white-shadow-raised);
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--font-on-light);
+  color: black;
+}
+
+.success {
+  background-color: var(--flash-success) !important;
+}
+.error {
+  background-color: var(--flash-error) !important;
+}
+
+.flash-msg .msg-content {
+  font-size: 1rem;
+  margin: 0.2rem;
+  text-align: center;
+}

@@ -11,6 +11,11 @@ export class PopupView extends View {
     this.#build(header);
   }
 
+  closeListener;
+  onClose(f) {
+    this.closeListener = f;
+  }
+
   #build(header) {
     this.root = View.element('div', css('card', 'popup'));
     this.panel = View.element('div', css('popup-panel'), this.root);
@@ -29,7 +34,12 @@ export class PopupView extends View {
       icon.size.TINY,
       css('icon-hover', 'popup-close')
     );
-    ic.addEventListener('click', () => this.detach());
+
+    ic.addEventListener('click', () => {
+      this.closeListener?.call();
+      this.detach();
+    });
+
     right.appendChild(ic);
   }
 }

@@ -6,11 +6,13 @@ form.small {
 }
 
 form {
-  padding: 0.5rem 2rem 0.5rem 2rem;
+  padding: 1rem 3rem 1rem 3rem;
   max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: 510px;
+  overflow-y: scroll;
 }
 
 .file-upload {
@@ -57,7 +59,7 @@ input[type='password'] {
   border: 1px solid var(--white-border);
   align-self: stretch;
   transition: 0.3s;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 button[type='submit'] {
@@ -110,20 +112,51 @@ textarea {
 
 textarea {
   align-self: stretch;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   resize: none;
-  height: 3rem;
+  text-align: center;
+  min-height: 3rem;
   border-radius: 0.3rem;
   margin-bottom: 0.5rem;
   padding: 0.3rem;
 }
 
-.multiple-fields {
+.duration-picker {
   align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin-bottom: 0.3rem;
   padding-bottom: 0 !important;
   color: var(--font-phased);
+  min-height: 4rem;
+}
+
+form.leave-comment {
+  display: flex;
+  padding: 0;
+  justify-content: stretch;
+  justify-self: stretch;
+  overflow: hidden;
+  flex-direction: row;
+  border-radius: 0.3rem;
+  border: 1px solid var(--white-border);
+}
+
+.leave-comment textarea {
+  text-align: unset;
+  border: none;
+  box-shadow: none;
+  flex-grow: 1;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  padding: 0.4rem;
+  border-right: 1px solid var(--white-border);
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.post-comment-btn {
+  padding: 0.7rem;
 }

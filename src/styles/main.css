@@ -26,6 +26,10 @@ body {
   background-color: var(--bg-white);
 }
 
+.body-stretch {
+  height: 100%;
+}
+
 main {
   width: 100%;
   flex-grow: 1;
@@ -48,6 +52,8 @@ button {
 
 .card-content-item {
   margin: 0.5rem 0.5rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-item-center {
@@ -59,10 +65,37 @@ button {
   flex-direction: column;
 }
 
-p {
+p,
+td {
   font-size: 0.9rem;
+}
+
+td {
+  border-bottom: 1px solid var(--white-border);
+  border-collapse: collapse;
 }
 
 .display-none {
   display: none !important;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+ol {
+  padding-left: 0.5rem;
+}
+
+ol li {
+  list-style: none;
+  border-bottom: 1px solid var(--white-border);
+}
+
+.centered {
+  align-self: center;
+  justify-self: center;
+  flex-grow: 1;
+  display: flex;
 }

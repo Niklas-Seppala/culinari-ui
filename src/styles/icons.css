@@ -1,7 +1,7 @@
 .icon-tiny {
   width: 0.8rem;
   height: 0.8rem;
-  margin: 0.4rem;
+  margin: 0 0.4rem 0 0.4rem;
 }
 span.icon-tiny {
   font-size: 0.8rem;
@@ -13,7 +13,7 @@ span.icon-tiny {
 .icon-small {
   width: 1rem;
   height: 1rem;
-  margin: 0.4rem;
+  margin: 0 0.4rem 0 0.4rem;
 }
 
 span.icon-small {
@@ -26,7 +26,7 @@ span.icon-small {
 .icon-medium {
   width: 1.3rem;
   height: 1.3rem;
-  margin: 0.4rem;
+  margin: 0 0.4rem 0 0.4rem;
 }
 span.icon-medium {
   font-size: 1rem;
@@ -35,10 +35,13 @@ span.icon-medium {
   margin: unset;
 }
 
+span {
+  white-space: nowrap;
+}
+
 .icon-large {
   width: 2rem;
   height: 2rem;
-  margin: 0.4rem;
 }
 span.icon-large {
   font-size: 1.5rem;
@@ -50,7 +53,7 @@ span.icon-large {
 .icon-huge {
   width: 3rem;
   height: 3rem;
-  margin: 0.4rem;
+  margin: 0 0.4rem 0 0.4rem;
 }
 span.icon-huge {
   font-size: 2rem;
@@ -68,8 +71,12 @@ span.icon-huge {
   transform: scale(1.1);
 }
 
+.icon-rotateable {
+  transition: transform 0.3s ease !important;
+}
+
 .icon-rotate {
-  transition: transform 0.3s ease;
+  transform: rotate(-180deg);
 }
 
 .click {
@@ -79,6 +86,19 @@ span.icon-huge {
 
 .icon-label {
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+.header-w-icon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.header-w-icon h4 {
+  margin: 0;
+}
+
+.icon-vert {
+  margin-bottom: 0.4rem;
 }

@@ -6,8 +6,11 @@
 }
 
 .post-header h3 {
-  margin: 0.3rem;
+  margin: 0 0 0.2rem 0;
   font-size: 1rem;
+  text-align: center;
+  word-break: break-word;
+  padding: 0 1rem 0 1rem;
 }
 
 .post-header span {
@@ -15,14 +18,10 @@
   color: var(--font-phased);
 }
 
-.cooking-time {
-  margin-left: 1rem;
-}
-
 .post-panel {
   width: 100%;
   display: flex;
-  padding: 0.3rem;
+  padding: 0.5rem;
   border-bottom: 1px solid var(--white-border);
 }
 
@@ -49,16 +48,19 @@
 }
 
 .comment {
-  padding: 0.5rem;
+  padding: 0.5rem 0 0.5rem 0;
   margin-top: 0.5rem;
+  display: flex;
+  justify-content: stretch;
+}
+
+.comment-text {
+  flex-grow: 1;
+  margin: 0;
 }
 
 .comment .post-panel {
   justify-content: space-around;
-}
-
-.comment p {
-  margin: 0.4rem;
 }
 
 .comment-text-favs {
@@ -67,9 +69,10 @@
   border-bottom: 1px solid var(--white-border);
 }
 
-.comment-auth {
-  display: flex;
-  justify-content: space-around;
+.comment-author {
+  font-size: 0.9rem;
+  font-weight: bold;
+  justify-self: center;
 }
 .comment-auth span {
   color: var(--font-phased);
@@ -78,38 +81,23 @@
   margin: 0 0.5rem 0 0.5rem;
 }
 
-.comment-name {
-  font-weight: bold;
-}
-
-.leave-comment {
-  justify-content: center;
-  max-width: 350px;
-  padding: 0;
+.auth-and-date {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
 }
 
-.leave-comment textarea {
-  flex-grow: 10;
-  margin: 0;
-  height: 2rem;
-  margin-right: 0.2rem;
+.comment-date {
+  color: var(--font-phased);
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
-.leave-comment button {
+.comment-auth-text-date {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  height: 2.7rem;
-  align-self: stretch;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.leave-comment textarea:focus {
-  line-height: unset;
-  text-align: start;
+  margin: 0 0.4rem 0 0.4rem;
 }
 
 img.food {
@@ -125,4 +113,45 @@ img.food {
   flex-direction: column;
   justify-content: center;
   max-width: 400px;
+  padding-bottom: 1rem;
+}
+
+.expand-btn {
+  margin-bottom: 0.5rem;
+}
+
+table {
+  border-spacing: 0.5rem;
+}
+
+.instruction-list p {
+  margin: 0.2rem 0 0.2rem 0;
+}
+
+.list p {
+  margin: 0;
+}
+
+.header-w-icon {
+  padding: 0.5rem 0 0rem 0;
+}
+
+.expandable-content {
+  padding-top: 0.5rem;
+}
+
+.instruction {
+  display: flex;
+  align-items: center;
+}
+
+.instruction span {
+  font-size: 1.4rem;
+}
+.instruction p {
+  margin-left: 0.5rem;
+}
+
+.ingredient {
+  font-weight: bold;
 }

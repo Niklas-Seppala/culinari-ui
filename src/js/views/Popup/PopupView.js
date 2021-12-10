@@ -11,9 +11,9 @@ export class PopupView extends View {
     this.#build(header);
   }
 
-  closeListener
+  closeListener;
   onClose(f) {
-    this.closeListener = f
+    this.closeListener = f;
   }
 
   #build(header) {
@@ -36,7 +36,7 @@ export class PopupView extends View {
     );
 
     ic.addEventListener('click', () => {
-      this.closeListener?.call()
+      this.closeListener?.call();
       this.detach();
     });
 

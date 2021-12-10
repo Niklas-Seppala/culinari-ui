@@ -1,17 +1,17 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
-import { View } from '../View';
-import { input, fileInput, multiInput, timeInput  } from './inputs';
+import { View, css } from '../View';
+import { input, fileInput, multiInput, timeInput } from './inputs';
 
 /**
  * Base class that holds common methods for all
- * future form views. 
+ * future form views.
  * @extends {PopupView}
  */
 class FormView extends PopupView {
   constructor(parent, header) {
     super(parent, header);
-    super.closeListener = this.cancel.bind(this)
+    super.closeListener = this.cancel.bind(this);
   }
 
   /**
@@ -29,33 +29,17 @@ class FormView extends PopupView {
     this.form.reset();
   }
 
-  /**
-   * Adds validator function to this form.
-   * 
-   * @param {(fields: object) => boolean} validator 
-   * @returns {this} this
-   */
-  addValidator(validator) {
-    this.validator = validator
-    return this;
-  }
 
   /**
-   *  
-   * Runs optional validator function, if form values are
-   * valid, calls subscribed onSubmit listeners.
+   * Calls subscribed onSubmit listeners.
    * Clears fields. Optionally closes this form.
-   * 
-   * @param {boolean?} close 
+   *
+   * @param {boolean} close
    */
   submit(close) {
-    if (this.validator ? this.validator.call(this, this.formData) : true) {
-      this.#submitListeners.forEach(f => f(this.formData));
-      this.form.reset();
-      if (close === true) this.detach();
-    } else {
-      window.alert('invalid')
-    }
+    this.#submitListeners.forEach(f => f(this.formData));
+    this.form.reset();
+    if (close === true) this.detach();
   }
 
   /** @type {[(fields:object) => void]} */
@@ -78,7 +62,7 @@ class FormView extends PopupView {
 
 /**
  * From view for registering to the application.
- * 
+ *
  * @extends {FormView}
  */
 export class RegisterFormView extends FormView {
@@ -92,8 +76,8 @@ export class RegisterFormView extends FormView {
       username: this.username.value,
       email: this.email.value,
       password: this.password.value,
-      password2: this.password2.value
-    }
+      password2: this.password2.value,
+    };
   }
 
   #build() {
@@ -118,10 +102,9 @@ export class RegisterFormView extends FormView {
   }
 }
 
-
 /**
  * Form for logging in as registered user.
- * 
+ *
  * @extends {FormView}
  */
 export class LoginFormView extends FormView {
@@ -133,8 +116,8 @@ export class LoginFormView extends FormView {
   get formData() {
     return {
       username: this.username.value,
-      password: this.password.value
-    }
+      password: this.password.value,
+    };
   }
 
   #build() {
@@ -155,10 +138,9 @@ export class LoginFormView extends FormView {
   }
 }
 
-
 /**
  * Form for posting/updating recipe.
- * 
+ *
  * @extends {FormView}
  */
 export class RecipeFormView extends FormView {

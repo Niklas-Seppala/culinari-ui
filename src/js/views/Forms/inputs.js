@@ -3,7 +3,7 @@ import { css, View, icon } from '../View';
 
 /**
  * Create basic input element.
- * 
+ *
  * @param {string} type Type of the input (supports textarea)
  * @param {string} name Name of the input
  * @param {string} id Id of the input
@@ -31,11 +31,11 @@ export const input = (type, name, id, placeholder, value) => {
 
 /**
  * Creates time input view.
- * 
- * @param {string} header 
+ *
+ * @param {string} header
  * @returns {HTMLDivElement}
  */
-export const timeInput = (header) => {
+export const timeInput = header => {
   const root = View.element('div', css('multiple-fields', 'card'));
   const label = View.element('label', css('center-label'));
   label.textContent = header;
@@ -66,14 +66,14 @@ export const timeInput = (header) => {
 
 /**
  * Creates dynamic multipart input.
- * 
+ *
  * @param {string} type Type of the input
  * @param {string} name Name of the input
  * @param {string} id Id of the input
  * @param {string} ph Placeholder value for the input
  * @param {string} value Staring value for the input
  * @param {number} ord Order of the input
- * @returns 
+ * @returns
  */
 export const multiInput = (type, name, id, ph, value, ord) => {
   const realName = `${name}_${ord}`;
@@ -101,7 +101,7 @@ export const multiInput = (type, name, id, ph, value, ord) => {
 
 /**
  * Creates custom file input element.
- * 
+ *
  * @param {string} name Name of the input
  * @param {string} id Id of the input
  * @param {string} fileTypes Accepted file types for the input

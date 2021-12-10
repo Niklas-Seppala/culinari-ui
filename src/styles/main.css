@@ -52,6 +52,8 @@ button {
 
 .card-content-item {
   margin: 0.5rem 0.5rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-item-center {
@@ -63,12 +65,32 @@ button {
   flex-direction: column;
 }
 
-p {
+p,
+td {
   font-size: 0.9rem;
+}
+
+td {
+  border-bottom: 1px solid var(--white-border);
+  border-collapse: collapse;
 }
 
 .display-none {
   display: none !important;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+ol {
+  padding-left: 0.5rem;
+}
+
+ol li {
+  list-style: none;
+  border-bottom: 1px solid var(--white-border);
 }
 
 .centered {
@@ -76,12 +98,4 @@ p {
   justify-self: center;
   flex-grow: 1;
   display: flex;
-}
-
-.main-item {
-  margin: 1rem 1rem 0 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 400px;
 }

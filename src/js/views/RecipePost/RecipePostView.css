@@ -9,6 +9,8 @@
   margin: 0 0 0.2rem 0;
   font-size: 1rem;
   text-align: center;
+  word-break: break-word;
+  padding: 0 1rem 0 1rem;
 }
 
 .post-header span {

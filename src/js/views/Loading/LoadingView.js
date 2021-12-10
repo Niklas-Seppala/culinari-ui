@@ -24,20 +24,20 @@ export class LoadingView extends View {
    * @returns {this} this
    */
   attach(parent) {
-    document.body.classList.add('body-stretch')
+    document.body.classList.add('body-stretch');
     return super.attach(parent);
   }
 
   detach() {
-     // Reverse body-stretch.
-    document.body.classList.remove('body-stretch') 
+    // Reverse body-stretch.
+    document.body.classList.remove('body-stretch');
     return super.detach();
   }
 
   #build() {
     this.root = View.element('section', css('main-item', 'centered'));
     this.root.innerHTML =
-      '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div>' + 
+      '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div>' +
       '<div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
   }
 }

@@ -1,7 +1,7 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
-import { View, css } from '../View';
-import { input, fileInput, multiInput, timeInput } from './inputs';
+import { View } from '../View';
+import { input, fileInput, multiInput } from './inputs';
 
 /**
  * Base class that holds common methods for all
@@ -28,7 +28,6 @@ class FormView extends PopupView {
     this.#cancelListeners.forEach(f => f(this.formData));
     this.form.reset();
   }
-
 
   /**
    * Calls subscribed onSubmit listeners.
@@ -155,10 +154,6 @@ export class RecipeFormView extends FormView {
       summary: this.summary.value,
       instructions: [],
       ingredients: [],
-      time: {
-        hours: this.time.hours.value,
-        mins: this.time.mins.value,
-      },
       files: this.files.files.files,
     };
 
@@ -179,7 +174,6 @@ export class RecipeFormView extends FormView {
     this.summary = input('textarea', 'summary', '', 'Summary');
     this.instructions = multiInput('text', 'instruction', '', 'Instruction', '', 0);
     this.ingredients = multiInput('text', 'ingredients', '', 'Ingredient', '', 0);
-    this.time = timeInput('Time', 'time');
     this.files = fileInput('foodImg', '', 'image/*', 'Image');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
 
@@ -187,7 +181,6 @@ export class RecipeFormView extends FormView {
     this.form.appendChild(this.summary);
     this.form.appendChild(this.instructions);
     this.form.appendChild(this.ingredients);
-    this.form.appendChild(this.time);
     this.form.appendChild(this.files);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);

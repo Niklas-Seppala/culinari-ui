@@ -30,41 +30,6 @@ export const input = (type, name, id, placeholder, value) => {
 };
 
 /**
- * Creates time input view.
- *
- * @param {string} header
- * @returns {HTMLDivElement}
- */
-export const timeInput = header => {
-  const root = View.element('div', css('multiple-fields', 'card'));
-  const label = View.element('label', css('center-label'));
-  label.textContent = header;
-
-  const inputWrapper = View.element('div');
-
-  const hours = input('number', 'timeHours', null, null, '0');
-  const hourLabel = View.element('label');
-  hourLabel.textContent = 'Hour';
-
-  const mins = input('number', 'timeMins', null, null, '0');
-  const minsLabel = document.createElement('label');
-  minsLabel.textContent = 'Min';
-
-  inputWrapper.appendChild(hours);
-  inputWrapper.appendChild(hourLabel);
-
-  inputWrapper.appendChild(mins);
-  inputWrapper.appendChild(minsLabel);
-
-  root.appendChild(label);
-  root.appendChild(inputWrapper);
-
-  root.hours = hours;
-  root.mins = mins;
-  return root;
-};
-
-/**
  * Creates dynamic multipart input.
  *
  * @param {string} type Type of the input

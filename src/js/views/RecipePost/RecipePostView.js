@@ -19,7 +19,6 @@ export class RecipePostView extends View {
       this.panel.render({
         author: this.state.author,
         name: this.state.name,
-        time: this.state.time,
         likes: this.state.likes,
         comments: this.state.comments.length,
         forks: this.state.forks,

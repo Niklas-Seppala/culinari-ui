@@ -133,18 +133,6 @@ textarea {
   min-height: 4rem;
 }
 
-.validation-error {
-  background-color: rgba(235, 102, 79, 0.226);
-  font-size: 0.8rem;
-  text-align: center;
-  align-self: stretch;
-  margin: 0 0 0.5rem 0;
-  border: 1px solid rgb(238, 65, 35);
-  border-radius: 0.3rem;
-  padding: 0.3rem;
-  box-shadow: var(--white-shadow);
-}
-
 form.leave-comment {
   display: flex;
   padding: 0;

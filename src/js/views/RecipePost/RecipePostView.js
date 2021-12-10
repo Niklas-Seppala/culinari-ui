@@ -3,7 +3,6 @@ import { View, css } from '../View';
 import { RecipePostPanelView } from './RecipePostPanelView';
 import { RecipePostDetails } from './RecipePostDetails';
 
-
 /**
  * View for users' recipe posts.
  */

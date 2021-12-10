@@ -64,19 +64,19 @@ export class RecipePostDetails extends View {
    */
   #renderInstructions(state) {
     View.removeChildrend(this.instructions);
-    
+
     if (state) {
       const instructionList = View.element('ol', css('instruction-list'));
-      
+
       // Sort the instruction based on index field.
       const sorted = state?.instructions.sort((a, b) => a.index - b.index);
 
       sorted.forEach((instr, i) => {
         // Construct each instruction element.
         const entry = View.element('li', null, instructionList);
-        const indexAndText = View.element('div', css('instruction'), entry); 
-        const index = View.element('span', null, indexAndText)
-        index.textContent = `${i+1}.`
+        const indexAndText = View.element('div', css('instruction'), entry);
+        const index = View.element('span', null, indexAndText);
+        index.textContent = `${i + 1}.`;
         const text = View.element('p', null, indexAndText);
         text.textContent = instr.content;
       });

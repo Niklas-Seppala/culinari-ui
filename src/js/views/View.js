@@ -3,9 +3,9 @@
  * @param {[string]} classes css classes
  * @returns {[string]} classes as an array
  */
- const __css = (...classes) => classes;
+const __css = (...classes) => classes;
 
- /**
+/**
  * Icon creation utility object.
  */
 const __icon = {
@@ -19,7 +19,7 @@ const __icon = {
     CLOSE: 6,
     DOWN_ARROW: 7,
     POST: 8,
-    SEND: 9
+    SEND: 9,
   },
   src: [
     ['../icons/heart.png', 'like'],
@@ -78,11 +78,11 @@ const __icon = {
    * @returns {HTMLImageElement} Icon
    */
   plain: (type, size, css) => {
-    const icon = View.element('img', __css('icon', size).concat(css))
+    const icon = View.element('img', __css('icon', size).concat(css));
     icon.src = __icon.src[type][0];
     icon.alt = __icon.src[type][1];
-    return icon
-  }
+    return icon;
+  },
 };
 
 /**
@@ -97,8 +97,8 @@ export class View {
   root;
 
   /**
-   * 
-   * @param {HTMLElement|string} parent 
+   *
+   * @param {HTMLElement|string} parent
    */
   constructor(parent) {
     this.parent = View.resolveParent(parent);
@@ -171,7 +171,7 @@ export class View {
 
     if (this.parent.children.length <= position) {
       // Parent doesnt have enough children to begin with, just append.
-      this.parent.appendChild(this.root)
+      this.parent.appendChild(this.root);
     } else {
       this.parent.insertBefore(this.root, this.parent.children[position]);
     }
@@ -226,8 +226,8 @@ export class View {
   }
 
   /**
-   * 
-   * @param {HTMLElement} parent 
+   *
+   * @param {HTMLElement} parent
    */
   static removeChildrend(parent) {
     while (parent.lastChild) parent.removeChild(parent.lastChild);
@@ -236,44 +236,43 @@ export class View {
 
 export class ExpandableView extends View {
   /** @type {HTMLDivElement} */
-  contentRoot
+  contentRoot;
 
   constructor(parent, header) {
-    super(parent)
-    this.#build(header)
+    super(parent);
+    this.#build(header);
     this.active = false;
   }
 
   /**
-   * 
-   * @param {string} text 
+   *
+   * @param {string} text
    */
   #build(text) {
     this.root = View.element('div', __css('card-content-item'));
 
-    const headerWrapper = View.element('div', __css('header-w-icon', 'click'), this.root)
+    const headerWrapper = View.element('div', __css('header-w-icon', 'click'), this.root);
     this.header = View.element('h4', __css(), headerWrapper);
     this.header.textContent = text;
     // Rotating icon.
-    const headerIcon = __icon.plain(__icon.type.DOWN_ARROW, __icon.size.SMALL, __css('icon-rotateable'))
+    const headerIcon = __icon.plain(
+      __icon.type.DOWN_ARROW,
+      __icon.size.SMALL,
+      __css('icon-rotateable')
+    );
     headerWrapper.appendChild(headerIcon);
 
     // View contents are mounted to this.
     this.contentRoot = View.element('div', __css('expandable-content'));
-    
+
     // Rotate animation and content display.
     headerWrapper.addEventListener('click', () => {
       headerIcon.classList.toggle('icon-rotate');
-      if (this.active) 
-        this.root.removeChild(this.contentRoot)
-      else
-        this.root.appendChild(this.contentRoot);
+      if (this.active) this.root.removeChild(this.contentRoot);
+      else this.root.appendChild(this.contentRoot);
       this.active = !this.active;
-    })
+    });
   }
 }
 
-export { 
-  __icon as icon,
-  __css as css 
-};
+export { __icon as icon, __css as css };

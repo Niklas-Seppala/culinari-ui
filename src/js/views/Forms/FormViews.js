@@ -74,13 +74,12 @@ class FormView extends PopupView {
       this.form.getElementsByClassName('validation-error')
     );
 
-    for (let i = 0; i < errors.length; i++)
-      this.form.removeChild(errors[i]);
+    for (let i = 0; i < errors.length; i++) this.form.removeChild(errors[i]);
   }
 
   /**
    * Renders validation errors to the form element.
-   * 
+   *
    * @param {ValidationResult} validation
    */
   #rederValidationErrors(validation) {

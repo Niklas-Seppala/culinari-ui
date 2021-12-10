@@ -61,7 +61,8 @@ button {
   flex-direction: column;
 }
 
-p, td {
+p,
+td {
   font-size: 0.9rem;
 }
 
@@ -74,12 +75,13 @@ td {
   display: none !important;
 }
 
-ul, ol {
+ul,
+ol {
   margin: 0;
-} 
+}
 
 ol {
-  padding-left: .5rem;
+  padding-left: 0.5rem;
 }
 
 ol li {

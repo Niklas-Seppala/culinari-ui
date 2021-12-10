@@ -135,13 +135,13 @@ textarea {
 
 .validation-error {
   background-color: rgba(235, 102, 79, 0.226);
-  font-size: .8rem;
+  font-size: 0.8rem;
   text-align: center;
   align-self: stretch;
-  margin: 0 0 .5rem 0;
+  margin: 0 0 0.5rem 0;
   border: 1px solid rgb(238, 65, 35);
-  border-radius: .3rem;
-  padding: .3rem;
+  border-radius: 0.3rem;
+  padding: 0.3rem;
   box-shadow: var(--white-shadow);
 }
 
@@ -162,13 +162,13 @@ form.leave-comment {
   box-shadow: none;
   flex-grow: 1;
   margin-bottom: 0;
-  font-size: .9rem;
-  padding: .4rem;
+  font-size: 0.9rem;
+  padding: 0.4rem;
   border-right: 1px solid var(--white-border);
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
 .post-comment-btn {
-  padding: .7rem;
+  padding: 0.7rem;
 }

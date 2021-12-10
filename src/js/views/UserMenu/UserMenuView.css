@@ -21,16 +21,13 @@
   margin-top: 0.3rem;
 }
 
-.menu-item span {
-  white-space: nowrap;
-}
-
 .menu-btn {
   display: flex;
   align-items: center;
   transition: margin-left 0.2s ease;
   user-select: none;
   cursor: pointer;
+  padding: .4rem 0 .4rem 0;
 }
 
 .menu-btn:hover {
@@ -56,6 +53,10 @@
   font-size: 0.8rem;
   display: flex;
   align-items: center;
+}
+
+.stat {
+  margin: .4rem 0 .4rem 0
 }
 
 #avatar {

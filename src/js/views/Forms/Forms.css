@@ -144,3 +144,31 @@ textarea {
   padding: .3rem;
   box-shadow: var(--white-shadow);
 }
+
+form.leave-comment {
+  display: flex;
+  padding: 0;
+  justify-content: stretch;
+  justify-self: stretch;
+  overflow: hidden;
+  flex-direction: row;
+  border-radius: 0.3rem;
+  border: 1px solid var(--white-border);
+}
+
+.leave-comment textarea {
+  text-align: unset;
+  border: none;
+  box-shadow: none;
+  flex-grow: 1;
+  margin-bottom: 0;
+  font-size: .9rem;
+  padding: .4rem;
+  border-right: 1px solid var(--white-border);
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.post-comment-btn {
+  padding: .7rem;
+}

@@ -3,9 +3,10 @@ import { UserMenuView } from './views/UserMenu/UserMenuView';
 import { SearchView } from './views/Search/SearchView';
 import { LoadingView } from './views/Loading/LoadingView';
 import { RecipePostView } from './views/RecipePost/RecipePostView';
-import { RecipeFormView } from './views/Forms/FormViews';
+import { LoginFormView, RecipeFormView, RegisterFormView } from './views/Forms/FormViews';
 import { FlashView } from './views/Flash/FlashView';
 import swipe from './modules/swipe';
+import user from './modules/user';
 
 // MOCK DATA
 import { recipes } from './mock/recipes';
@@ -17,29 +18,79 @@ const main = () => {
 
   const forms = {
     recipe: new RecipeFormView('main').on.submit(fields => {
+      console.log(fields)
       flash
         .render({ message: 'Not yet implemented', type: 'error', duration: 3000 })
         .attach();
       forms.recipe.detach();
     }),
+
+    login: new LoginFormView('main').on.submit(fields => {
+      console.log(fields)
+      flash
+        .render({ message: 'Not yet implemented', type: 'error', duration: 3000 })
+        .attach();
+      forms.login.detach();
+    }),
+
+    register: new RegisterFormView('main').on.submit(async fields => {
+      console.log(fields)
+      const url = 'http://127.0.0.1:3000/auth/register';
+      
+      const fetchOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fields)
+      }
+
+      const response = await fetch(url, fetchOptions)
+      const json = await response.json();
+      console.log(json);
+
+      console.log(response.status)
+      if (response.status === 200) {
+        flash
+          .render({ message: 'Success', type: 'success', duration: 3000 })
+          .attach();
+        forms.register.detach();
+      }
+    }),
   };
 
-  const userMenu = new UserMenuView('main');
-  userMenu.profile.render({
-    username: 'Test User',
-    avatar: './img/def-profile.png',
-    likes: 6,
-    comments: 12,
-    forks: 16,
-  });
-  userMenu.detach();
+  user.loadCurrent();
+
+  const userMenu = new UserMenuView('main').detach();
+  const u = user.getUser();
+  if (u) {
+    console.log(u)
+    userMenu.profile.render(u)
+  } else {
+    userMenu.logged.detach();
+  }
+
+  // userMenu.profile.render({
+  //   username: 'Test User',
+  //   avatar: './img/def-profile.png',
+  //   likes: 6,
+  //   comments: 12,
+  //   forks: 16,
+  // });
+
+
   // Detach anonymous part from user menu.
-  userMenu.anonymous.detach();
+  // userMenu.anonymous.detach();
 
   // Menu click events.
-  userMenu.anonymous.on.aboutClicked(e => console.log('about'));
-  userMenu.anonymous.on.loginClicked(e => console.log('login'));
-  userMenu.anonymous.on.registerClicked(e => console.log('register'));
+  userMenu.anonymous.on.aboutClicked(() => console.log('about'));
+  userMenu.anonymous.on.loginClicked(() => {
+    forms.login.attach();
+  });
+  userMenu.anonymous.on.registerClicked(() => {
+    forms.register.attach()
+  });
+  
   userMenu.logged.on.logoutClicked(e => console.log('logout'));
   userMenu.logged.on.myRecipesClicked(e => console.log('my recipes'));
   userMenu.logged.on.newRecipeClicked(e => {

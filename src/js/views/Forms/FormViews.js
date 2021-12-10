@@ -75,7 +75,7 @@ export class RegisterFormView extends FormView {
       username: this.username.value,
       email: this.email.value,
       password: this.password.value,
-      password2: this.password2.value,
+      confirm: this.confirm.value,
     };
   }
 
@@ -84,13 +84,13 @@ export class RegisterFormView extends FormView {
     this.username = input('text', 'username', '', 'Username');
     this.email = input('email', 'email', '', 'Email');
     this.password = input('password', 'password', '', 'Password');
-    this.password2 = input('password', 'password2', '', 'Password Again');
+    this.confirm = input('password', 'confirm', '', 'Password Again');
     this.submitBtn = input('submit', 'submit', '', 'Register');
 
     this.form.appendChild(this.username);
     this.form.appendChild(this.email);
     this.form.appendChild(this.password);
-    this.form.appendChild(this.password2);
+    this.form.appendChild(this.confirm);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 

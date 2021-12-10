@@ -63,9 +63,9 @@ const main = () => {
     validator: dist => dist.x > 80 && dist.y < 50,
   });
 
-  // Append these Views normally to 'main'.
-  new RecipePostView('main').attach().render(recipes[0]);
-  new RecipePostView('main').attach().render(recipes[0]);
+  recipes.forEach(recipe => {
+  new RecipePostView('main').attach().render(recipe);
+  })
 };
 
 window.onload = main;

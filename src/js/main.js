@@ -25,7 +25,7 @@ const main = () => {
   const userMenu = new UserMenuView('main');
   userMenu.profile.render({
     username: 'Test User',
-    avatar: '../img/def-profile.png',
+    avatar: './img/def-profile.png',
     likes: 6,
     comments: 12,
     forks: 16,

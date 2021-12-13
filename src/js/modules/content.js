@@ -3,6 +3,7 @@ import { FlashView } from '../views/Flash/FlashView';
 import { LoadingView } from '../views/Loading/LoadingView';
 import { css, View } from '../views/View';
 import { SearchView } from '../views/Search/SearchView';
+import { AboutView } from '../views/About/AboutVIew';
 
 /**
  * @type {{
@@ -12,6 +13,7 @@ import { SearchView } from '../views/Search/SearchView';
     loading: LoadingView,
     search: SearchView,
     flash: FlashView,
+    about: AboutView
   }}
  */
 let __views = undefined;
@@ -52,6 +54,7 @@ const components = () => {
     loading: new LoadingView('main'),
     search: new SearchView('main'),
     flash: new FlashView('main'),
+    about: new AboutView('main')
   };
   return __views;
 };

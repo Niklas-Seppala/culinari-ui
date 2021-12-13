@@ -9,7 +9,7 @@ import { recipes } from './mock/recipes';
 
 const main = async () => {
   const forms = formsModule.components();
-  const { menu, nav, browser, flash, loading, search } = content.components();
+  const { menu, nav, browser, flash, loading, about, search } = content.components();
   const { userMenu } = user.components();
 
   //*****************************************/
@@ -51,7 +51,8 @@ const main = async () => {
 
   // ANONYMOUS USER MENU EVENTS
   userMenu.anonymous.on.aboutClicked(() => {
-    console.log('about page');
+    about.attach();
+    userMenu.detach();
   });
   userMenu.anonymous.on.loginClicked(() => {
     userMenu.detach();

@@ -1,10 +1,10 @@
 :root {
-  --flash-error: rgba(253, 170, 155, 0.9);
+  --flash-error: rgba(248, 182, 170, 0.9);
   --flash-success: rgba(203, 241, 137, 0.9);
 }
 
 .flash-msg {
-  z-index: 20;
+  z-index: 40;
   width: 100%;
   box-shadow: var(--white-shadow-raised);
   position: fixed;
@@ -12,7 +12,8 @@
   justify-content: space-between;
   align-items: center;
   border: 1px solid var(--font-on-light);
-  color: black;
+  color: rgb(17, 17, 17);
+  padding: .2rem;
 }
 
 .success {
@@ -23,7 +24,7 @@
 }
 
 .flash-msg .msg-content {
-  font-size: 1rem;
+  font-size: .9rem;
   margin: 0.2rem;
   text-align: center;
 }

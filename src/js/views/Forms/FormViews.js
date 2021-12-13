@@ -151,7 +151,7 @@ export class RecipeFormView extends FormView {
   get formData() {
     const result = {
       name: this.name.value,
-      summary: this.summary.value,
+      desc: this.desc.value,
       instructions: [],
       ingredients: [],
       files: this.files.files.files,
@@ -160,9 +160,16 @@ export class RecipeFormView extends FormView {
     for (let i = 0; i < this.form.children.length; i++) {
       const inpt = this.form.children[i];
       if (inpt.name?.startsWith('instruction') && inpt.value) {
-        result.instructions.push(inpt.value);
+        result.instructions.push({
+          content: inpt.value,
+          order: result.instructions.length
+        });
       } else if (inpt.name?.startsWith('ingredient') && inpt.value) {
-        result.ingredients.push(inpt.value);
+
+        result.ingredients.push({
+          name: inpt.value,
+          order: result.ingredients.length
+        });
       }
     }
     return result;
@@ -171,14 +178,14 @@ export class RecipeFormView extends FormView {
   #build() {
     this.form = View.element('form');
     this.name = input('text', 'name', '', 'Name');
-    this.summary = input('textarea', 'summary', '', 'Summary');
+    this.desc = input('textarea', 'desc', '', 'Summary');
     this.instructions = multiInput('text', 'instruction', '', 'Instruction', '', 0);
     this.ingredients = multiInput('text', 'ingredients', '', 'Ingredient', '', 0);
     this.files = fileInput('foodImg', '', 'image/*', 'Image');
     this.submitBtn = input('submit', 'submit', '', 'Log In');
 
     this.form.appendChild(this.name);
-    this.form.appendChild(this.summary);
+    this.form.appendChild(this.desc);
     this.form.appendChild(this.instructions);
     this.form.appendChild(this.ingredients);
     this.form.appendChild(this.files);

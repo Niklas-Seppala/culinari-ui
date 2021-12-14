@@ -100,6 +100,7 @@ const main = async () => {
       if (login.ok) {
         // Store user to local storage/user module
         user.store(json);
+        
         // Update and open user menu
         userMenu.anonymous.detach();
         userMenu.profile.render(user.getUser());

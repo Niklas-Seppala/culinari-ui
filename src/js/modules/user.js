@@ -15,6 +15,8 @@ const loadStorage = () => {
 };
 
 const store = (user) => {
+  user.commentCount = user.recipes.reduce((a, b) => (b.comment.length || 0) + a, 0)
+  user.forkCount = user.recipes.reduce((a,b) => (b.forked_from ? 1 : 0  + a), 0)
   localStorage.setItem('user', JSON.stringify(user));
   __user = user
 }

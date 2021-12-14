@@ -35,15 +35,20 @@ class ContentBrowser {
 
   loadRecipes(recipes) {
     const USER = user.getUser();
-    this.recipes = recipes;
-    this.recipes
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-      .forEach(recipe => {
-        const post = new RecipePostView(this.latest).render(recipe).attach();
+    if (recipes) this.recipes = recipes;
 
-        post.on.comment(async data => {
+    while(this.latest.lastChild) this.latest.removeChild(this.latest.lastChild);
+
+    this.recipes
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .forEach(recipe => {
+        const post = new RecipePostView(this.latest).render(recipe).attach();
+        post.on.comment(async () => {
           const token = user.getUser().token;
-          const req = await fetch(api.ROUTES.COMMENT.POST, api.METHODS.POST(data, token));
+          const req = await fetch(api.ROUTES.COMMENT.POST, api.METHODS.POST({
+            text: post.details.commentText.value,
+            recipe: recipe.id,
+          }, token));
           const json = await req.json();
           recipe.comment.push(json);
           post.render(recipe);

@@ -4,6 +4,20 @@ import formsModule from './modules/forms';
 import content from './modules/content';
 import api from './modules/api';
 
+const loadRecipes = async (browser) => {
+  const resp = await fetch(api.ROUTES.RECIPE.ALL);
+  const data = await resp.json();
+  if (resp.ok) {
+    console.log(data);
+    data.forEach(item => {
+      item.picture = [
+        'https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg',
+      ];
+    });
+  }
+  browser.loadRecipes(data);
+};
+
 // MOCK DATA
 import { recipes, apiRecipe } from './mock/recipes';
 
@@ -12,11 +26,10 @@ const main = async () => {
   const { menu, nav, browser, flash, loading, search } = content.components();
   const { userMenu } = user.components();
 
-
   //*****************************************/
   //**********    LOAD API DATA  ************/
   //*****************************************/
-  await user.fetch(api.ROUTES.USER.ALL);
+  const asd = await user.fetch(api.ROUTES.USER.ALL);
 
   //*****************************************/
   //**********    MAIN MENU    **************/
@@ -47,7 +60,7 @@ const main = async () => {
   {
     // If user is loaded, reflect this in user menu.
     if (user.loadStorage()) {
-      console.log(user.getUser())
+      console.log(user.getUser());
       userMenu.profile.render(user.getUser());
       userMenu.anonymous.detach();
     } else {
@@ -73,14 +86,17 @@ const main = async () => {
     user.dispose();
     userMenu.logged.detach();
     userMenu.anonymous.attach();
-    flash.render({ message: 'You are now logged out', type: 'success', duration: 3000 }).attach();
+    flash
+      .render({ message: 'You are now logged out', type: 'success', duration: 3000 })
+      .attach();
     userMenu.detach();
+    browser.loadRecipes();
   });
   userMenu.logged.on.myRecipesClicked(() => {
     console.log('my recipes');
   });
   userMenu.logged.on.newRecipeClicked(() => {
-    // userMenu.detach();
+    userMenu.detach();
     forms.recipe.attach();
   });
 
@@ -111,6 +127,8 @@ const main = async () => {
         userMenu.anonymous.detach();
         userMenu.profile.render(user.getUser());
         userMenu.logged.attach();
+        browser.loadRecipes();
+        console.log(user.getUser());
 
         flash
           .render({ message: `Welcome, ${json.name}`, type: 'success', duration: 4000 })
@@ -156,17 +174,22 @@ const main = async () => {
   //**********    Fetch Recipes   ***********/
   //*****************************************/
   {
-    // STATIC DEV MOCK DATA
-    const resp = await fetch(api.ROUTES.RECIPE.ALL)
-    const data = await resp.json()
-    if (resp.ok) {
-      console.log(data)
-      data.forEach(item => {
-        item.picture = ['https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg']
-      })
-    }
-    browser.loadRecipes(data)
-  }
+    // const resp = await fetch(api.ROUTES.RECIPE.ALL);
+    // const data = await resp.json();
+    // if (resp.ok) {
+    //   console.log(data);
+    //   data.forEach(item => {
+    //     item.picture = [
+    //       'https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg',
+    //     ];
+    //   });
+    // }
+    // browser.loadRecipes(data);
+  // }
+  
+  await loadRecipes(browser);
+}
+
 };
 
 window.onload = main;

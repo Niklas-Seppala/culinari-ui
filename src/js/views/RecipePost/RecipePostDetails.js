@@ -112,7 +112,7 @@ export class RecipePostDetails extends View {
 
         // Comment likes.
         const likes = icon.labeled(
-          comment.commentLike.find(item => item.user_id === USER.id)
+          comment.commentLike.find(item => item.user_id === USER?.id)
             ? icon.type.LIKE_ACTIVE
             : icon.type.LIKE,
           icon.size.SMALL,
@@ -180,11 +180,6 @@ export class RecipePostDetails extends View {
       this.comments.contentRoot.appendChild(commentContainer);
     }
   }
-
-  on = {
-    comment: post =>
-      this.postComment.addEventListener('click', post(this.commentText.textContent)),
-  };
 
   #build() {
     this.root = View.element('div', null);

@@ -49,12 +49,11 @@ const components = () => {
 
 const __fetch = async (route) => {
   const response = await fetch(route);
-  __users = {... await response.json()};
-  for (const key in __users) {
-      const element = __users[key];
-      __users[element.id] = element
-      delete __users[key]
-  }
+  __users = {};
+  const temp = await response.json();
+  temp.forEach(usr => {
+    __users[usr.id] = usr;
+  })
   return __users
 }
 

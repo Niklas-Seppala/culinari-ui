@@ -75,10 +75,8 @@ export class RecipePostView extends View {
      */
     comment: postComment => {
       this.details.postComment.addEventListener('click', () => {
-        postComment({
-          text: this.details.commentText.value,
-          recipe: this.state.id,
-        });
+        postComment();
+        this.details.commentText.value = '';
       });
       return this;
     },

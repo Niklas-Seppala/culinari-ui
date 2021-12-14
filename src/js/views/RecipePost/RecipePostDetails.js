@@ -1,6 +1,7 @@
 import { View, ExpandableView, css, icon } from '../View';
 import { input } from '../Forms/inputs';
 import user from '../../modules/user';
+import api from '../../modules/api';
 
 /**
  * SubView of RecipePostView of the extended content:
@@ -92,7 +93,7 @@ export class RecipePostDetails extends View {
    *  timestamp: string,
    *  content:string,
    *  author: string,
-   *  likes: number}]}} state
+   *  commentLike: number}]}} state
    */
   #renderComments(state) {
     // Remove previous comments
@@ -103,6 +104,7 @@ export class RecipePostDetails extends View {
     if (state) {
       // A node to facilitate all of the comments.
       const commentContainer = View.element('div', null);
+      const USER = user.getUser();
 
       const now = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000;
       state.comment.forEach(comment => {
@@ -110,11 +112,47 @@ export class RecipePostDetails extends View {
 
         // Comment likes.
         const likes = icon.labeled(
-          icon.type.LIKE,
+          comment.commentLike.find(item => item.user_id === USER.id)
+            ? icon.type.LIKE_ACTIVE
+            : icon.type.LIKE,
           icon.size.SMALL,
           css('icon-hover', 'icon-vert')
         );
-        likes.label.textContent = comment.likes || 0;
+        likes.label.textContent = comment.commentLike.length;
+
+        likes.root.addEventListener('click', async () => {
+          if (!user.getUser()) return
+          try {
+            const USER = user.getUser();
+            let response = await fetch(
+              api.ROUTES.COMMENT.LIKE(comment.id),
+              api.METHODS.POST({}, USER.token)
+            );
+            const newLike = await response.json();
+            if (response.ok) {
+              likes.root.getElementsByTagName('img').item(0).src = icon.newSrc(
+                icon.type.LIKE_ACTIVE
+              );
+              comment.commentLike.push(newLike);
+              likes.label.textContent = comment.commentLike.length;
+            } else {
+              response = await fetch(
+                api.ROUTES.COMMENT.LIKE(comment.id),
+                api.METHODS.DELETE({}, USER.token)
+              );
+              if (response.ok) {
+                likes.root.getElementsByTagName('img').item(0).src = icon.newSrc(
+                  icon.type.LIKE
+                );
+                comment.commentLike = comment.commentLike.filter(
+                  like => like.user_id != USER.id
+                );
+                likes.label.textContent = comment.commentLike.length;
+              }
+            }
+          } catch (error) {}
+        });
+
         root.appendChild(likes.root);
 
         // Comment author and time.
@@ -127,8 +165,8 @@ export class RecipePostDetails extends View {
         // TODO: EXTRACT LATER
         const timeDiff = new Date(now - new Date(comment.createdAt).getTime());
         const h = timeDiff.getHours();
-        const hourStr = `${h !== 0 ? h : ''} ${timeDiff.getHours() !== 0 ? 'h' : ''}`;
-        const timeStr = `${hourStr || ''} ${timeDiff.getMinutes()}min`;
+        const hourStr = `${h !== 0 ? h : ''} ${timeDiff.getHours() !== 0 ? ' h' : ''}`;
+        const timeStr = `${hourStr || ''} ${timeDiff.getMinutes()} min`;
         date.textContent = timeStr;
 
         // Comment text content.
@@ -158,7 +196,11 @@ export class RecipePostDetails extends View {
     this.comments = new ExpandableView(this.root, 'Comments').attach();
 
     // Post new comment form.
-    const commentForm = View.element('form', css('leave-comment'), this.comments.contentRoot);
+    const commentForm = View.element(
+      'form',
+      css('leave-comment'),
+      this.comments.contentRoot
+    );
     this.commentText = input('textarea', 'submit-comment', null, 'Leave a Comment');
     commentForm.appendChild(this.commentText);
     this.postComment = icon.plain(

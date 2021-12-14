@@ -1,3 +1,4 @@
+import user from '../../modules/user';
 import { View, icon, css } from '../View';
 
 /**
@@ -27,9 +28,15 @@ export class RecipePostPanelView extends View {
   }
 
   render(state) {
+    const USER = user.getUser();
     if (state) this.state = state;
     if (this.state) {
-      this.likes.label.textContent = this.state.likes || 0;
+      this.likes.label.textContent = this.state.like.length || 0;
+      this.likes.root.getElementsByTagName('img').item(0).src = this.state.like.find(
+        item => item.user_id === USER?.id
+      )
+        ? icon.src[icon.type.LIKE_ACTIVE][0]
+        : icon.src[icon.type.LIKE][0];
       this.comments.label.textContent = this.state.comments;
       this.forks.label.textContent = this.state.forks;
       this.name.textContent = this.state.name;

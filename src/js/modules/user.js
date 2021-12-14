@@ -1,7 +1,15 @@
 import { UserMenuView } from '../views/UserMenu/UserMenuView';
 
 /**
- * @type {}
+ * @type {{
+ *  token: string,
+ *  name: string,
+ *  commentCount: number,
+ *  id: number,
+ *  role: number,
+ *  score: number,
+ *  recipes: []
+ * }}
  */
  let __user = undefined;
 

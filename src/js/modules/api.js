@@ -11,12 +11,15 @@ const ROUTES = {
   },
   RECIPE: {
     ALL: `${BASE_URL}/recipe`,
-    SINGLE: (id) => `${BASE_URL}/comment/${id}`
+    POST: `${BASE_URL}/recipe`,
+    SINGLE: (id) => `${BASE_URL}/recipe/${id}`,
+    LIKE: (id) => `${BASE_URL}/recipe/${id}/like`,
   },
   COMMENT: {
     ALL: `${BASE_URL}/comment`,
-    SINGLE: (id) => `${BASE_URL}/comment/${id}`,
     POST: `${BASE_URL}/comment`,
+    SINGLE: (id) => `${BASE_URL}/comment/${id}`,
+    LIKE: (id) => `${BASE_URL}/comment/${id}/like`,
   }
 };
 
@@ -30,6 +33,16 @@ const METHODS = {
       },
       body: JSON.stringify(body),
     };
+  },
+  DELETE: (body, auth) => {
+    return {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: "Bearer " + auth,
+      },
+      body: JSON.stringify(body)
+    }
   },
   GET: {
     method: 'GET',

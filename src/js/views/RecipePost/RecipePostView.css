@@ -91,7 +91,6 @@
 .comment-date {
   color: var(--font-phased);
   font-size: 0.8rem;
-  font-style: italic;
 }
 
 .comment-auth-text-date {

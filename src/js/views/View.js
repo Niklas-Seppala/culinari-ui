@@ -20,6 +20,7 @@ const __icon = {
     DOWN_ARROW: 7,
     POST: 8,
     SEND: 9,
+    LIKE_ACTIVE: 10
   },
   src: [
     ['./icons/heart.png', 'like'],
@@ -32,6 +33,7 @@ const __icon = {
     ['./icons/down.png', 'down'],
     ['./icons/post.png', 'post'],
     ['./icons/send.png', 'send'],
+    ['./icons/heart-filled.png', 'like-active'],
   ],
   size: {
     SMALL: 'icon-small',
@@ -39,6 +41,10 @@ const __icon = {
     MEDIUM: 'icon-medium',
     LARGE: 'icon-large',
     HUGE: 'icon-huge',
+  },
+
+  newSrc: (type) => {
+    return __icon.src[type][0]
   },
 
   /**

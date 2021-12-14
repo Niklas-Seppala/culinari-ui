@@ -162,3 +162,55 @@ export const recipes = [
       'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient.',
   },
 ];
+
+
+export const apiRecipe = [
+  {
+    "id": 1,
+    "name": "Gabbage Stew - 1.0",
+    "desc": "Delicios peasant food from natures very own treasures: Gabbages",
+    "owner_id": 1,
+    "forked_from": null,
+    "picture": [
+      "https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg"
+    ],
+    "ingredient": [
+      {
+        "id": 1,
+        "name": "Gabbage",
+        "unit": "kg",
+        "amount": 5.2
+      },
+      {
+        "id": 2,
+        "name": "Ground Pork",
+        "unit": "kg",
+        "amount": 5.2
+      }
+    ],
+    "step": [
+      {
+        "id": 1,
+        "content": "Boil the gabbage ",
+        "order": 0
+      },
+      {
+        "id": 2,
+        "content": "Boil the gabbage add pork",
+        "order": 1
+      },
+      {
+        "id": 3,
+        "content": "Profit",
+        "order": 2
+      }
+    ],
+    "comment": [
+      {
+        "text": "Nice recipe :)",
+        "author_id": 1,
+        "createdAt": "2021-12-14T07:32:03.000Z"
+      }
+    ]
+  }
+]

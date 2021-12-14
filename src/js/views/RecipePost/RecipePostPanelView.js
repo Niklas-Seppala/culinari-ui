@@ -29,7 +29,7 @@ export class RecipePostPanelView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      this.likes.label.textContent = this.state.likes;
+      this.likes.label.textContent = this.state.likes || 0;
       this.comments.label.textContent = this.state.comments;
       this.forks.label.textContent = this.state.forks;
       this.name.textContent = this.state.name;

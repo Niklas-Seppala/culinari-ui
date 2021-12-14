@@ -2,6 +2,7 @@ import './RecipePostView.css';
 import { View, css } from '../View';
 import { RecipePostPanelView } from './RecipePostPanelView';
 import { RecipePostDetails } from './RecipePostDetails';
+import user from '../../modules/user';
 
 /**
  * View for users' recipe posts.
@@ -15,16 +16,15 @@ export class RecipePostView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      this.image.src = this.state.image;
+      this.image.src = this.state.picture[0];
       this.panel.render({
-        author: this.state.author,
+        author: user.getUsers()[this.state.owner_id].name,
         name: this.state.name,
         likes: this.state.likes,
-        comments: this.state.comments.length,
-        forks: this.state.forks,
+        comments: this.state.comment.length,
+        forks: this.state.forks || 0,
       });
-      this.summary.textContent = this.state.summary;
-
+      this.summary.textContent = this.state.desc;
       this.details.render(this.state);
     }
     return this;
@@ -43,6 +43,19 @@ export class RecipePostView extends View {
 
     /** @param {(e: Event) => void} cb */
     expandClicked: listener => this.delegate('click', listener, this.expBtn),
+
+    /**
+     * @param {{(recipe: number) => void}} postComment 
+     */
+     comment: (postComment) => {
+      this.details.postComment.addEventListener('click', () => {
+        postComment({
+          text: this.details.commentText.value,
+          recipe: this.state.id,
+        });
+      })
+      return this;
+    }
   };
 
   #build() {
@@ -54,6 +67,6 @@ export class RecipePostView extends View {
     this.panel = new RecipePostPanelView(this).attach();
     this.summary = View.element('p', css('card-content-item'), this.root);
 
-    this.details = new RecipePostDetails(this.root).attach();
+    this.details = new RecipePostDetails(this).attach();
   }
 }

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:3000';
+const BASE_URL = 'https://127.0.0.1:8000';
 
 const ROUTES = {
   AUTH: {
@@ -8,15 +8,25 @@ const ROUTES = {
   USER: {
     ALL: `${BASE_URL}/user`,
     SINGLE: (id) => `${BASE_URL}/user/${id}`
+  },
+  RECIPE: {
+    ALL: `${BASE_URL}/recipe`,
+    SINGLE: (id) => `${BASE_URL}/comment/${id}`
+  },
+  COMMENT: {
+    ALL: `${BASE_URL}/comment`,
+    SINGLE: (id) => `${BASE_URL}/comment/${id}`,
+    POST: `${BASE_URL}/comment`,
   }
 };
 
 const METHODS = {
-  POST: body => {
+  POST: (body, auth) => {
     return {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: "Bearer " + auth,
       },
       body: JSON.stringify(body),
     };

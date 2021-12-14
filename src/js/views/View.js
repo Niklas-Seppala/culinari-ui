@@ -255,23 +255,25 @@ export class ExpandableView extends View {
     this.header = View.element('h4', __css(), headerWrapper);
     this.header.textContent = text;
     // Rotating icon.
-    const headerIcon = __icon.plain(
+    this.headerIcon = __icon.plain(
       __icon.type.DOWN_ARROW,
       __icon.size.SMALL,
       __css('icon-rotateable')
     );
-    headerWrapper.appendChild(headerIcon);
+    headerWrapper.appendChild(this.headerIcon);
 
     // View contents are mounted to this.
     this.contentRoot = View.element('div', __css('expandable-content'));
 
     // Rotate animation and content display.
-    headerWrapper.addEventListener('click', () => {
-      headerIcon.classList.toggle('icon-rotate');
-      if (this.active) this.root.removeChild(this.contentRoot);
-      else this.root.appendChild(this.contentRoot);
-      this.active = !this.active;
-    });
+    headerWrapper.addEventListener('click', () => this.toggle());
+  }
+
+  toggle() {
+    this.headerIcon.classList.toggle('icon-rotate');
+    if (this.active) this.root.removeChild(this.contentRoot);
+    else this.root.appendChild(this.contentRoot);
+    this.active = !this.active;
   }
 }
 

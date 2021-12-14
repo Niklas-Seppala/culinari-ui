@@ -3,6 +3,9 @@ import { FlashView } from '../views/Flash/FlashView';
 import { LoadingView } from '../views/Loading/LoadingView';
 import { css, View } from '../views/View';
 import { SearchView } from '../views/Search/SearchView';
+import { RecipePostView } from '../views/RecipePost/RecipePostView';
+import api from './api';
+import user from './user';
 
 /**
  * @type {{
@@ -21,10 +24,35 @@ class ContentBrowser {
    * @param {ContentNavView} contentNav
    */
   constructor(contentNav) {
-    this.contents = View.element('div', css('content-page'));
-    View.resolveParent('main').appendChild(this.contents);
+    this.latest = View.element('div'); //css('content-page')
+    View.resolveParent('main').appendChild(this.latest);
+
     this.nav = contentNav;
     this.lastViewIndex = 2;
+  }
+
+  loadRecipes(recipes) {
+    this.recipes = recipes;
+    this.recipes
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      .forEach(recipe => {
+        const post = new RecipePostView(this.latest)
+          .render(recipe)
+          .attach()
+          .on.comment(async data => {
+            const token = user.getUser().token;
+            const req = await fetch(
+              api.ROUTES.COMMENT.POST,
+              api.METHODS.POST(data, token)
+            );
+            const json = await req.json();
+            recipe.comment.push(json);
+            post.render(recipe);
+          })
+          .on.commentClicked(() => {
+            post.details.comments.toggle();
+          });
+      });
   }
 
   changeContentByIndex(index) {

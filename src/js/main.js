@@ -5,12 +5,18 @@ import content from './modules/content';
 import api from './modules/api';
 
 // MOCK DATA
-import { recipes } from './mock/recipes';
+import { recipes, apiRecipe } from './mock/recipes';
 
 const main = async () => {
   const forms = formsModule.components();
   const { menu, nav, browser, flash, loading, search } = content.components();
   const { userMenu } = user.components();
+
+
+  //*****************************************/
+  //**********    LOAD API DATA  ************/
+  //*****************************************/
+  await user.fetch(api.ROUTES.USER.ALL);
 
   //*****************************************/
   //**********    MAIN MENU    **************/
@@ -100,7 +106,7 @@ const main = async () => {
       if (login.ok) {
         // Store user to local storage/user module
         user.store(json);
-        
+
         // Update and open user menu
         userMenu.anonymous.detach();
         userMenu.profile.render(user.getUser());
@@ -146,6 +152,21 @@ const main = async () => {
     }
   });
 
+  //*****************************************/
+  //**********    Fetch Recipes   ***********/
+  //*****************************************/
+  {
+    // STATIC DEV MOCK DATA
+    const resp = await fetch(api.ROUTES.RECIPE.ALL)
+    const data = await resp.json()
+    if (resp.ok) {
+      console.log(data)
+      data.forEach(item => {
+        item.picture = ['https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg']
+      })
+    }
+    browser.loadRecipes(data)
+  }
 };
 
 window.onload = main;

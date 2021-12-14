@@ -1,5 +1,6 @@
 import { View, ExpandableView, css, icon } from '../View';
 import { input } from '../Forms/inputs';
+import user from '../../modules/user';
 
 /**
  * SubView of RecipePostView of the extended content:
@@ -33,7 +34,7 @@ export class RecipePostDetails extends View {
   /**
    * Renders specified recipe ingredients to DOM.
    *
-   * @param {{ingredients: [{
+   * @param {{ingredient: [{
    *   content:string,
    *   unit:string,
    *   amount:number}]}} state
@@ -42,11 +43,11 @@ export class RecipePostDetails extends View {
     View.removeChildrend(this.ingredients);
     if (state) {
       const ingredientTable = View.element('table', css('list'));
-      state.ingredients.forEach(ingr => {
+      state.ingredient.forEach(ingr => {
         // Construct each ingredient / unit pair. We use table here.
         const row = View.element('tr', null, ingredientTable);
         const text = View.element('td', css('ingredient'), row);
-        text.textContent = ingr.content;
+        text.textContent = ingr.name;
 
         const amountAndUnit = View.element('td', null, row);
         amountAndUnit.textContent = `${ingr.amount} ${ingr.unit}`;
@@ -58,7 +59,7 @@ export class RecipePostDetails extends View {
   /**
    * Renders specified recipe instructions to DOM.
    *
-   * @param {{instructions: [{
+   * @param {{step: [{
    *   index: number,
    *   content: string}]}} state
    */
@@ -69,7 +70,7 @@ export class RecipePostDetails extends View {
       const instructionList = View.element('ol', css('instruction-list'));
 
       // Sort the instruction based on index field.
-      const sorted = state?.instructions.sort((a, b) => a.index - b.index);
+      const sorted = state?.step.sort((a, b) => a.order - b.order);
 
       sorted.forEach((instr, i) => {
         // Construct each instruction element.
@@ -87,7 +88,7 @@ export class RecipePostDetails extends View {
   /**
    * Renders specified recipe comments to DOM.
    *
-   * @param {{comments: [{
+   * @param {{comment: [{
    *  timestamp: string,
    *  content:string,
    *  author: string,
@@ -95,15 +96,16 @@ export class RecipePostDetails extends View {
    */
   #renderComments(state) {
     // Remove previous comments
-    while (this.comments.children.length > 1) {
-      this.comments.removeChild(this.comments.lastChild);
+    while (this.comments.contentRoot.children.length > 1) {
+      this.comments.contentRoot.removeChild(this.comments.contentRoot.lastChild);
     }
 
     if (state) {
       // A node to facilitate all of the comments.
       const commentContainer = View.element('div', null);
 
-      state.comments.forEach(comment => {
+      const now = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000;
+      state.comment.forEach(comment => {
         const root = View.element('div', css('comment', 'card'));
 
         // Comment likes.
@@ -112,28 +114,39 @@ export class RecipePostDetails extends View {
           icon.size.SMALL,
           css('icon-hover', 'icon-vert')
         );
-        likes.label.textContent = comment.likes;
+        likes.label.textContent = comment.likes || 0;
         root.appendChild(likes.root);
 
         // Comment author and time.
         const wrapper = View.element('div', css('comment-auth-text-date'), root);
         const authAndDate = View.element('div', css('auth-and-date'), wrapper);
         const author = View.element('span', css('comment-author'), authAndDate);
-        author.textContent = comment.author;
+        author.textContent = user.getUsers()[comment.author_id].name;
         const date = View.element('span', css('comment-date'), authAndDate);
-        date.textContent = comment.timestamp;
+
+        // TODO: EXTRACT LATER
+        const timeDiff = new Date(now - new Date(comment.createdAt).getTime());
+        const h = timeDiff.getHours();
+        const hourStr = `${h !== 0 ? h : ''} ${timeDiff.getHours() !== 0 ? 'h' : ''}`;
+        const timeStr = `${hourStr || ''} ${timeDiff.getMinutes()}min`;
+        date.textContent = timeStr;
 
         // Comment text content.
         const text = View.element('p', css('comment-text'), wrapper);
-        text.textContent = comment.content;
+        text.textContent = comment.text;
 
         // attach
         commentContainer.appendChild(root);
       });
       // Attach comments node to DOM
-      this.comments.appendChild(commentContainer);
+      this.comments.contentRoot.appendChild(commentContainer);
     }
   }
+
+  on = {
+    comment: post =>
+      this.postComment.addEventListener('click', post(this.commentText.textContent)),
+  };
 
   #build() {
     this.root = View.element('div', null);
@@ -142,17 +155,17 @@ export class RecipePostDetails extends View {
       this.root,
       'Instructions'
     ).attach().contentRoot;
-    this.comments = new ExpandableView(this.root, 'Comments').attach().contentRoot;
+    this.comments = new ExpandableView(this.root, 'Comments').attach();
 
     // Post new comment form.
-    const commentForm = View.element('form', css('leave-comment'), this.comments);
-    const commentText = input('textarea', 'submit-comment', null, 'Leave a Comment');
-    commentForm.appendChild(commentText);
-    const sendIcon = icon.plain(
+    const commentForm = View.element('form', css('leave-comment'), this.comments.contentRoot);
+    this.commentText = input('textarea', 'submit-comment', null, 'Leave a Comment');
+    commentForm.appendChild(this.commentText);
+    this.postComment = icon.plain(
       icon.type.POST,
       icon.size.LARGE,
       css('click', 'post-comment-btn', 'icon-hover')
     );
-    commentForm.appendChild(sendIcon);
+    commentForm.appendChild(this.postComment);
   }
 }

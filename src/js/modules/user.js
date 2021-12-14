@@ -5,6 +5,8 @@ import { UserMenuView } from '../views/UserMenu/UserMenuView';
  */
  let __user = undefined;
 
+ let __users = undefined;
+
 /**
  * 
  * @returns {boolean}
@@ -37,10 +39,25 @@ const components = () => {
   }
 }
 
+const __fetch = async (route) => {
+  const response = await fetch(route);
+  __users = {... await response.json()};
+  for (const key in __users) {
+      const element = __users[key];
+      __users[element.id] = element
+      delete __users[key]
+  }
+  return __users
+}
+
+const getUsers = () => __users
+
 export default {
   loadStorage,
   getUser,
+  getUsers,
   store,
   dispose,
-  components
+  components,
+  fetch: __fetch
 };

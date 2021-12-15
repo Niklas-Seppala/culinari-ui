@@ -4,6 +4,7 @@ import { LoadingView } from '../views/Loading/LoadingView';
 import { View } from '../views/View';
 import { SearchView } from '../views/Search/SearchView';
 import { RecipePostView } from '../views/RecipePost/RecipePostView';
+import { AboutView } from '../views/About/AboutVIew';
 import api from './api';
 import user from './user';
 
@@ -48,6 +49,7 @@ const handleCommentPost = async (post, recipe) => {
 
 const unixtime = ISO_time => new Date(ISO_time).getTime() / 1000;
 
+
 /**
  * @type {{
     menu: TopMenuView,
@@ -56,6 +58,7 @@ const unixtime = ISO_time => new Date(ISO_time).getTime() / 1000;
     loading: LoadingView,
     search: SearchView,
     flash: FlashView,
+    about: AboutView
   }}
  */
 let __views = undefined;
@@ -188,6 +191,7 @@ const components = () => {
     loading: new LoadingView('main'),
     search: new SearchView('main'),
     flash: new FlashView('main'),
+    about: new AboutView('main')
   };
   return __views;
 };

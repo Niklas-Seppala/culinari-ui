@@ -1,0 +1,21 @@
+#about {
+  padding: 1rem;
+}
+
+#about h2 {
+  margin: 0;
+  margin-left: 1rem;
+}
+
+#about-logo {
+  height: 3.5rem;
+}
+
+#about-header {
+  align-self: stretch;
+  justify-self: stretch;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--white-border);
+}

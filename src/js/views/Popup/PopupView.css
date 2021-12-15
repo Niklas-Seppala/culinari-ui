@@ -1,17 +1,18 @@
 .popup {
   position: fixed;
-  top: 5.72rem;
+  top: 6.2rem;
   background-color: var(--bg-white);
-  min-width: 330px;
-  max-width: 330px;
+  min-width: 300px;
+  max-width: 300px;
   z-index: 20;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 .popup-panel {
-  width: 100%;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid var(--white-border);
+  align-items: center;
 }
 
 .side-padding {
@@ -22,7 +23,7 @@
 
 .popup h2 {
   font-size: 1rem;
-  margin: 0rem;
+  margin: 0 0 .3rem 0;
 }
 
 .popup-close {

@@ -49,7 +49,7 @@ export class FlashView extends View {
     // Close icon on the right side.
     const right = View.element('div', css('side-padding'), this.root);
 
-    this.close = icon.plain(icon.type.CLOSE, icon.size.SMALL, css('icon-hover'));
+    this.close = icon.plain(icon.type.CLOSE, icon.size.TINY, css('icon-hover'));
     this.close.addEventListener('click', e => this.detach());
     right.appendChild(this.close);
   }

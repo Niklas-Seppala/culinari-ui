@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
+  // mode: 'production',
   entry: './src/js/main.js',
-  // mode: 'development',
+  mode: 'development',
   // entry: './src/js/main.dev.js', // Untracked
   output: {
     path: path.resolve(__dirname, 'src/dist'),
@@ -17,5 +17,5 @@ module.exports = {
       },
     ],
   },
-  // watch: true,
+  watch: true,
 };

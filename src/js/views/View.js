@@ -20,6 +20,8 @@ const __icon = {
     DOWN_ARROW: 7,
     POST: 8,
     SEND: 9,
+    LIKE_ACTIVE: 10,
+    IMAGES: 11
   },
   src: [
     ['./icons/heart.png', 'like'],
@@ -32,6 +34,8 @@ const __icon = {
     ['./icons/down.png', 'down'],
     ['./icons/post.png', 'post'],
     ['./icons/send.png', 'send'],
+    ['./icons/heart-filled.png', 'like-active'],
+    ['./icons/gallery.png', 'images'],
   ],
   size: {
     SMALL: 'icon-small',
@@ -39,6 +43,10 @@ const __icon = {
     MEDIUM: 'icon-medium',
     LARGE: 'icon-large',
     HUGE: 'icon-huge',
+  },
+
+  newSrc: (type) => {
+    return __icon.src[type][0]
   },
 
   /**
@@ -255,23 +263,25 @@ export class ExpandableView extends View {
     this.header = View.element('h4', __css(), headerWrapper);
     this.header.textContent = text;
     // Rotating icon.
-    const headerIcon = __icon.plain(
+    this.headerIcon = __icon.plain(
       __icon.type.DOWN_ARROW,
       __icon.size.SMALL,
       __css('icon-rotateable')
     );
-    headerWrapper.appendChild(headerIcon);
+    headerWrapper.appendChild(this.headerIcon);
 
     // View contents are mounted to this.
     this.contentRoot = View.element('div', __css('expandable-content'));
 
     // Rotate animation and content display.
-    headerWrapper.addEventListener('click', () => {
-      headerIcon.classList.toggle('icon-rotate');
-      if (this.active) this.root.removeChild(this.contentRoot);
-      else this.root.appendChild(this.contentRoot);
-      this.active = !this.active;
-    });
+    headerWrapper.addEventListener('click', () => this.toggle());
+  }
+
+  toggle() {
+    this.headerIcon.classList.toggle('icon-rotate');
+    if (this.active) this.root.removeChild(this.contentRoot);
+    else this.root.appendChild(this.contentRoot);
+    this.active = !this.active;
   }
 }
 

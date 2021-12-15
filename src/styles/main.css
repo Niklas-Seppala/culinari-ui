@@ -11,7 +11,7 @@
 }
 
 html {
-  font-family: /* DEV */ Arial, Helvetica, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   font-size: 16px;
   height: 100vh;
   background-color: var(--bg-white);
@@ -25,7 +25,7 @@ body {
   display: flex;
   align-items: center;
   background-color: var(--bg-white);
-  height: 100%;
+  min-height: 100%;
 }
 
 .body-stretch {
@@ -104,7 +104,7 @@ ol li {
 
 .content-page {
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 
 .fade-in {
@@ -112,4 +112,18 @@ ol li {
 }
 .fade-out {
   opacity: 0;
+}
+
+@media only screen and (min-width: 600px) {
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-white);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(38, 39, 39, 0.514);
+    border-radius: 1rem;
+  }
 }

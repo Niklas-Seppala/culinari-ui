@@ -1,72 +1,118 @@
-import { ContentNavView, TopMenuView } from './views/TopMenu/TopMenuView';
-import { UserMenuView } from './views/UserMenu/UserMenuView';
-import { SearchView } from './views/Search/SearchView';
-import { LoadingView } from './views/Loading/LoadingView';
-import { RecipePostView } from './views/RecipePost/RecipePostView';
-import { RecipeFormView } from './views/Forms/FormViews';
-import { FlashView } from './views/Flash/FlashView';
 import swipe from './modules/swipe';
+import user from './modules/user';
+import formsModule from './modules/forms';
+import content, { ContentBrowser } from './modules/content';
+import api from './modules/api';
 
-// MOCK DATA
-import { recipes } from './mock/recipes';
-import { css, View } from './views/View';
+const fetchRecipes = async browser => {
+  const resp = await fetch(api.ROUTES.RECIPE.ALL);
+  const data = await resp.json();
+  if (resp.ok) {
+    console.log(data);
+  }
+  browser.load(data);
+};
 
-const main = () => {
-  const loading = new LoadingView('main').attach();
-  const flash = new FlashView('main');
+const main = async () => {
+  
+  const forms = formsModule.components();
+  const { menu, nav, browser, flash, loading, about, search } = content.components();
+  const { userMenu } = user.components();
 
-  const forms = {
-    recipe: new RecipeFormView('main').on.submit(fields => {
-      flash
-        .render({ message: 'Not yet implemented', type: 'error', duration: 3000 })
-        .attach();
-      forms.recipe.detach();
-    }),
-  };
+  const smoothLoading = (work) => {
+    loading.attach()
+    setTimeout(async () => {
+      work();
+      loading.detach();
+    }, 400); // DEV
+  }
 
-  const userMenu = new UserMenuView('main');
-  userMenu.profile.render({
-    username: 'Test User',
-    avatar: './img/def-profile.png',
-    likes: 6,
-    comments: 12,
-    forks: 16,
+  //*****************************************/
+  //**********    LOAD API DATA  ************/
+  //*****************************************/
+
+  smoothLoading(async () => {
+    await user.fetch(api.ROUTES.USER.ALL);
+    await fetchRecipes(browser);
+    browser.displayLatest();
+    loading.detach();
+  })
+  user.loadStorage()
+  
+
+  //*****************************************/
+  //**********    MAIN MENU    **************/
+  //*****************************************/
+
+  // Content navigation click events.
+  nav.on.talkedClicked(() => {
+    browser.displayTalked();
   });
-  userMenu.detach();
-  // Detach anonymous part from user menu.
-  userMenu.anonymous.detach();
-
-  // Menu click events.
-  userMenu.anonymous.on.aboutClicked(e => console.log('about'));
-  userMenu.anonymous.on.loginClicked(e => console.log('login'));
-  userMenu.anonymous.on.registerClicked(e => console.log('register'));
-  userMenu.logged.on.logoutClicked(e => console.log('logout'));
-  userMenu.logged.on.myRecipesClicked(e => console.log('my recipes'));
-  userMenu.logged.on.newRecipeClicked(e => {
-    forms.recipe.attach();
-    userMenu.detach();
+  nav.on.latestClicked(() => {
+    browser.displayLatest();
+  });
+  nav.on.likedClicked(() => {
+    browser.displayLiked();
   });
 
-  const search = new SearchView('main');
-  const topMenu = new TopMenuView('top-panel-view');
-  const browser = new ContentBrowser(topMenu.contentNav);
+  // Search button click events.
+  menu.on.searchClicked(() => (search.isAttached ? search.detach() : search.attach()));
 
-  // Content navigation clicks.
-  topMenu.contentNav.on.talkedClicked(_ => {
-    if (browser.currentIndex != 0) browser.changeContentByIndex(0);
-  });
-  topMenu.contentNav.on.likedClicked(e => {
-    if (browser.currentIndex != 2) browser.changeContentByIndex(2);
-  });
-  topMenu.contentNav.on.latestClicked(e => {
-    if (browser.currentIndex != 1) browser.changeContentByIndex(1);
-  });
-
-  // Search and menu clicks.
-  topMenu.on.searchClicked(e => (search.isAttached ? search.detach() : search.attach()));
-  topMenu.on.userMenuClicked(e =>
+  // User menu click events.
+  menu.on.userMenuClicked(() =>
     userMenu.isAttached ? userMenu.detach() : userMenu.attach()
   );
+
+  //*****************************************/
+  //**********    USER MENU    **************/
+  //*****************************************/
+  {
+    // If user is loaded, reflect this in user menu.
+    const USER = user.getUser();
+    if (USER) {
+      userMenu.profile.render(USER);
+      userMenu.anonymous.detach();
+    } else {
+      userMenu.logged.detach();
+    }
+  }
+
+  // ANONYMOUS USER MENU EVENTS
+  userMenu.anonymous.on.aboutClicked(() => {
+    about.attach();
+    userMenu.detach();
+  });
+  userMenu.anonymous.on.loginClicked(() => {
+    userMenu.detach();
+    forms.login.attach();
+  });
+  userMenu.anonymous.on.registerClicked(() => {
+    userMenu.detach();
+    forms.register.attach();
+  });
+
+  // LOGGED IN USER MENU EVENTS
+  userMenu.logged.on.logoutClicked(() => {
+    user.dispose();
+    userMenu.logged.detach();
+    userMenu.anonymous.attach();
+    flash
+      .render({ message: 'You are now logged out', type: 'success', duration: 3000 })
+      .attach();
+    userMenu.detach();
+    browser.load();
+  });
+  userMenu.logged.on.myRecipesClicked(() => {
+    console.log('my recipes');
+  });
+  userMenu.logged.on.newRecipeClicked(() => {
+    userMenu.detach();
+    forms.recipe.attach();
+  });
+
+  //*****************************************/
+  //********    SWIPE DETECTION   ***********/
+  //*****************************************/
 
   swipe.configure({
     left: _ => browser.browseLeft(),
@@ -74,49 +120,97 @@ const main = () => {
     validator: dist => dist.x > 80 && dist.y < 50,
   });
 
-  // demo loading view
-  setTimeout(() => {
-    loading.detach();
-    recipes.forEach(recipe => {
-      new RecipePostView(browser.contents).attach().render(recipe);
-    });
-    setTimeout(() => browser.changeContentByIndex(1), 100);
-  }, 1000);
+  //*****************************************/
+  //*********    LOGIN/REGISTER   ***********/
+  //*****************************************/
+
+  forms.login.on.submit(async fields => {
+    try {
+      const login = await fetch(api.ROUTES.AUTH.LOGIN, api.METHODS.POST(fields));
+      const json = await login.json();
+
+      if (login.ok) {
+        // Store user to local storage/user module
+        user.store(json);
+
+        // Update and open user menu
+        userMenu.anonymous.detach();
+        userMenu.profile.render(user.getUser());
+        userMenu.logged.attach();
+        browser.load();
+
+        flash
+          .render({ message: `Welcome, ${json.name}`, type: 'success', duration: 4000 })
+          .attach();
+        forms.login.detach();
+      } else {
+        flash.render({ message: 'Login failed', type: 'error', duration: 4000 }).attach();
+        console.error(json);
+      }
+    } catch (err) {
+      flash.render({ message: 'Login failed', type: 'error', duration: 4000 }).attach();
+      console.error(err);
+    }
+  });
+
+  forms.register.on.submit(async fields => {
+    try {
+      const register = await fetch(api.ROUTES.AUTH.REGISTER, api.METHODS.POST(fields));
+      const json = await register.json();
+
+      if (register.ok) {
+        console.log(json);
+        flash
+          .render({
+            message: 'Success. You can now log in.',
+            type: 'success',
+            duration: 4000,
+          })
+          .attach();
+        forms.register.detach();
+        forms.login.attach();
+      } else {
+        flash.render({ message: 'Failed', type: 'error', duration: 4000 }).attach();
+        console.log(json);
+      }
+    } catch (err) {
+      flash.render({ message: 'Failed', type: 'error', duration: 4000 }).attach();
+      console.error(err);
+    }
+  });
+
+  forms.recipe.on.submit(async fields => {
+    const TOKEN = user.getUser().token;
+    const files = [...fields.files]
+    const textualData = {...fields};
+    delete textualData.files;
+    
+    const textRes = await fetch(api.ROUTES.RECIPE.POST, api.METHODS.POST(textualData, TOKEN))
+    if (textRes.ok) {
+      const recipe = await textRes.json();
+      
+      const imgBody = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        console.log(files[i])
+        imgBody.append('img', files[i]);
+      }
+      const picRes = await fetch(
+        api.ROUTES.RECIPE.POST_IMG(recipe.id),
+        api.METHODS.POST_FORM(imgBody, TOKEN)
+      );
+      if (!picRes.ok) {
+        flash.render({message: 'Upload failed', type: 'error', duration: 3000}).attach();
+        return;
+        // const images = await picRes.json();
+        // forms.recipe.detach();
+
+        // recipe.picture = images;
+        // browser.recipes.push(recipe);
+        // browser.load();
+      }
+      location.reload();
+    }
+  });
 };
-
-class ContentBrowser {
-  /**
-   *
-   * @param {ContentNavView} contentNav
-   */
-  constructor(contentNav) {
-    this.contents = View.element('div', css('content-page'));
-    View.resolveParent('main').appendChild(this.contents);
-    this.nav = contentNav;
-    this.lastViewIndex = 2;
-  }
-
-  changeContentByIndex(index) {
-    if (index < 0 || index > this.lastViewIndex) return;
-    this.currentIndex = index;
-    this.nav.highlight(this.nav.buttons[index]);
-
-    if (this.contents.classList.contains('fade-in'))
-      this.contents.classList.toggle('fade-in');
-
-    setTimeout(() => {
-      this.contents.classList.toggle('fade-in');
-    }, 300);
-  }
-
-  browseRight() {
-    if (this.currentIndex < this.lastViewIndex)
-      this.changeContentByIndex(++this.currentIndex);
-  }
-
-  browseLeft() {
-    if (this.currentIndex > 0) this.changeContentByIndex(--this.currentIndex);
-  }
-}
 
 window.onload = main;

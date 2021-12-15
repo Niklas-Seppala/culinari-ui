@@ -85,12 +85,12 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.4rem;
+  margin-top: .15rem;
 }
 
 .comment-date {
   color: var(--font-phased);
   font-size: 0.8rem;
-  font-style: italic;
 }
 
 .comment-auth-text-date {
@@ -113,7 +113,6 @@ img.food {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 400px;
   padding-bottom: 1rem;
 }
 
@@ -125,9 +124,6 @@ table {
   border-spacing: 0.5rem;
 }
 
-.instruction-list p {
-  margin: 0.2rem 0 0.2rem 0;
-}
 
 .list p {
   margin: 0;
@@ -143,14 +139,14 @@ table {
 
 .instruction {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .instruction span {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 .instruction p {
-  margin-left: 0.5rem;
+  margin: 0 0 0.06rem .5rem;
 }
 
 .ingredient {

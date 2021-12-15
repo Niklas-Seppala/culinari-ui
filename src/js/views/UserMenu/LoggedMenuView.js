@@ -19,12 +19,13 @@ class ProfileView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      this.avatar.src = this.state.avatar;
-      this.username.textContent = this.state.username;
-      this.likes.textContent = this.state.likes;
-      this.comments.textContent = this.state.comments;
-      this.forks.textContent = this.state.forks;
+      this.avatar.src = this.state.avatar || './img/def-profile.png';
+      this.username.textContent = this.state.name;
+      this.likes.textContent = this.state.score;
+      this.comments.textContent = this.state.commentCount;
+      this.forks.textContent = this.state.forkCount;
     }
+
     return this;
   }
 

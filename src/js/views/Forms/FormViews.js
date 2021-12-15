@@ -1,7 +1,7 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
 import { View } from '../View';
-import { input, fileInput, multiInput } from './inputs';
+import { input, fileInput, multiInput, IngredientInput, InstructionInput } from './inputs';
 
 /**
  * Base class that holds common methods for all
@@ -75,7 +75,7 @@ export class RegisterFormView extends FormView {
       username: this.username.value,
       email: this.email.value,
       password: this.password.value,
-      password2: this.password2.value,
+      confirm: this.confirm.value,
     };
   }
 
@@ -84,13 +84,13 @@ export class RegisterFormView extends FormView {
     this.username = input('text', 'username', '', 'Username');
     this.email = input('email', 'email', '', 'Email');
     this.password = input('password', 'password', '', 'Password');
-    this.password2 = input('password', 'password2', '', 'Password Again');
+    this.confirm = input('password', 'confirm', '', 'Password Again');
     this.submitBtn = input('submit', 'submit', '', 'Register');
 
     this.form.appendChild(this.username);
     this.form.appendChild(this.email);
     this.form.appendChild(this.password);
-    this.form.appendChild(this.password2);
+    this.form.appendChild(this.confirm);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 
@@ -151,36 +151,37 @@ export class RecipeFormView extends FormView {
   get formData() {
     const result = {
       name: this.name.value,
-      summary: this.summary.value,
-      instructions: [],
-      ingredients: [],
+      desc: this.desc.value,
+      instructions: this.instructions.state,
+      ingredients: this.ingredients.state,
       files: this.files.files.files,
     };
-
-    for (let i = 0; i < this.form.children.length; i++) {
-      const inpt = this.form.children[i];
-      if (inpt.name?.startsWith('instruction') && inpt.value) {
-        result.instructions.push(inpt.value);
-      } else if (inpt.name?.startsWith('ingredient') && inpt.value) {
-        result.ingredients.push(inpt.value);
-      }
-    }
     return result;
   }
 
   #build() {
     this.form = View.element('form');
     this.name = input('text', 'name', '', 'Name');
-    this.summary = input('textarea', 'summary', '', 'Summary');
-    this.instructions = multiInput('text', 'instruction', '', 'Instruction', '', 0);
-    this.ingredients = multiInput('text', 'ingredients', '', 'Ingredient', '', 0);
-    this.files = fileInput('foodImg', '', 'image/*', 'Image');
+    this.name.required = true
+    this.name.classList.add('input-grp')
+
+    this.desc = input('textarea', 'desc', '', 'Summary');
+    this.desc.required = true;
+    this.desc.classList.add('input-grp')
+
+    this.instructions = new InstructionInput(this.form);
+    this.ingredients = new IngredientInput(this.form);
+
+    this.files = fileInput('foodImg', '', 'image/*', 'Upload');
+    this.files.classList.add('input-grp')
+
     this.submitBtn = input('submit', 'submit', '', 'Log In');
+    this.submitBtn.addEventListener('submit', e => e.preventDefault())
 
     this.form.appendChild(this.name);
-    this.form.appendChild(this.summary);
-    this.form.appendChild(this.instructions);
-    this.form.appendChild(this.ingredients);
+    this.form.appendChild(this.desc);
+    this.instructions.attach();
+    this.ingredients.attach();
     this.form.appendChild(this.files);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);

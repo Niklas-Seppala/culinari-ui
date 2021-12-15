@@ -91,6 +91,7 @@
 .comment-date {
   color: var(--font-phased);
   font-size: 0.8rem;
+  margin-bottom: .1rem;
 }
 
 .comment-auth-text-date {
@@ -114,6 +115,7 @@ img.food {
   flex-direction: column;
   justify-content: center;
   padding-bottom: 1rem;
+  position: relative;
 }
 
 .expand-btn {
@@ -123,7 +125,6 @@ img.food {
 table {
   border-spacing: 0.5rem;
 }
-
 
 .list p {
   margin: 0;
@@ -151,4 +152,23 @@ table {
 
 .ingredient {
   font-weight: bold;
+}
+
+div.delete {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .5rem .5rem .3rem .5rem;
+  background: var(--bg-white);
+  border-left: 1px solid var(--white-border);
+  border-bottom: 1px solid var(--white-border);
+  border-bottom-left-radius: .3rem;
+}
+
+img.delete {
+  margin: 0;
+}
+
+.date-and-remove {
+  display: flex;align-items: center;;
 }

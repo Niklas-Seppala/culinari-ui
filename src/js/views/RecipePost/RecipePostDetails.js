@@ -26,6 +26,7 @@ export class RecipePostDetails extends View {
    * @returns
    */
   render(state) {
+    this.state = state;
     this.#renderIngredients(state);
     this.#renderInstructions(state);
     this.#renderComments(state);
@@ -105,9 +106,7 @@ export class RecipePostDetails extends View {
       // A node to facilitate all of the comments.
       const commentContainer = View.element('div', null);
       const USER = user.getUser();
-
-      const now = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000;
-      state.comment.forEach(comment => {
+      state.comment?.forEach(comment => {
         const root = View.element('div', css('comment', 'card'));
 
         // Comment likes.
@@ -122,27 +121,28 @@ export class RecipePostDetails extends View {
 
         likes.root.addEventListener('click', async () => {
           const USER = user.getUser();
-          if (!USER) return
+          if (!USER) return;
 
           const response = await fetch(
             api.ROUTES.COMMENT.LIKE(comment.id),
             api.METHODS.POST({}, USER.token)
           );
           if (response.ok) {
-            const {OP, data} = await response.json();
-            const like = likes.root.getElementsByTagName('img').item(0)
+            const { OP, data } = await response.json();
+            const like = likes.root.getElementsByTagName('img').item(0);
             switch (OP) {
               case 'DEL':
                 like.src = icon.newSrc(icon.type.LIKE);
                 comment.commentLike = comment.commentLike.filter(
-                  like => like.user_id != USER.id
+                  like => like.user_id !== USER.id
                 );
                 break;
-                case 'POST':
-                  like.src = icon.newSrc(icon.type.LIKE_ACTIVE);
-                  comment.commentLike.push(data);
+              case 'POST':
+                like.src = icon.newSrc(icon.type.LIKE_ACTIVE);
+                comment.commentLike.push(data);
                 break;
-              default: break;
+              default:
+                break;
             }
             likes.label.textContent = comment.commentLike.length;
           }
@@ -155,14 +155,28 @@ export class RecipePostDetails extends View {
         const authAndDate = View.element('div', css('auth-and-date'), wrapper);
         const author = View.element('span', css('comment-author'), authAndDate);
         author.textContent = user.getUsers()[comment.author_id].name;
-        const date = View.element('span', css('comment-date'), authAndDate);
 
-        // TODO: EXTRACT LATER
-        const timeDiff = new Date(now - new Date(comment.createdAt).getTime());
-        const h = timeDiff.getHours();
-        const hourStr = `${h !== 0 ? h : ''} ${timeDiff.getHours() !== 0 ? ' h' : ''}`;
-        const timeStr = `${hourStr || ''} ${timeDiff.getMinutes()} min`;
-        date.textContent = timeStr;
+        const dateAndRemove = View.element('div', css('date-and-remove'), authAndDate);
+        const date = View.element('span', css('comment-date'), dateAndRemove);
+        date.textContent = new Date(comment.createdAt).toLocaleDateString();
+
+        if (USER && (USER.id === comment.author_id || USER.admin)) {
+          const remove = icon.plain(icon.type.CLOSE, icon.size.TINY, css('icon-hover'));
+          dateAndRemove.appendChild(remove);
+          remove.addEventListener('click', async () => {
+            console.log('delete comment', comment);
+            const response = await fetch(
+              api.ROUTES.COMMENT.REMOVE(comment.id),
+              api.METHODS.DELETE({}, USER.token)
+            );
+            if (response.ok) {
+              state.comment = state.comment.filter(c => c.id !== comment.id);
+              commentContainer.removeChild(root);
+            } else {
+              console.log(await response.json());
+            }
+          });
+        }
 
         // Comment text content.
         const text = View.element('p', css('comment-text'), wrapper);
@@ -186,11 +200,8 @@ export class RecipePostDetails extends View {
     this.comments = new ExpandableView(this.root, 'Comments').attach();
 
     // Post new comment form.
-    const commentForm = View.element(
-      'form',
-      css('leave-comment'),
-      this.comments.contentRoot
-    );
+    const commentForm = View.element('form', css('leave-comment'));
+
     this.commentText = input('textarea', 'submit-comment', null, 'Leave a Comment');
     commentForm.appendChild(this.commentText);
     this.postComment = icon.plain(
@@ -199,5 +210,7 @@ export class RecipePostDetails extends View {
       css('click', 'post-comment-btn', 'icon-hover')
     );
     commentForm.appendChild(this.postComment);
+
+    if (user.hasUser()) this.comments.contentRoot.appendChild(commentForm);
   }
 }

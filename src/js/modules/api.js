@@ -16,12 +16,14 @@ const ROUTES = {
     POST_IMG: id => `${BASE_URL}/recipe/${id}/img`,
     SINGLE: (id) => `${BASE_URL}/recipe/${id}`,
     LIKE: (id) => `${BASE_URL}/recipe/${id}/like`,
+    DELETE: (id) => `${BASE_URL}/recipe/${id}`
   },
   COMMENT: {
     ALL: `${BASE_URL}/comment`,
     POST: `${BASE_URL}/comment`,
     SINGLE: (id) => `${BASE_URL}/comment/${id}`,
     LIKE: (id) => `${BASE_URL}/comment/${id}/like`,
+    REMOVE: (id) => `${BASE_URL}/comment/${id}`
   }
 };
 

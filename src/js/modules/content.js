@@ -191,7 +191,7 @@ const components = () => {
     loading: new LoadingView('main'),
     search: new SearchView('main'),
     flash: new FlashView('main'),
-    about: new AboutView('main')
+    about: new AboutView('main', 'What is Culinari?')
   };
   return __views;
 };

@@ -1,14 +1,13 @@
-import './AboutView.css'
-import { View } from '../View';
+import { PopupView } from '../Popup/PopupView';
 
-export class AboutView extends View {
-  constructor(parent) {
-    super(parent)
-    this.#build()
+export class AboutView extends PopupView {
+  constructor(parent, header) {
+    super(parent, header)
     this.detach();
+    this.#build()
   }
 
   #build() {
-    this.root = document.getElementById('about');
+    this.root.appendChild(document.getElementById('about'))
   }
 }

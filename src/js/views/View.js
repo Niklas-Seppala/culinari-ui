@@ -212,7 +212,6 @@ export class View {
     const elem = document.createElement(tag);
     css?.forEach(_class => elem.classList.add(_class));
     View.resolveParent(parent)?.appendChild(elem);
-    // parent?.appendChild(elem);
     if (id) elem.id = id;
     return elem;
   }

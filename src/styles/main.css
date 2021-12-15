@@ -102,18 +102,6 @@ ol li {
   display: flex;
 }
 
-.content-page {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.fade-in {
-  opacity: 1;
-}
-.fade-out {
-  opacity: 0;
-}
-
 @media only screen and (min-width: 600px) {
   ::-webkit-scrollbar {
     width: 5px;

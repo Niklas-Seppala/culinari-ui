@@ -24,14 +24,9 @@
 .menu-btn {
   display: flex;
   align-items: center;
-  transition: margin-left 0.2s ease;
   user-select: none;
   cursor: pointer;
   padding: 0.4rem 0 0.4rem 0;
-}
-
-.menu-btn:hover {
-  margin-left: 0.8rem;
 }
 
 .menu-btn span {

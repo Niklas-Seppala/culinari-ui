@@ -36,7 +36,8 @@ const handleRecipeLike = async (post, recipe) => {
 };
 
 const handleCommentPost = async (post, recipe) => {
-  const token = user.getUser().token;
+  const token = user.getUser()?.token;
+  if (!token) return;
   const body = {
     text: post.details.commentText.value,
     recipe: recipe.id,
@@ -82,32 +83,34 @@ export class ContentBrowser {
    * @param {FlashView} flash
    */
   constructor(contentNav, flash) {
-    // this.posts = View.element('div'); //css('content-page')
     this.posts = new BrowserPosts('main').attach();
     this.flash = flash;
-    // View.resolveParent('main').appendChild(this.posts);
     this.nav = contentNav;
     this.navIndex = -1
     this.elements = []
+    this.recipes = []
   }
 
   displayLatest(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.LATEST) return;
-    this.#sortByTime();
+    // this.#sortByTime();
+    this.#sort((a, b) => unixtime(b.state.createdAt) - unixtime(a.state.createdAt));
     this.navIndex = ContentBrowser.NAV.LATEST;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
   }
 
   displayTalked(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.TALKED) return;
-    this.#sortByComments();
+    // this.#sortByComments();
+    this.#sort((a, b) => b.state.comment.length - a.state.comment.length);
     this.navIndex = ContentBrowser.NAV.TALKED;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
   }
 
   displayLiked(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.LIKED) return;
-    this.#sortByLikes();
+    // this.#sortByLikes();
+    this.#sort((a, b) => b.state.like.length - a.state.like.length);
     this.navIndex = ContentBrowser.NAV.LIKED;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
   }
@@ -117,7 +120,12 @@ export class ContentBrowser {
     this.#clean();
     this.elements = []
     this.recipes.forEach(recipe => {
-      const post = new RecipePostView().render(recipe);
+      const post = new RecipePostView(null, recipe).render()
+        .on.removed(() => {
+          this.recipes = this.recipes.filter(r => r.id !== recipe.id);
+          this.elements = this.elements.filter(r => r.state.id !== recipe.id);
+          post.detach();
+        })
       post.on.comment(() => handleCommentPost(post, recipe));
       post.on.commentClicked(() => post.details.comments.toggle());
       post.on.likeClicked(() => handleRecipeLike(post, recipe));
@@ -157,28 +165,28 @@ export class ContentBrowser {
       this.posts.root.removeChild(this.posts.root.lastChild);
   }
 
+  #sort(predicate) {
+    this.elements.sort(predicate);
+    this.#clean();
+    this.elements.forEach((ele) => ele.attach(this.posts.root))
+  }
+
   #sortByLikes() {
     this.elements.sort((a, b) => b.state.like.length - a.state.like.length);
     this.#clean();
-    this.elements.forEach((ele) => {
-      this.posts.root.appendChild(ele.root);
-    });
+    this.elements.forEach((ele) => ele.attach(this.posts.root))
   }
 
   #sortByComments() {
     this.elements.sort((a, b) => b.state.comment.length - a.state.comment.length);
     this.#clean();
-    this.elements.forEach((ele) => {
-      this.posts.root.appendChild(ele.root);
-    });
+    this.elements.forEach((ele) => ele.attach(this.posts.root))
   }
 
   #sortByTime() {
     this.elements.sort((a, b) => unixtime(b.state.createdAt) - unixtime(a.state.createdAt));
     this.#clean();
-    this.elements.forEach((ele) => {
-      this.posts.root.appendChild(ele.root);
-    });
+    this.elements.forEach((ele) => ele.attach(this.posts.root))
   }
 }
 
@@ -191,7 +199,7 @@ const components = () => {
     loading: new LoadingView('main'),
     search: new SearchView('main'),
     flash: new FlashView('main'),
-    about: new AboutView('main', 'What is Culinari?')
+    about: new AboutView('main', 'About the Application')
   };
   return __views;
 };

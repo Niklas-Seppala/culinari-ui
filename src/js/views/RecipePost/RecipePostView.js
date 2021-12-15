@@ -1,5 +1,5 @@
 import './RecipePostView.css';
-import { View, css } from '../View';
+import { View, css, icon } from '../View';
 import { RecipePostPanelView } from './RecipePostPanelView';
 import { RecipePostDetails } from './RecipePostDetails';
 import user from '../../modules/user';
@@ -9,8 +9,9 @@ import api from '../../modules/api';
  * View for users' recipe posts.
  */
 export class RecipePostView extends View {
-  constructor(parent) {
+  constructor(parent, state) {
     super(parent);
+    this.state = state
     this.#build();
   }
 
@@ -31,11 +32,10 @@ export class RecipePostView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      const image = this.state.picture[0]?.filename
-      if (image)
-        this.image.src = api.ROUTES.STATIC(image);
+      const image = this.state.picture[0]?.filename;
+      if (image) this.image.src = api.ROUTES.STATIC(image);
       else {
-        console.log('no image')
+        console.log('no image');
       }
       this.panel.render({
         author: user.getUsers()[this.state.owner_id].name,
@@ -86,10 +86,43 @@ export class RecipePostView extends View {
       });
       return this;
     },
-  };
 
+    removed: listener => {
+      this.#removedListener = listener;
+      return this;
+    }
+  };
+  /** @type {() => void} */
+  #removedListener = undefined;
+  
   #build() {
+    const USER = user.getUser();
     this.root = View.element('section', css('main-item', 'card'));
+
+    if (USER && (USER.id === this.state.owner_id || USER.admin)) {
+      this.remove = View.element('div', css('delete'), this.root);
+      const removeIcon = icon.plain(
+        icon.type.CLOSE,
+        icon.size.SMALL,
+        css('delete', 'icon-hover')
+      );
+      this.remove.appendChild(removeIcon);
+      this.remove.addEventListener('click', async () => {
+        console.log('delete', this.state);
+        const response = await fetch(
+          api.ROUTES.RECIPE.DELETE(this.state.id),
+          api.METHODS.DELETE({}, USER.token)
+        );
+        if (response.ok) {
+          console.log('ok', await response.json());
+          this.#removedListener?.call()
+
+        } else {
+          console.log(await response.json());
+        }
+      });
+    }
+
     this.image = View.element('img', css('food'), this.root);
     this.image.alt = 'food';
     this.panel = new RecipePostPanelView(this).attach();

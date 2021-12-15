@@ -9,6 +9,7 @@ import { UserMenuView } from '../views/UserMenu/UserMenuView';
  *  role: number,
  *  score: number,
  *  recipes: []
+ *  admin: boolean
  * }}
  */
  let __user = undefined;
@@ -33,6 +34,7 @@ const store = (user) => {
   user.forkCount = user.recipes.reduce((a,b) => (b.forked_from ? 1 : 0  + a), 0)
   localStorage.setItem('user', JSON.stringify(user));
   __user = user
+  __user.admin = user.role === 1;
 }
 
 const getUser = () => {
@@ -43,6 +45,8 @@ const getUser = () => {
     return undefined;
   }
 }
+
+const hasUser = () => Boolean(__user)
 
 const dispose = () => {
   console.log(__user.name, 'logged out')
@@ -77,6 +81,7 @@ const getUsers = () => __users
 export default {
   loadStorage,
   getUser,
+  hasUser,
   getUsers,
   store,
   dispose,

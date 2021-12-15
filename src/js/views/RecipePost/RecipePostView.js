@@ -3,6 +3,7 @@ import { View, css } from '../View';
 import { RecipePostPanelView } from './RecipePostPanelView';
 import { RecipePostDetails } from './RecipePostDetails';
 import user from '../../modules/user';
+import api from '../../modules/api';
 
 /**
  * View for users' recipe posts.
@@ -30,7 +31,12 @@ export class RecipePostView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      this.image.src = this.state.picture[0];
+      const image = this.state.picture[0]?.filename
+      if (image)
+        this.image.src = api.ROUTES.STATIC(image);
+      else {
+        console.log('no image')
+      }
       this.panel.render({
         author: user.getUsers()[this.state.owner_id].name,
         name: this.state.name,

@@ -121,36 +121,31 @@ export class RecipePostDetails extends View {
         likes.label.textContent = comment.commentLike.length;
 
         likes.root.addEventListener('click', async () => {
-          if (!user.getUser()) return
-          try {
-            const USER = user.getUser();
-            let response = await fetch(
-              api.ROUTES.COMMENT.LIKE(comment.id),
-              api.METHODS.POST({}, USER.token)
-            );
-            const newLike = await response.json();
-            if (response.ok) {
-              likes.root.getElementsByTagName('img').item(0).src = icon.newSrc(
-                icon.type.LIKE_ACTIVE
-              );
-              comment.commentLike.push(newLike);
-              likes.label.textContent = comment.commentLike.length;
-            } else {
-              response = await fetch(
-                api.ROUTES.COMMENT.LIKE(comment.id),
-                api.METHODS.DELETE({}, USER.token)
-              );
-              if (response.ok) {
-                likes.root.getElementsByTagName('img').item(0).src = icon.newSrc(
-                  icon.type.LIKE
-                );
+          const USER = user.getUser();
+          if (!USER) return
+
+          const response = await fetch(
+            api.ROUTES.COMMENT.LIKE(comment.id),
+            api.METHODS.POST({}, USER.token)
+          );
+          if (response.ok) {
+            const {OP, data} = await response.json();
+            const like = likes.root.getElementsByTagName('img').item(0)
+            switch (OP) {
+              case 'DEL':
+                like.src = icon.newSrc(icon.type.LIKE);
                 comment.commentLike = comment.commentLike.filter(
                   like => like.user_id != USER.id
                 );
-                likes.label.textContent = comment.commentLike.length;
-              }
+                break;
+                case 'POST':
+                  like.src = icon.newSrc(icon.type.LIKE_ACTIVE);
+                  comment.commentLike.push(data);
+                break;
+              default: break;
             }
-          } catch (error) {}
+            likes.label.textContent = comment.commentLike.length;
+          }
         });
 
         root.appendChild(likes.root);

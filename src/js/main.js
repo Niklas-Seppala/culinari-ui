@@ -1,35 +1,44 @@
 import swipe from './modules/swipe';
 import user from './modules/user';
 import formsModule from './modules/forms';
-import content from './modules/content';
+import content, { ContentBrowser } from './modules/content';
 import api from './modules/api';
 
-const loadRecipes = async (browser) => {
+const fetchRecipes = async browser => {
   const resp = await fetch(api.ROUTES.RECIPE.ALL);
   const data = await resp.json();
   if (resp.ok) {
     console.log(data);
-    data.forEach(item => {
-      item.picture = [
-        'https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg',
-      ];
-    });
   }
-  browser.loadRecipes(data);
+  browser.load(data);
 };
 
-// MOCK DATA
-import { recipes, apiRecipe } from './mock/recipes';
-
 const main = async () => {
+  
   const forms = formsModule.components();
   const { menu, nav, browser, flash, loading, search } = content.components();
   const { userMenu } = user.components();
 
+  const smoothLoading = (work) => {
+    loading.attach()
+    setTimeout(async () => {
+      work();
+      loading.detach();
+    }, 400); // DEV
+  }
+
   //*****************************************/
   //**********    LOAD API DATA  ************/
   //*****************************************/
-  const asd = await user.fetch(api.ROUTES.USER.ALL);
+
+  smoothLoading(async () => {
+    await user.fetch(api.ROUTES.USER.ALL);
+    await fetchRecipes(browser);
+    browser.displayLatest();
+    loading.detach();
+  })
+  user.loadStorage()
+  
 
   //*****************************************/
   //**********    MAIN MENU    **************/
@@ -37,13 +46,13 @@ const main = async () => {
 
   // Content navigation click events.
   nav.on.talkedClicked(() => {
-    if (browser.currentIndex != 0) browser.changeContentByIndex(0);
+    browser.displayTalked();
   });
   nav.on.latestClicked(() => {
-    if (browser.currentIndex != 1) browser.changeContentByIndex(1);
+    browser.displayLatest();
   });
   nav.on.likedClicked(() => {
-    if (browser.currentIndex != 2) browser.changeContentByIndex(2);
+    browser.displayLiked();
   });
 
   // Search button click events.
@@ -59,9 +68,9 @@ const main = async () => {
   //*****************************************/
   {
     // If user is loaded, reflect this in user menu.
-    if (user.loadStorage()) {
-      console.log(user.getUser());
-      userMenu.profile.render(user.getUser());
+    const USER = user.getUser();
+    if (USER) {
+      userMenu.profile.render(USER);
       userMenu.anonymous.detach();
     } else {
       userMenu.logged.detach();
@@ -90,7 +99,7 @@ const main = async () => {
       .render({ message: 'You are now logged out', type: 'success', duration: 3000 })
       .attach();
     userMenu.detach();
-    browser.loadRecipes();
+    browser.load();
   });
   userMenu.logged.on.myRecipesClicked(() => {
     console.log('my recipes');
@@ -127,8 +136,7 @@ const main = async () => {
         userMenu.anonymous.detach();
         userMenu.profile.render(user.getUser());
         userMenu.logged.attach();
-        browser.loadRecipes();
-        console.log(user.getUser());
+        browser.load();
 
         flash
           .render({ message: `Welcome, ${json.name}`, type: 'success', duration: 4000 })
@@ -170,26 +178,38 @@ const main = async () => {
     }
   });
 
-  //*****************************************/
-  //**********    Fetch Recipes   ***********/
-  //*****************************************/
-  {
-    // const resp = await fetch(api.ROUTES.RECIPE.ALL);
-    // const data = await resp.json();
-    // if (resp.ok) {
-    //   console.log(data);
-    //   data.forEach(item => {
-    //     item.picture = [
-    //       'https://www.ingredion.com/content/dam/ingredion/usca-images/food/meat/cheeseburger-bread_720x560.jpg',
-    //     ];
-    //   });
-    // }
-    // browser.loadRecipes(data);
-  // }
-  
-  await loadRecipes(browser);
-}
+  forms.recipe.on.submit(async fields => {
+    const TOKEN = user.getUser().token;
+    const files = [...fields.files]
+    const textualData = {...fields};
+    delete textualData.files;
+    
+    const textRes = await fetch(api.ROUTES.RECIPE.POST, api.METHODS.POST(textualData, TOKEN))
+    if (textRes.ok) {
+      const recipe = await textRes.json();
+      
+      const imgBody = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        console.log(files[i])
+        imgBody.append('img', files[i]);
+      }
+      const picRes = await fetch(
+        api.ROUTES.RECIPE.POST_IMG(recipe.id),
+        api.METHODS.POST_FORM(imgBody, TOKEN)
+      );
+      if (!picRes.ok) {
+        flash.render({message: 'Upload failed', type: 'error', duration: 3000}).attach();
+        return;
+        // const images = await picRes.json();
+        // forms.recipe.detach();
 
+        // recipe.picture = images;
+        // browser.recipes.push(recipe);
+        // browser.load();
+      }
+      location.reload();
+    }
+  });
 };
 
 window.onload = main;

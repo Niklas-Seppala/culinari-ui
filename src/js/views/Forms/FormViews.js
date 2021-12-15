@@ -1,7 +1,7 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
 import { View } from '../View';
-import { input, fileInput, multiInput } from './inputs';
+import { input, fileInput, multiInput, IngredientInput, InstructionInput } from './inputs';
 
 /**
  * Base class that holds common methods for all
@@ -152,42 +152,36 @@ export class RecipeFormView extends FormView {
     const result = {
       name: this.name.value,
       desc: this.desc.value,
-      instructions: [],
-      ingredients: [],
+      instructions: this.instructions.state,
+      ingredients: this.ingredients.state,
       files: this.files.files.files,
     };
-
-    for (let i = 0; i < this.form.children.length; i++) {
-      const inpt = this.form.children[i];
-      if (inpt.name?.startsWith('instruction') && inpt.value) {
-        result.instructions.push({
-          content: inpt.value,
-          order: result.instructions.length
-        });
-      } else if (inpt.name?.startsWith('ingredient') && inpt.value) {
-
-        result.ingredients.push({
-          name: inpt.value,
-          order: result.ingredients.length
-        });
-      }
-    }
     return result;
   }
 
   #build() {
     this.form = View.element('form');
     this.name = input('text', 'name', '', 'Name');
+    this.name.required = true
+    this.name.classList.add('input-grp')
+
     this.desc = input('textarea', 'desc', '', 'Summary');
-    this.instructions = multiInput('text', 'instruction', '', 'Instruction', '', 0);
-    this.ingredients = multiInput('text', 'ingredients', '', 'Ingredient', '', 0);
-    this.files = fileInput('foodImg', '', 'image/*', 'Image');
+    this.desc.required = true;
+    this.desc.classList.add('input-grp')
+
+    this.instructions = new InstructionInput(this.form);
+    this.ingredients = new IngredientInput(this.form);
+
+    this.files = fileInput('foodImg', '', 'image/*', 'Upload');
+    this.files.classList.add('input-grp')
+
     this.submitBtn = input('submit', 'submit', '', 'Log In');
+    this.submitBtn.addEventListener('submit', e => e.preventDefault())
 
     this.form.appendChild(this.name);
     this.form.appendChild(this.desc);
-    this.form.appendChild(this.instructions);
-    this.form.appendChild(this.ingredients);
+    this.instructions.attach();
+    this.ingredients.attach();
     this.form.appendChild(this.files);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);

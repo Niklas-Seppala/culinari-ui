@@ -20,7 +20,8 @@ const __icon = {
     DOWN_ARROW: 7,
     POST: 8,
     SEND: 9,
-    LIKE_ACTIVE: 10
+    LIKE_ACTIVE: 10,
+    IMAGES: 11
   },
   src: [
     ['./icons/heart.png', 'like'],
@@ -34,6 +35,7 @@ const __icon = {
     ['./icons/post.png', 'post'],
     ['./icons/send.png', 'send'],
     ['./icons/heart-filled.png', 'like-active'],
+    ['./icons/gallery.png', 'images'],
   ],
   size: {
     SMALL: 'icon-small',

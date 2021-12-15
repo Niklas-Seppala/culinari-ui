@@ -20,7 +20,11 @@ import { UserMenuView } from '../views/UserMenu/UserMenuView';
  * @returns {boolean}
  */
 const loadStorage = () => {
+  console.log('loading storage')
   __user = JSON.parse(localStorage.getItem('user'))
+  if (__user) {
+    console.log(__user.name, 'active')
+  }
   return Boolean(__user)
 };
 
@@ -32,11 +36,16 @@ const store = (user) => {
 }
 
 const getUser = () => {
-  if (__user) { return {...__user} }
-  else return undefined;
+  if (__user) {
+    return {...__user}
+  }
+  else {
+    return undefined;
+  }
 }
 
 const dispose = () => {
+  console.log(__user.name, 'logged out')
   __user = undefined;
   localStorage.clear();
 }
@@ -48,13 +57,19 @@ const components = () => {
 }
 
 const __fetch = async (route) => {
+  console.log('fetching users from remote..')
   const response = await fetch(route);
-  __users = {};
-  const temp = await response.json();
-  temp.forEach(usr => {
-    __users[usr.id] = usr;
-  })
-  return __users
+  if (response.ok) {
+    __users = {};
+    const temp = await response.json();
+    temp.forEach(usr => {
+      __users[usr.id] = usr;
+    })
+    console.log('success:', __users)
+    return __users
+  }
+  console.log('failed to fetch :(')
+  return undefined;
 }
 
 const getUsers = () => __users

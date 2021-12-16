@@ -1,7 +1,7 @@
 #user-menu-view {
   padding: 0.3rem;
   background-color: var(--bg-white);
-  width: 9.5rem;
+  width: 10rem;
   height: 100%;
   position: fixed;
   left: 0;
@@ -54,11 +54,12 @@
   margin: 0.4rem 0 0.4rem 0;
 }
 
-#avatar {
-  height: 80px;
-  width: 80px;
+.avatar {
+  height: 100px;
+  width: 100px;
   box-shadow: var(--white-shadow);
   border: 1px solid var(--font-on-light);
   border-radius: 50%;
+  object-fit: cover;
   margin-bottom: 0.5rem;
 }

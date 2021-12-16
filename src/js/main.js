@@ -14,31 +14,40 @@ const fetchRecipes = async browser => {
 };
 
 const main = async () => {
-  
   const forms = formsModule.components();
   const { menu, nav, browser, flash, loading, about, search } = content.components();
   const { userMenu } = user.components();
 
-  const smoothLoading = (work) => {
-    loading.attach()
+  const smoothLoading = work => {
+    loading.attach();
     setTimeout(async () => {
       work();
       loading.detach();
     }, 400); // DEV
-  }
+  };
 
   //*****************************************/
   //**********    LOAD API DATA  ************/
   //*****************************************/
-
   smoothLoading(async () => {
-    await user.fetch(api.ROUTES.USER.ALL);
-    await fetchRecipes(browser);
+    const tasks = [
+      user.loadStorage(),
+      user.fetch(api.ROUTES.USER.ALL),
+      fetchRecipes(browser),
+    ];
+    await Promise.all(tasks);
+
+    const USER = user.getUser();
+    if (USER) {
+      userMenu.profile.render(USER);
+      userMenu.anonymous.detach();
+    } else {
+      userMenu.logged.detach();
+    }
+
     browser.displayLatest();
     loading.detach();
-  })
-  user.loadStorage()
-  
+  });
 
   //*****************************************/
   //**********    MAIN MENU    **************/
@@ -62,20 +71,6 @@ const main = async () => {
   menu.on.userMenuClicked(() =>
     userMenu.isAttached ? userMenu.detach() : userMenu.attach()
   );
-
-  //*****************************************/
-  //**********    USER MENU    **************/
-  //*****************************************/
-  {
-    // If user is loaded, reflect this in user menu.
-    const USER = user.getUser();
-    if (USER) {
-      userMenu.profile.render(USER);
-      userMenu.anonymous.detach();
-    } else {
-      userMenu.logged.detach();
-    }
-  }
 
   // ANONYMOUS USER MENU EVENTS
   userMenu.anonymous.on.aboutClicked(() => {
@@ -108,6 +103,14 @@ const main = async () => {
   userMenu.logged.on.newRecipeClicked(() => {
     userMenu.detach();
     forms.recipe.attach();
+  });
+  userMenu.logged.on.aboutClicked(() => {
+    userMenu.detach();
+    about.attach();
+  });
+  userMenu.logged.on.settingsClicked(() => {
+    forms.settings.render(user.getUser()).attach();
+    userMenu.detach();
   });
 
   //*****************************************/
@@ -170,6 +173,7 @@ const main = async () => {
         forms.register.detach();
         forms.login.attach();
       } else {
+        forms.settings.changes = true;
         flash.render({ message: 'Failed', type: 'error', duration: 4000 }).attach();
         console.log(json);
       }
@@ -179,19 +183,75 @@ const main = async () => {
     }
   });
 
+  forms.settings.onClose(() => {
+    if (forms.settings.changes) location.reload();
+  })
+  forms.settings.on.submitAvatar(async fields => {
+    const USER = user.getUser();
+    if (!USER) return;
+
+    if (fields.avatar) {
+      const body = new FormData();
+      body.append('avatar', fields.avatar);
+
+      const response = await fetch(
+        api.ROUTES.USER.AVATAR(USER.id),
+        api.METHODS.POST_FORM(body, USER.token)
+      );
+      if (response.ok) {
+        forms.settings.changes = true;
+        flash.render({message: 'Avatar Updated', type: 'success', duration: 2000}).attach();
+      } else {
+        flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+      }
+    }
+  });
+
+  forms.settings.on.submitInfo(async fields => {
+    const USER = user.getUser();
+    if (!USER) return;
+
+    const body = { username: fields.username, email: fields.email }
+    console.log(body);
+    const response = await fetch(api.ROUTES.USER.UPDATE, api.METHODS.PUT(body, USER.token))
+    console.log(await response.json());
+    if (response.ok) {
+      forms.settings.changes = true;
+      flash.render({message: 'Info Updated', type: 'success', duration: 2000}).attach();
+    } else {
+      flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+    }
+  });
+
+  forms.settings.on.submitPasswords(async fields => {
+    const USER = user.getUser();
+    if (!USER) return;
+
+    const body = { password: fields.password, confirm: fields.confirm }
+    const response = await fetch(api.ROUTES.USER.PASSWORD, api.METHODS.PUT(body, USER.token))
+    console.log(await response.json());
+    if (response.ok) {
+      flash.render({message: 'Password Updated', type: 'success', duration: 2000}).attach();
+    } else {
+      flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+    }
+  })
+
   forms.recipe.on.submit(async fields => {
     const TOKEN = user.getUser().token;
-    const files = [...fields.files]
-    const textualData = {...fields};
+    const files = [...fields.files];
+    const textualData = { ...fields };
     delete textualData.files;
-    
-    const textRes = await fetch(api.ROUTES.RECIPE.POST, api.METHODS.POST(textualData, TOKEN))
+
+    const textRes = await fetch(
+      api.ROUTES.RECIPE.POST,
+      api.METHODS.POST(textualData, TOKEN)
+    );
     if (textRes.ok) {
       const recipe = await textRes.json();
-      
+
       const imgBody = new FormData();
       for (let i = 0; i < files.length; i++) {
-        console.log(files[i])
         imgBody.append('img', files[i]);
       }
       const picRes = await fetch(
@@ -199,14 +259,10 @@ const main = async () => {
         api.METHODS.POST_FORM(imgBody, TOKEN)
       );
       if (!picRes.ok) {
-        flash.render({message: 'Upload failed', type: 'error', duration: 3000}).attach();
+        flash
+          .render({ message: 'Upload failed', type: 'error', duration: 3000 })
+          .attach();
         return;
-        // const images = await picRes.json();
-        // forms.recipe.detach();
-
-        // recipe.picture = images;
-        // browser.recipes.push(recipe);
-        // browser.load();
       }
       location.reload();
     }

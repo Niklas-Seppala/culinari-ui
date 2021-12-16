@@ -1,5 +1,6 @@
 import './UserMenuView.css';
 import { View } from '../View';
+import api from '../../modules/api';
 
 /**
  * Sub view component for LoggedMenuView that
@@ -19,7 +20,12 @@ class ProfileView extends View {
   render(state) {
     if (state) this.state = state;
     if (this.state) {
-      this.avatar.src = this.state.avatar || './img/def-profile.png';
+      const avatar = this.state.avatar;
+      if (avatar) {
+        this.avatar.src = api.ROUTES.STATIC(avatar);
+      } else {
+        this.avatar.src = './img/def-profile.png';
+      }
       this.username.textContent = this.state.name;
       this.likes.textContent = this.state.score;
       this.comments.textContent = this.state.commentCount;
@@ -59,6 +65,12 @@ export class LoggedMenuView extends View {
 
     /** @param {(e: Event) => void} listener */
     logoutClicked: listener => this.delegate('click', listener, this.logout),
+
+    /** @param {(e: Event) => void} listener */
+    aboutClicked: listener => this.delegate('click', listener, this.about),
+
+    /** @param {(e: Event) => void} listener */
+    settingsClicked: listener => this.delegate('click', listener, this.settings),
   };
 
   #build() {
@@ -66,6 +78,8 @@ export class LoggedMenuView extends View {
     this.root = document.getElementById('user-menu');
     this.myRecipes = document.getElementById('my-recipes-btn');
     this.newRecipe = document.getElementById('new-recipe-btn');
+    this.settings = document.getElementById('settings-btn');
+    this.about = document.getElementById('reg-about-btn');
     this.logout = document.getElementById('logout-btn');
   }
 }

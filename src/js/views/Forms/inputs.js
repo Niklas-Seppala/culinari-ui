@@ -210,14 +210,14 @@ export const multiInput = (type, name, id, ph, value, ord) => {
  * @param {string} label Label/Header for the input
  * @returns {HTMLLabelElement} Custom file input element.
  */
-export const fileInput = (name, id, fileTypes, label) => {
+export const fileInput = (name, id, fileTypes, label, required) => {
   const root = document.createElement('label');
   root.for = name;
   root.className = 'file-upload';
 
   /** @type {HTMLInputElement} */
   const file = input('file', name, id, null, null);
-  file.required = true;
+  file.required = required;
   file.accept = fileTypes;
   file.multiple = true;
 

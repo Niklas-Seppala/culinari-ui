@@ -1,4 +1,5 @@
 import { UserMenuView } from '../views/UserMenu/UserMenuView';
+import api from './api';
 
 /**
  * @type {{
@@ -8,6 +9,7 @@ import { UserMenuView } from '../views/UserMenu/UserMenuView';
  *  id: number,
  *  role: number,
  *  score: number,
+ *  email: string,
  *  recipes: []
  *  admin: boolean
  * }}
@@ -16,15 +18,17 @@ import { UserMenuView } from '../views/UserMenu/UserMenuView';
 
  let __users = undefined;
 
-/**
- * 
- * @returns {boolean}
- */
-const loadStorage = () => {
+
+const loadStorage = async () => {
   console.log('loading storage')
   __user = JSON.parse(localStorage.getItem('user'))
   if (__user) {
-    console.log(__user.name, 'active')
+    const response = await fetch(api.ROUTES.USER.PRIVATE(__user.id), api.METHODS.GET(__user.token));
+    const temp = await response.json();
+    console.log(temp)
+    temp.token = __user.token;
+    __user = temp;
+    console.log(__user.name, __user, 'active')
   }
   return Boolean(__user)
 };

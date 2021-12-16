@@ -266,6 +266,7 @@ export class RecipeFormView extends FormView {
     this.name.value = state.name;
     this.desc.value = state.desc;
     this.ingredients.render(state.ingredient)
+    this.instructions.render(state.step)
     return this;
   }
 

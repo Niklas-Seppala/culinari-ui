@@ -4,13 +4,13 @@ import formsModule from './modules/forms';
 import content from './modules/content';
 import api from './modules/api';
 
-const fetchRecipes = async browser => {
+const fetchRecipes = async (browser, forms) => {
   const resp = await fetch(api.ROUTES.RECIPE.ALL);
   const data = await resp.json();
   if (resp.ok) {
     console.log(data);
   }
-  browser.load(data);
+  browser.load(data, forms);
   return data;
 };
 
@@ -33,7 +33,7 @@ const main = async () => {
   smoothLoading(async () => {
     await user.fetch(api.ROUTES.USER.ALL);
     await user.loadStorage();
-    const recipes = await fetchRecipes(browser);
+    const recipes = await fetchRecipes(browser, forms);
     
     
     user.getMyRecipes(recipes)

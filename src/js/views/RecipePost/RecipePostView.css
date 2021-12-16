@@ -154,6 +154,17 @@ table {
   font-weight: bold;
 }
 
+div.edit-delete {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .3rem .3rem .1rem .4rem;
+  background: var(--bg-white);
+  border-left: 1px solid var(--white-border);
+  border-bottom: 1px solid var(--white-border);
+  border-bottom-left-radius: .3rem;
+}
+
 div.delete {
   position: absolute;
   right: 0;
@@ -166,7 +177,11 @@ div.delete {
 }
 
 img.delete {
-  margin: 0;
+  margin: .1rem .3rem .1rem .6rem;
+}
+
+img.edit {
+  margin: .1rem .3rem .1rem .6rem;
 }
 
 .date-and-remove {

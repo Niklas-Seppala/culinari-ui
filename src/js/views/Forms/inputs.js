@@ -48,15 +48,15 @@ export class InstructionInput extends View {
     }
 
   render(state) {
-    this.state = [];
+    this._state = [];
+    this.index = 0;
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
     console.log(state)
-    
     state.forEach(values => {
-      console.log(inp)
       const inp = this.#createInput();
-      inp.children[0].value = values.name;
+      inp.children[0].value = values.content;
     });
+    this.#createInput();
   }
 
   #createInput() {
@@ -106,15 +106,16 @@ export class IngredientInput extends View {
   }
 
   render(state) {
-    this.state = [];
+    this._state = [];
+    this.index = 0;
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
-    console.log(state)
     state.forEach(values => {
       const inp = this.#createInput();
       inp.children[0].value = values.name;
-      inp.children[1].value = values.unit;
-      inp.children[2].value = values.amount;
+      inp.children[1].value = values.amount;
+      inp.children[2].value = values.unit;
     });
+    this.#createInput();
   }
 
   /**

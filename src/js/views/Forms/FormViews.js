@@ -1,7 +1,8 @@
 import './Forms.css';
 import { PopupView } from '../Popup/PopupView';
-import { View } from '../View';
+import { css, icon, View } from '../View';
 import { input, fileInput, multiInput, IngredientInput, InstructionInput } from './inputs';
+import api from '../../modules/api';
 
 /**
  * Base class that holds common methods for all
@@ -85,12 +86,88 @@ export class RegisterFormView extends FormView {
     this.email = input('email', 'email', '', 'Email');
     this.password = input('password', 'password', '', 'Password');
     this.confirm = input('password', 'confirm', '', 'Password Again');
-    this.submitBtn = input('submit', 'submit', '', 'Register');
+    this.submitBtn = input('submit', 'submit', null, null, 'Register');
 
     this.form.appendChild(this.username);
     this.form.appendChild(this.email);
     this.form.appendChild(this.password);
     this.form.appendChild(this.confirm);
+    this.form.appendChild(this.submitBtn);
+    this.root.appendChild(this.form);
+
+    this.form.addEventListener('submit', e => {
+      e.preventDefault();
+      this.submit();
+    });
+  }
+}
+
+/**
+ * From view for registering to the application.
+ *
+ * @extends {FormView}
+ */
+ export class SettingsFormView extends FormView {
+  constructor(parent) {
+    super(parent, 'Profile Settings');
+    this.#build();
+  }
+
+  render(state) {
+    this.username.value = state.name || '';
+    this.email.value = state.email || '';
+
+    if (state.avatar) {
+      this.avatarImage.src = api.ROUTES.STATIC(state.avatar)
+    } else {
+      this.avatarImage.src = './img/def-profile.png'
+    }
+    return this;
+  }
+
+  get formData() {
+    return {
+      username: this.username.value,
+      email: this.email.value,
+      password: this.password.value,
+      avatar: this.fInput.files[0]
+      // confirm: this.confirm.value,
+    };
+  }
+
+  #build() {
+    this.form = View.element('form');
+    this.username = input('text', 'username', '', 'Username');
+    this.username.required = true;
+    this.email = input('email', 'email', '', 'Email');
+    this.email.required = true;
+    this.password = input('password', 'password', '', 'Password');
+    this.password.required = true;
+    // this.confirm = input('password', 'confirm', '', 'Password Again');
+    this.submitBtn = input('submit', 'submit', null, null, 'Update');
+
+    /** @type {HTMLImageElement} */
+    const avatarSettings = View.element('div', css('avatar-settings'), this.form);
+    this.avatarImage = View.element('img', css('avatar'), avatarSettings);
+    this.avatarImage.src = './img/def-profile.png'
+
+    this.avatar = fileInput('avatar', null, 'image/*', 'Change Avatar')
+    this.fInput = this.avatar.getElementsByTagName('input').item(0);
+
+    const reader = new FileReader();
+    reader.addEventListener('load', () => this.avatarImage.src = reader.result);
+
+    this.fInput.addEventListener('change', () => {
+      const selectedFile = this.fInput.files[0];
+      if (selectedFile) reader.readAsDataURL(selectedFile)
+    })
+    this.avatar.classList.add('change-avatar')
+    avatarSettings.appendChild(this.avatar)
+    
+    this.form.appendChild(this.username);
+    this.form.appendChild(this.email);
+    this.form.appendChild(this.password);
+    // this.form.appendChild(this.confirm);
     this.form.appendChild(this.submitBtn);
     this.root.appendChild(this.form);
 
@@ -123,7 +200,7 @@ export class LoginFormView extends FormView {
     this.form = View.element('form');
     this.username = input('text', 'username', '', 'Username');
     this.password = input('password', 'password', '', 'Password');
-    this.submitBtn = input('submit', 'submit', '', 'Log In');
+    this.submitBtn = input('submit', 'submit', null, null, 'Log In');
 
     this.form.appendChild(this.username);
     this.form.appendChild(this.password);
@@ -172,7 +249,7 @@ export class RecipeFormView extends FormView {
     this.instructions = new InstructionInput(this.form);
     this.ingredients = new IngredientInput(this.form);
 
-    this.files = fileInput('foodImg', '', 'image/*', 'Upload');
+    this.files = fileInput('foodImg', '', 'image/*', 'Upload', true);
     this.files.classList.add('input-grp')
 
     this.submitBtn = input('submit', 'submit', '', 'Log In');

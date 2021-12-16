@@ -216,3 +216,14 @@ form.leave-comment {
 .nth-grp-input {
   margin-top: .5rem;
 }
+
+.avatar-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+}
+
+.change-avatar {
+  align-self: stretch;
+}

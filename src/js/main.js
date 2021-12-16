@@ -109,6 +109,14 @@ const main = async () => {
     userMenu.detach();
     forms.recipe.attach();
   });
+  userMenu.logged.on.aboutClicked(() => {
+    userMenu.detach();
+    about.attach();
+  })
+  userMenu.logged.on.settingsClicked(() => {
+    forms.settings.render(user.getUser()).attach();
+    userMenu.detach();
+  })
 
   //*****************************************/
   //********    SWIPE DETECTION   ***********/
@@ -179,6 +187,25 @@ const main = async () => {
     }
   });
 
+  forms.settings.on.submit(async fields => {
+    const USER = user.getUser();
+    if (!USER) return;
+
+    console.log(fields)
+
+    if (fields.avatar) {
+      const imgBody = new FormData();
+      imgBody.append('avatar', fields.avatar)
+      const avatarRes = await fetch(
+        api.ROUTES.USER.AVATAR(USER.id),
+        api.METHODS.POST_FORM(imgBody, USER.token)
+      );
+      if (avatarRes.ok) {
+      }
+    }
+    location.reload();
+  })
+
   forms.recipe.on.submit(async fields => {
     const TOKEN = user.getUser().token;
     const files = [...fields.files]
@@ -191,7 +218,6 @@ const main = async () => {
       
       const imgBody = new FormData();
       for (let i = 0; i < files.length; i++) {
-        console.log(files[i])
         imgBody.append('img', files[i]);
       }
       const picRes = await fetch(
@@ -201,12 +227,6 @@ const main = async () => {
       if (!picRes.ok) {
         flash.render({message: 'Upload failed', type: 'error', duration: 3000}).attach();
         return;
-        // const images = await picRes.json();
-        // forms.recipe.detach();
-
-        // recipe.picture = images;
-        // browser.recipes.push(recipe);
-        // browser.load();
       }
       location.reload();
     }

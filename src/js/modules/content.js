@@ -82,7 +82,7 @@ export class ContentBrowser {
    * @param {FlashView} flash
    */
   constructor(contentNav, flash) {
-    this.posts = new BrowserPosts('main').attach();
+    this.postsRoot = new BrowserPosts('main').attach();
     this.flash = flash;
     this.nav = contentNav;
     this.navIndex = -1;
@@ -149,10 +149,24 @@ export class ContentBrowser {
   }
 
   search(str) {
+    const searchStr = str.toLowerCase();
     this.#clean();
-    this.elements
-      .filter(post => post.state.name.includes(str))
-      .forEach(post => post.attach(this.posts));
+
+    // Take elements which will be included in search.
+    const temp = this.elements.filter(post =>
+      post.state.name.toLowerCase().includes(searchStr)
+    );
+
+    // Prioritise starts with condition.
+    const starts = [];
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i].state.name.toLowerCase().startsWith(searchStr)) {
+        starts.push(temp[i]);
+        temp.splice(i, 1);
+      }
+    }
+    // Attach search results to DOM
+    starts.concat(temp).forEach(post => post.attach(this.postsRoot));
   }
 
   cancelSearch() {
@@ -168,14 +182,14 @@ export class ContentBrowser {
   }
 
   #clean() {
-    while (this.posts.root.lastChild)
-      this.posts.root.removeChild(this.posts.root.lastChild);
+    while (this.postsRoot.root.lastChild)
+      this.postsRoot.root.removeChild(this.postsRoot.root.lastChild);
   }
 
   #sort(predicate) {
     this.elements.sort(predicate);
     this.#clean();
-    this.elements.forEach(ele => ele.attach(this.posts.root));
+    this.elements.forEach(ele => ele.attach(this.postsRoot.root));
   }
 }
 

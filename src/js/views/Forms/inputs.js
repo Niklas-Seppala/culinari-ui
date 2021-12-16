@@ -20,6 +20,7 @@ export const input = (type, name, id, placeholder, value) => {
     input = document.createElement('input');
     input.type = type;
   }
+  input.autocomplete = 'off'
 
   input.name = name;
   if (id) input.id = id;

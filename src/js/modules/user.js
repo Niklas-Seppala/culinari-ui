@@ -10,8 +10,9 @@ import api from './api';
  *  role: number,
  *  score: number,
  *  email: string,
- *  recipes: []
- *  admin: boolean
+ *  recipe: []
+ *  admin: boolean,
+ *  forkCount: number
  * }}
  */
  let __user = undefined;
@@ -81,6 +82,14 @@ const __fetch = async (route) => {
 
 const getUsers = () => __users
 
+const getMyRecipes = (recipes) => {
+  if (__user) {
+    __user.recipe = recipes.filter(res => res.owner_id === __user.id)
+    __user.forkCount = __user.recipe.reduce((b,a) => { return b + a.fork.length}, 0);
+    console.log(__user)
+  }
+}
+
 export default {
   loadStorage,
   getUser,
@@ -89,5 +98,6 @@ export default {
   store,
   dispose,
   components,
+  getMyRecipes,
   fetch: __fetch
 };

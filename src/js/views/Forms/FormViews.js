@@ -330,4 +330,9 @@ export class ForkRecipeForm extends RecipeFormView {
   constructor(parent) {
     super(parent, 'Fork Recipe');
   }
+
+  render(state) {
+    this.loadedRecipeId = state.id
+    return super.render(state);
+  }
 }

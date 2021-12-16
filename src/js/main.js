@@ -144,17 +144,7 @@ const main = async () => {
       if (login.ok) {
         // Store user to local storage/user module
         user.store(json);
-
-        // Update and open user menu
-        userMenu.anonymous.detach();
-        userMenu.profile.render(user.getUser());
-        userMenu.logged.attach();
-        browser.load();
-
-        flash
-          .render({ message: `Welcome, ${json.name}`, type: 'success', duration: 4000 })
-          .attach();
-        forms.login.detach();
+        location.reload();
       } else {
         flash.render({ message: 'Login failed', type: 'error', duration: 4000 }).attach();
         console.error(json);

@@ -25,7 +25,6 @@ const loadStorage = async () => {
   if (__user) {
     const response = await fetch(api.ROUTES.USER.PRIVATE(__user.id), api.METHODS.GET(__user.token));
     const temp = await response.json();
-    console.log(temp)
     temp.token = __user.token;
     __user = temp;
     console.log(__user.name, __user, 'active')

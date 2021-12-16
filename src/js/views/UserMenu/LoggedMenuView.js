@@ -27,8 +27,12 @@ class ProfileView extends View {
         this.avatar.src = './img/def-profile.png';
       }
       this.username.textContent = this.state.name;
-      this.likes.textContent = this.state.score;
-      this.comments.textContent = this.state.commentCount;
+
+      let sum = 0;
+      this.state.comment.forEach(comment => sum += comment.commentLike.length);
+      this.state.recipe.forEach(recipe => sum += recipe.like.length)
+      this.likes.textContent = sum;
+      this.comments.textContent = this.state.comment.length;
       this.forks.textContent = this.state.forkCount;
     }
 

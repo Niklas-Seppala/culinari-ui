@@ -11,6 +11,7 @@ const fetchRecipes = async browser => {
     console.log(data);
   }
   browser.load(data);
+  return data;
 };
 
 const main = async () => {
@@ -32,8 +33,10 @@ const main = async () => {
   smoothLoading(async () => {
     await user.fetch(api.ROUTES.USER.ALL);
     await user.loadStorage();
-    await fetchRecipes(browser);
-
+    const recipes = await fetchRecipes(browser);
+    
+    
+    user.getMyRecipes(recipes)
     const USER = user.getUser();
     if (USER) {
       userMenu.profile.render(USER);
@@ -165,10 +168,7 @@ const main = async () => {
   forms.register.on.submit(async fields => {
     try {
       const register = await fetch(api.ROUTES.AUTH.REGISTER, api.METHODS.POST(fields));
-      const json = await register.json();
-
       if (register.ok) {
-        console.log(json);
         flash
           .render({
             message: 'Success. You can now log in.',
@@ -181,7 +181,6 @@ const main = async () => {
       } else {
         forms.settings.changes = true;
         flash.render({ message: 'Failed', type: 'error', duration: 4000 }).attach();
-        console.log(json);
       }
     } catch (err) {
       flash.render({ message: 'Failed', type: 'error', duration: 4000 }).attach();
@@ -218,9 +217,7 @@ const main = async () => {
     if (!USER) return;
 
     const body = { username: fields.username, email: fields.email }
-    console.log(body);
     const response = await fetch(api.ROUTES.USER.UPDATE, api.METHODS.PUT(body, USER.token))
-    console.log(await response.json());
     if (response.ok) {
       forms.settings.changes = true;
       flash.render({message: 'Info Updated', type: 'success', duration: 2000}).attach();
@@ -235,7 +232,6 @@ const main = async () => {
 
     const body = { password: fields.password, confirm: fields.confirm }
     const response = await fetch(api.ROUTES.USER.PASSWORD, api.METHODS.PUT(body, USER.token))
-    console.log(await response.json());
     if (response.ok) {
       flash.render({message: 'Password Updated', type: 'success', duration: 2000}).attach();
     } else {

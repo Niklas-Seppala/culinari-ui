@@ -148,6 +148,13 @@ export class ContentBrowser {
     }
   }
 
+  displayFromUser(id) {
+    this.#clean();
+    this.elements
+      .filter(post => post.state.owner_id === id)
+      .forEach(p => p.attach(this.postsRoot));
+  }
+
   search(str) {
     const searchStr = str.toLowerCase();
     this.#clean();

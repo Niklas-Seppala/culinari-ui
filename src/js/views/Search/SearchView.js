@@ -32,8 +32,14 @@ export class SearchView extends View {
   /** View events */
   on = {
     /** @param {(e: Event) => void} listener */
-    search: listener => this.delegate('click', listener, this.search),
+    search: listener => this.delegate('input', listener, this.search),
   };
+
+  attach(parent) {
+    super.attach(parent)
+    this.search.focus();
+    return this;
+  }
 
   #build() {
     this.root = View.element('div', css('search-bar'), null, 'search-view');

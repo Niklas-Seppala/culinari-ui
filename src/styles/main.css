@@ -102,6 +102,10 @@ ol li {
   display: flex;
 }
 
+.content-page {
+  margin-top: 2rem;
+}
+
 @media only screen and (min-width: 600px) {
   ::-webkit-scrollbar {
     width: 5px;

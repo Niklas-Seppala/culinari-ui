@@ -1,7 +1,7 @@
 import swipe from './modules/swipe';
 import user from './modules/user';
 import formsModule from './modules/forms';
-import content, { ContentBrowser } from './modules/content';
+import content from './modules/content';
 import api from './modules/api';
 
 const fetchRecipes = async browser => {
@@ -30,12 +30,9 @@ const main = async () => {
   //**********    LOAD API DATA  ************/
   //*****************************************/
   smoothLoading(async () => {
-    const tasks = [
-      user.loadStorage(),
-      user.fetch(api.ROUTES.USER.ALL),
-      fetchRecipes(browser),
-    ];
-    await Promise.all(tasks);
+    await user.fetch(api.ROUTES.USER.ALL);
+    await user.loadStorage();
+    await fetchRecipes(browser);
 
     const USER = user.getUser();
     if (USER) {
@@ -65,7 +62,16 @@ const main = async () => {
   });
 
   // Search button click events.
-  menu.on.searchClicked(() => (search.isAttached ? search.detach() : search.attach()));
+  menu.on.searchClicked(() => {
+    if (search.isAttached) {
+      search.detach();
+      browser.cancelSearch();
+    } else {
+      search.attach();
+    }
+  });
+
+  search.on.search(e => browser.search(e.target.value))
 
   // User menu click events.
   menu.on.userMenuClicked(() =>

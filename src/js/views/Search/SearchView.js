@@ -38,7 +38,6 @@ export class SearchView extends View {
   attach(parent) {
     super.attach(parent)
     this.search.focus();
-    this.search.select();
     return this;
   }
 

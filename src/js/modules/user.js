@@ -18,16 +18,16 @@ import api from './api';
 
  let __users = undefined;
 
-/**
- * 
- * @returns {boolean}
- */
+
 const loadStorage = async () => {
   console.log('loading storage')
   __user = JSON.parse(localStorage.getItem('user'))
   if (__user) {
     const response = await fetch(api.ROUTES.USER.PRIVATE(__user.id), api.METHODS.GET(__user.token));
-    __user = await response.json();
+    const temp = await response.json();
+    console.log(temp)
+    temp.token = __user.token;
+    __user = temp;
     console.log(__user.name, __user, 'active')
   }
   return Boolean(__user)

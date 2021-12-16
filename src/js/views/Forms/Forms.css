@@ -11,8 +11,8 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 410px;
-  overflow-y: scroll;
+  /* max-height: 410px;
+  overflow-y: scroll; */
   scrollbar-width: 0;
 }
 
@@ -219,11 +219,29 @@ form.leave-comment {
 
 .avatar-settings {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 150px;
+  justify-content: center;
+  margin-bottom: .5rem;
 }
 
 .change-avatar {
-  align-self: stretch;
+  margin-left: .5rem;
+  height: 3rem;
+  margin-bottom: 0;
+  align-self: center;
+  width: 5rem;
+}
+
+.form-sub-header {
+  margin-top: .5rem !important;
+  padding: 0 3rem 0 3rem;
+  border-bottom: 1px solid var(--white-border);
+}
+
+.avatar-settings .avatar {
+  margin: 0;
+}
+
+form.settings {
+  padding: .5rem;
 }

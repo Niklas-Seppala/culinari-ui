@@ -11,6 +11,8 @@ const ROUTES = {
     SINGLE: id => `${BASE_URL}/user/${id}`,
     AVATAR: id => `${BASE_URL}/user/${id}/avatar`,
     PRIVATE: id => `${BASE_URL}/user/${id}/private`,
+    UPDATE: `${BASE_URL}/user`,
+    PASSWORD: `${BASE_URL}/user/password`,
   },
   RECIPE: {
     ALL: `${BASE_URL}/recipe`,
@@ -54,6 +56,16 @@ const METHODS = {
   DELETE: (body, auth) => {
     return {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + auth,
+      },
+      body: JSON.stringify(body),
+    };
+  },
+  PUT: (body, auth) => {
+    return {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + auth,

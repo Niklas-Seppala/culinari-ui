@@ -27,7 +27,7 @@ class FormView extends PopupView {
    */
   cancel() {
     this.#cancelListeners.forEach(f => f(this.formData));
-    this.form.reset();
+    this.form?.reset();
   }
 
   /**
@@ -110,7 +110,10 @@ export class RegisterFormView extends FormView {
  export class SettingsFormView extends FormView {
   constructor(parent) {
     super(parent, 'Profile Settings');
+    this.#buildAvatarForm();
     this.#build();
+    this.#buildPasswodForm();
+    this.changes = false;
   }
 
   render(state) {
@@ -125,29 +128,32 @@ export class RegisterFormView extends FormView {
     return this;
   }
 
+  on = {
+    submitPasswords: f => this.delegate('submit', () => f(this.formData), this.passwordForm),
+    submitInfo: f => this.delegate('submit', () => f(this.formData), this.infoForm),
+    submitAvatar: f => this.delegate('submit', () =>  f(this.formData), this.avatarForm)
+  }
+ 
   get formData() {
     return {
       username: this.username.value,
       email: this.email.value,
       password: this.password.value,
-      avatar: this.fInput.files[0]
-      // confirm: this.confirm.value,
+      avatar: this.fInput.files[0],
+      confirm: this.confirm.value,
     };
   }
 
-  #build() {
-    this.form = View.element('form');
-    this.username = input('text', 'username', '', 'Username');
-    this.username.required = true;
-    this.email = input('email', 'email', '', 'Email');
-    this.email.required = true;
-    this.password = input('password', 'password', '', 'Password');
-    this.password.required = true;
-    // this.confirm = input('password', 'confirm', '', 'Password Again');
-    this.submitBtn = input('submit', 'submit', null, null, 'Update');
-
+  #buildAvatarForm() {
     /** @type {HTMLImageElement} */
-    const avatarSettings = View.element('div', css('avatar-settings'), this.form);
+    const header = View.element('h2', css('form-sub-header'), this.root)
+    header.textContent = 'Change Profile Avatar'
+
+    this.avatarForm = View.element('form', css('settings'), this.root);
+    this.avatarForm.addEventListener('submit', e => e.preventDefault())
+
+
+    const avatarSettings = View.element('div', css('avatar-settings'), this.avatarForm);
     this.avatarImage = View.element('img', css('avatar'), avatarSettings);
     this.avatarImage.src = './img/def-profile.png'
 
@@ -163,18 +169,49 @@ export class RegisterFormView extends FormView {
     })
     this.avatar.classList.add('change-avatar')
     avatarSettings.appendChild(this.avatar)
-    
-    this.form.appendChild(this.username);
-    this.form.appendChild(this.email);
-    this.form.appendChild(this.password);
-    // this.form.appendChild(this.confirm);
-    this.form.appendChild(this.submitBtn);
-    this.root.appendChild(this.form);
 
-    this.form.addEventListener('submit', e => {
+    const submitBtn = input('submit', 'submit', null, null, 'Update');
+    this.avatarForm.appendChild(submitBtn);
+  }
+
+  #buildPasswodForm() {
+    const header = View.element('h2', css('form-sub-header'), this.root)
+    header.textContent = 'Change Profile Password'
+    this.passwordForm = View.element('form', css('settings'), this.root);
+    this.passwordForm.addEventListener('submit', e => e.preventDefault())
+
+    this.password = input('password', 'password', '', 'Password');
+    this.password.required = true;
+    
+    this.confirm = input('password', 'confirm', '', 'Password Again');
+    this.confirm.required = true;
+
+    const submitBtn = input('submit', 'submit', null, null, 'Update');
+
+    this.passwordForm.appendChild(this.password);
+    this.passwordForm.appendChild(this.confirm);
+    this.passwordForm.appendChild(submitBtn);
+
+    this.passwordForm.addEventListener('submit', e => {
       e.preventDefault();
-      this.submit();
     });
+  }
+
+  #build() {
+    const header = View.element('h2', css('form-sub-header'), this.root)
+    header.textContent = 'Change Profile Info'
+    this.infoForm = View.element('form', css('settings'), this.root);
+    this.infoForm.addEventListener('submit', e => e.preventDefault())
+
+    this.username = input('text', 'username', '', 'Username');
+    this.username.required = true;
+    this.email = input('email', 'email', '', 'Email');
+    this.email.required = true;
+    const submitBtn = input('submit', 'submit', null, null, 'Update');
+
+    this.infoForm.appendChild(this.username);
+    this.infoForm.appendChild(this.email);
+    this.infoForm.appendChild(submitBtn);
   }
 }
 

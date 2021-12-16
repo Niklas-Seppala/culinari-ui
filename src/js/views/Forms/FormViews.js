@@ -262,6 +262,13 @@ export class RecipeFormView extends FormView {
     this.#build();
   }
 
+  render(state) {
+    this.name.value = state.name;
+    this.desc.value = state.desc;
+    this.ingredients.render(state.ingredient)
+    return this;
+  }
+
   get formData() {
     const result = {
       name: this.name.value,

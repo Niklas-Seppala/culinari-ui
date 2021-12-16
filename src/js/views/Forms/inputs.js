@@ -47,6 +47,18 @@ export class InstructionInput extends View {
       return this._state.filter(item => Object.keys(item).length !== 0);
     }
 
+  render(state) {
+    this.state = [];
+    while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
+    console.log(state)
+    
+    state.forEach(values => {
+      console.log(inp)
+      const inp = this.#createInput();
+      inp.children[0].value = values.name;
+    });
+  }
+
   #createInput() {
     const subRoot = View.element('div', css('input-grp-item'), this.root);
     const instruction = input(
@@ -75,6 +87,7 @@ export class InstructionInput extends View {
     this.index++;
     this.root.appendChild(subRoot);
     this._state.push({});
+    return subRoot;
   }
 
   #build() {
@@ -93,7 +106,9 @@ export class IngredientInput extends View {
   }
 
   render(state) {
+    this.state = [];
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
+    console.log(state)
     state.forEach(values => {
       const inp = this.#createInput();
       inp.children[0].value = values.name;
@@ -159,6 +174,7 @@ export class IngredientInput extends View {
     this.index++;
     this.root.appendChild(subRoot);
     this._state.push({});
+    return subRoot;
   }
 
   #build() {

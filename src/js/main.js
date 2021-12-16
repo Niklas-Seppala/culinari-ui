@@ -107,7 +107,7 @@ const main = async () => {
     browser.load();
   });
   userMenu.logged.on.myRecipesClicked(() => {
-    console.log('my recipes');
+    browser.displayFromUser(user.getUser().id)
   });
   userMenu.logged.on.newRecipeClicked(() => {
     userMenu.detach();

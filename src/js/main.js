@@ -4,13 +4,13 @@ import formsModule from './modules/forms';
 import content from './modules/content';
 import api from './modules/api';
 
-const fetchRecipes = async browser => {
+const fetchRecipes = async (browser, forms) => {
   const resp = await fetch(api.ROUTES.RECIPE.ALL);
   const data = await resp.json();
   if (resp.ok) {
     console.log(data);
   }
-  browser.load(data);
+  browser.load(data, forms);
   return data;
 };
 
@@ -33,7 +33,7 @@ const main = async () => {
   smoothLoading(async () => {
     await user.fetch(api.ROUTES.USER.ALL);
     await user.loadStorage();
-    const recipes = await fetchRecipes(browser);
+    const recipes = await fetchRecipes(browser, forms);
     
     
     user.getMyRecipes(recipes)
@@ -107,6 +107,7 @@ const main = async () => {
     browser.load();
   });
   userMenu.logged.on.myRecipesClicked(() => {
+    userMenu.detach();
     browser.displayFromUser(user.getUser().id)
   });
   userMenu.logged.on.newRecipeClicked(() => {
@@ -259,6 +260,47 @@ const main = async () => {
       location.reload();
     }
   });
+
+  forms.updateRecipe.on.submit(async fields => {
+    const LOADED_ID = forms.updateRecipe.loadedRecipeId;
+    const TOKEN = user.getUser().token;
+    const files = [...fields.files];
+    const textualData = { ...fields };
+    delete textualData.files;
+
+    const textRes = await fetch(
+      api.ROUTES.RECIPE.PUT(LOADED_ID),
+      api.METHODS.PUT(textualData, TOKEN)
+      );
+      const recipe = await textRes.json();
+      console.log(recipe)
+      if (textRes.ok) {
+
+      if (files.length > 0) {
+        const imgBody = new FormData();
+        files.forEach(f => imgBody.append('img', f));
+        const picRes = await fetch(
+          api.ROUTES.RECIPE.PUT_IMG(LOADED_ID),
+          api.METHODS.PUT_FORM(imgBody, TOKEN)
+        );
+        if (!picRes.ok) {
+          flash
+            .render({ message: 'Upload failed', type: 'error', duration: 3000 })
+            .attach();
+          return;
+        }
+      }
+      location.reload();
+    } else {
+      flash
+        .render({ message: 'Update failed', type: 'error', duration: 3000 })
+        .attach();
+    }
+  })
+
+  forms.forkRecipe.on.submit(fields => {
+
+  })
 };
 
 window.onload = main;

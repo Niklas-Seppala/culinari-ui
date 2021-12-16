@@ -47,6 +47,17 @@ export class InstructionInput extends View {
       return this._state.filter(item => Object.keys(item).length !== 0);
     }
 
+  render(state) {
+    this._state = [...state];
+    this.index = 0;
+    while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
+    state.forEach(values => {
+      const inp = this.#createInput();
+      inp.children[0].value = values.content;
+    });
+    this.#createInput();
+  }
+
   #createInput() {
     const subRoot = View.element('div', css('input-grp-item'), this.root);
     const instruction = input(
@@ -75,6 +86,7 @@ export class InstructionInput extends View {
     this.index++;
     this.root.appendChild(subRoot);
     this._state.push({});
+    return subRoot;
   }
 
   #build() {
@@ -93,13 +105,16 @@ export class IngredientInput extends View {
   }
 
   render(state) {
+    this._state = [...state];
+    this.index = 0;
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
     state.forEach(values => {
       const inp = this.#createInput();
       inp.children[0].value = values.name;
-      inp.children[1].value = values.unit;
-      inp.children[2].value = values.amount;
+      inp.children[1].value = values.amount;
+      inp.children[2].value = values.unit;
     });
+    this.#createInput();
   }
 
   /**
@@ -159,6 +174,7 @@ export class IngredientInput extends View {
     this.index++;
     this.root.appendChild(subRoot);
     this._state.push({});
+    return subRoot;
   }
 
   #build() {

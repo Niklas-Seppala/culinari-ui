@@ -90,8 +90,15 @@ export class RecipePostView extends View {
     removed: listener => {
       this.#removedListener = listener;
       return this;
+    },
+
+    edit: listener => {
+      if (this.editBtn)
+        this.delegate('click', listener, this.editBtn)
+      return this;
     }
   };
+
   /** @type {() => void} */
   #removedListener = undefined;
   
@@ -100,15 +107,15 @@ export class RecipePostView extends View {
     this.root = View.element('section', css('main-item', 'card'));
 
     if (USER && (USER.id === this.state.owner_id || USER.admin)) {
-      this.remove = View.element('div', css('delete'), this.root);
+
+      this.menuBar = View.element('div', css('delete'), this.root)
+
       const removeIcon = icon.plain(
         icon.type.CLOSE,
-        icon.size.TINY,
+        icon.size.SMALL,
         css('delete', 'icon-hover')
       );
-      this.remove.appendChild(removeIcon);
-      this.remove.addEventListener('click', async () => {
-        console.log('delete', this.state);
+      removeIcon.addEventListener('click', async () => {
         const response = await fetch(
           api.ROUTES.RECIPE.DELETE(this.state.id),
           api.METHODS.DELETE({}, USER.token)
@@ -121,6 +128,15 @@ export class RecipePostView extends View {
           console.log(await response.json());
         }
       });
+
+      this.editBtn = icon.plain(
+        icon.type.EXPAND,
+        icon.size.SMALL,
+        css('edit', 'icon-hover')
+      );
+
+      this.menuBar.appendChild(this.editBtn);
+      this.menuBar.appendChild(removeIcon);
     }
 
     this.image = View.element('img', css('food'), this.root);

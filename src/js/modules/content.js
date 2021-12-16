@@ -8,6 +8,7 @@ import { AboutView } from '../views/About/AboutVIew';
 import api from './api';
 import user from './user';
 
+
 const handleRecipeLike = async (post, recipe) => {
   const USER = user.getUser();
   if (!USER) return;
@@ -111,7 +112,7 @@ export class ContentBrowser {
     this.nav.highlight(this.nav.buttons[this.navIndex]);
   }
 
-  load(recipes) {
+  load(recipes, forms) {
     if (recipes) this.recipes = recipes;
     this.#clean();
     this.elements = [];
@@ -124,6 +125,12 @@ export class ContentBrowser {
       post.on.comment(() => handleCommentPost(post, recipe));
       post.on.commentClicked(() => post.details.comments.toggle());
       post.on.likeClicked(() => handleRecipeLike(post, recipe));
+      post.on.edit((e) => {
+        console.log(recipe)
+        forms.updateRecipe.render(recipe).attach();
+        console.log(this.recipes)
+      })
+
       this.elements.push(post);
     });
     this.changeContentByIndex(this.navIndex, true);

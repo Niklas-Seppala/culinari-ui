@@ -1,7 +1,7 @@
 import { ContentNavView, TopMenuView } from '../views/TopMenu/TopMenuView';
 import { FlashView } from '../views/Flash/FlashView';
 import { LoadingView } from '../views/Loading/LoadingView';
-import { View } from '../views/View';
+import { css, View } from '../views/View';
 import { SearchView } from '../views/Search/SearchView';
 import { RecipePostView } from '../views/RecipePost/RecipePostView';
 import { AboutView } from '../views/About/AboutVIew';
@@ -50,7 +50,6 @@ const handleCommentPost = async (post, recipe) => {
 
 const unixtime = ISO_time => new Date(ISO_time).getTime() / 1000;
 
-
 /**
  * @type {{
     menu: TopMenuView,
@@ -67,7 +66,7 @@ let __views = undefined;
 class BrowserPosts extends View {
   constructor(parent) {
     super(parent);
-    this.root = View.element('div'); //css('content-page')
+    this.root = View.element('div', css('content-page'));
   }
 }
 
@@ -75,8 +74,8 @@ export class ContentBrowser {
   static NAV = {
     TALKED: 0,
     LATEST: 1,
-    LIKED: 2
-  }
+    LIKED: 2,
+  };
 
   /**
    * @param {ContentNavView} contentNav
@@ -86,14 +85,13 @@ export class ContentBrowser {
     this.posts = new BrowserPosts('main').attach();
     this.flash = flash;
     this.nav = contentNav;
-    this.navIndex = -1
-    this.elements = []
-    this.recipes = []
+    this.navIndex = -1;
+    this.elements = [];
+    this.recipes = [];
   }
 
   displayLatest(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.LATEST) return;
-    // this.#sortByTime();
     this.#sort((a, b) => unixtime(b.state.createdAt) - unixtime(a.state.createdAt));
     this.navIndex = ContentBrowser.NAV.LATEST;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
@@ -101,7 +99,6 @@ export class ContentBrowser {
 
   displayTalked(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.TALKED) return;
-    // this.#sortByComments();
     this.#sort((a, b) => b.state.comment.length - a.state.comment.length);
     this.navIndex = ContentBrowser.NAV.TALKED;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
@@ -109,7 +106,6 @@ export class ContentBrowser {
 
   displayLiked(force) {
     if (!force && this.navIndex === ContentBrowser.NAV.LIKED) return;
-    // this.#sortByLikes();
     this.#sort((a, b) => b.state.like.length - a.state.like.length);
     this.navIndex = ContentBrowser.NAV.LIKED;
     this.nav.highlight(this.nav.buttons[this.navIndex]);
@@ -118,38 +114,49 @@ export class ContentBrowser {
   load(recipes) {
     if (recipes) this.recipes = recipes;
     this.#clean();
-    this.elements = []
+    this.elements = [];
     this.recipes.forEach(recipe => {
-      const post = new RecipePostView(null, recipe).render()
-        .on.removed(() => {
-          this.recipes = this.recipes.filter(r => r.id !== recipe.id);
-          this.elements = this.elements.filter(r => r.state.id !== recipe.id);
-          post.detach();
-        })
+      const post = new RecipePostView(null, recipe).render().on.removed(() => {
+        this.recipes = this.recipes.filter(r => r.id !== recipe.id);
+        this.elements = this.elements.filter(r => r.state.id !== recipe.id);
+        post.detach();
+      });
       post.on.comment(() => handleCommentPost(post, recipe));
       post.on.commentClicked(() => post.details.comments.toggle());
       post.on.likeClicked(() => handleRecipeLike(post, recipe));
-      this.elements.push(post)
+      this.elements.push(post);
     });
-    this.changeContentByIndex(this.navIndex, true)
+    this.changeContentByIndex(this.navIndex, true);
   }
 
   changeContentByIndex(index, force) {
     if (index < 0 || index > ContentBrowser.NAV.LIKED) return;
-    
+
     this.nav.highlight(this.nav.buttons[this.navIndex]);
     switch (index) {
-      case ContentBrowser.NAV.TALKED: this.displayTalked(force); break;
-      case ContentBrowser.NAV.LATEST: this.displayLatest(force); break;
-      case ContentBrowser.NAV.LIKED: this.displayLiked(force); break;
-      default: break;
+      case ContentBrowser.NAV.TALKED:
+        this.displayTalked(force);
+        break;
+      case ContentBrowser.NAV.LATEST:
+        this.displayLatest(force);
+        break;
+      case ContentBrowser.NAV.LIKED:
+        this.displayLiked(force);
+        break;
+      default:
+        break;
     }
   }
 
   search(str) {
-    const temp = this.elements.filter(post => post.name.includes(str))
     this.#clean();
-    temp.forEach((post) => post.attach(this.posts));
+    this.elements
+      .filter(post => post.state.name.includes(str))
+      .forEach(post => post.attach(this.posts));
+  }
+
+  cancelSearch() {
+    this.changeContentByIndex(this.navIndex, true);
   }
 
   browseRight() {
@@ -161,32 +168,14 @@ export class ContentBrowser {
   }
 
   #clean() {
-    while (this.posts.root.lastChild) 
+    while (this.posts.root.lastChild)
       this.posts.root.removeChild(this.posts.root.lastChild);
   }
 
   #sort(predicate) {
     this.elements.sort(predicate);
     this.#clean();
-    this.elements.forEach((ele) => ele.attach(this.posts.root))
-  }
-
-  #sortByLikes() {
-    this.elements.sort((a, b) => b.state.like.length - a.state.like.length);
-    this.#clean();
-    this.elements.forEach((ele) => ele.attach(this.posts.root))
-  }
-
-  #sortByComments() {
-    this.elements.sort((a, b) => b.state.comment.length - a.state.comment.length);
-    this.#clean();
-    this.elements.forEach((ele) => ele.attach(this.posts.root))
-  }
-
-  #sortByTime() {
-    this.elements.sort((a, b) => unixtime(b.state.createdAt) - unixtime(a.state.createdAt));
-    this.#clean();
-    this.elements.forEach((ele) => ele.attach(this.posts.root))
+    this.elements.forEach(ele => ele.attach(this.posts.root));
   }
 }
 
@@ -199,7 +188,7 @@ const components = () => {
     loading: new LoadingView('main'),
     search: new SearchView('main'),
     flash: new FlashView('main'),
-    about: new AboutView('main', 'About the Application')
+    about: new AboutView('main', 'About the Application'),
   };
   return __views;
 };

@@ -103,7 +103,7 @@ export class RecipePostView extends View {
       this.remove = View.element('div', css('delete'), this.root);
       const removeIcon = icon.plain(
         icon.type.CLOSE,
-        icon.size.SMALL,
+        icon.size.TINY,
         css('delete', 'icon-hover')
       );
       this.remove.appendChild(removeIcon);

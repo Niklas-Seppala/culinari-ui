@@ -65,7 +65,16 @@ const main = async () => {
   });
 
   // Search button click events.
-  menu.on.searchClicked(() => (search.isAttached ? search.detach() : search.attach()));
+  menu.on.searchClicked(() => {
+    if (search.isAttached) {
+      search.detach();
+      browser.cancelSearch();
+    } else {
+      search.attach();
+    }
+  });
+
+  search.on.search(e => browser.search(e.target.value))
 
   // User menu click events.
   menu.on.userMenuClicked(() =>

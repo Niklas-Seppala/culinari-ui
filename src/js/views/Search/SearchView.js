@@ -32,7 +32,7 @@ export class SearchView extends View {
   /** View events */
   on = {
     /** @param {(e: Event) => void} listener */
-    search: listener => this.delegate('click', listener, this.search),
+    search: listener => this.delegate('input', listener, this.search),
   };
 
   #build() {

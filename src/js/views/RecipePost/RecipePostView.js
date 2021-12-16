@@ -34,15 +34,12 @@ export class RecipePostView extends View {
     if (this.state) {
       const image = this.state.picture[0]?.filename;
       if (image) this.image.src = api.ROUTES.STATIC(image);
-      else {
-        console.log('no image');
-      }
       this.panel.render({
         author: user.getUsers()[this.state.owner_id].name,
         name: this.state.name,
         like: this.state.like,
         comments: this.state.comment.length,
-        forks: this.state.forks || 0,
+        forks: this.state.fork.length || 0,
       });
       this.summary.textContent = this.state.desc;
       this.details.render(this.state);

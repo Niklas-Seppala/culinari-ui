@@ -125,12 +125,8 @@ export class ContentBrowser {
       post.on.comment(() => handleCommentPost(post, recipe));
       post.on.commentClicked(() => post.details.comments.toggle());
       post.on.likeClicked(() => handleRecipeLike(post, recipe));
-      post.on.edit((e) => {
-        console.log(recipe)
-        forms.updateRecipe.render(recipe).attach();
-        console.log(this.recipes)
-      })
-
+      post.on.forkClicked(() => forms.forkRecipe.render(recipe).attach());
+      post.on.edit(() => forms.updateRecipe.render(recipe).attach())
       this.elements.push(post);
     });
     this.changeContentByIndex(this.navIndex, true);

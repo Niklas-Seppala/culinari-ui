@@ -298,8 +298,39 @@ const main = async () => {
     }
   })
 
-  forms.forkRecipe.on.submit(fields => {
+  forms.forkRecipe.on.submit(async fields => {
+    const FORKED_ID = forms.forkRecipe.loadedRecipeId;
+    const TOKEN = user.getUser().token;
+    const files = [...fields.files];
+    const textualData = { ...fields };
+    delete textualData.files;
+    textualData.forked_from = FORKED_ID;
 
+    console.log(textualData)
+
+    const textRes = await fetch(
+      api.ROUTES.RECIPE.POST,
+      api.METHODS.POST(textualData, TOKEN)
+    );
+    if (textRes.ok) {
+      const recipe = await textRes.json();
+
+      const imgBody = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        imgBody.append('img', files[i]);
+      }
+      const picRes = await fetch(
+        api.ROUTES.RECIPE.POST_IMG(recipe.id),
+        api.METHODS.POST_FORM(imgBody, TOKEN)
+      );
+      if (!picRes.ok) {
+        flash
+          .render({ message: 'Upload failed', type: 'error', duration: 3000 })
+          .attach();
+        return;
+      }
+      location.reload();
+    }
   })
 };
 

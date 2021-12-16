@@ -126,7 +126,9 @@ export class ContentBrowser {
       post.on.commentClicked(() => post.details.comments.toggle());
       post.on.likeClicked(() => handleRecipeLike(post, recipe));
       post.on.edit((e) => {
-        forms.recipe.render(recipe).attach();
+        console.log(recipe)
+        forms.updateRecipe.render(recipe).attach();
+        console.log(this.recipes)
       })
 
       this.elements.push(post);

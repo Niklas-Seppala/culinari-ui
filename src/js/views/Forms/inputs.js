@@ -48,10 +48,9 @@ export class InstructionInput extends View {
     }
 
   render(state) {
-    this._state = [];
+    this._state = [...state];
     this.index = 0;
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
-    console.log(state)
     state.forEach(values => {
       const inp = this.#createInput();
       inp.children[0].value = values.content;
@@ -106,7 +105,7 @@ export class IngredientInput extends View {
   }
 
   render(state) {
-    this._state = [];
+    this._state = [...state];
     this.index = 0;
     while (this.root.lastChild) this.root.removeChild(this.root.lastChild);
     state.forEach(values => {

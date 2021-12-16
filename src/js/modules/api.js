@@ -1,7 +1,7 @@
 const BASE_URL = 'https://127.0.0.1:8000';
 
 const ROUTES = {
-  STATIC: resource => `${BASE_URL}/static/${resource}`,
+  STATIC: resource => `${BASE_URL}/uploads/${resource}`,
   AUTH: {
     LOGIN: `${BASE_URL}/auth/login`,
     REGISTER: `${BASE_URL}/auth/register`,
@@ -21,6 +21,8 @@ const ROUTES = {
     SINGLE: id => `${BASE_URL}/recipe/${id}`,
     LIKE: id => `${BASE_URL}/recipe/${id}/like`,
     DELETE: id => `${BASE_URL}/recipe/${id}`,
+    PUT: id => `${BASE_URL}/recipe/${id}`,
+    PUT_IMG: id => `${BASE_URL}/recipe/${id}/img`
   },
   COMMENT: {
     ALL: `${BASE_URL}/comment`,
@@ -36,13 +38,21 @@ const METHODS = {
     return {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + auth,
       },
       body: body,
     };
   },
 
+  PUT_FORM: (body, auth) => {
+    return {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + auth,
+      },
+      body: body,
+    };
+  },
   POST: (body, auth) => {
     return {
       method: 'POST',

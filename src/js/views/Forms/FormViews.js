@@ -38,7 +38,6 @@ class FormView extends PopupView {
    */
   submit(close) {
     this.#submitListeners.forEach(f => f(this.formData));
-    this.form.reset();
     if (close === true) this.detach();
   }
 
@@ -257,8 +256,8 @@ export class LoginFormView extends FormView {
  * @extends {FormView}
  */
 export class RecipeFormView extends FormView {
-  constructor(parent) {
-    super(parent, 'Post New Recipe');
+  constructor(parent, header) {
+    super(parent, header || 'Post New Recipe');
     this.#build();
   }
 
@@ -312,5 +311,23 @@ export class RecipeFormView extends FormView {
       e.preventDefault();
       this.submit();
     });
+  }
+}
+
+export class UpdateRecipeForm extends RecipeFormView {
+  constructor(parent) {
+    super(parent, 'Update Recipe');
+    this.files.files.required = false;
+  }
+
+  render(state) {
+    this.loadedRecipeId = state.id
+    return super.render(state);
+  }
+}
+
+export class ForkRecipeForm extends RecipeFormView {
+  constructor(parent) {
+    super(parent, 'Fork Recipe');
   }
 }

@@ -1,4 +1,6 @@
-const BASE_URL = 'https://127.0.0.1:8000';
+// const BASE_URL = 'https://127.0.0.1:8000';
+const BASE_URL = 'https://10.114.32.74/culinari';
+
 
 const ROUTES = {
   STATIC: resource => `${BASE_URL}/uploads/${resource}`,

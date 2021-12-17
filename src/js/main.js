@@ -68,6 +68,7 @@ const main = async () => {
   menu.on.searchClicked(() => {
     if (search.isAttached) {
       search.detach();
+      search.clear();
       browser.cancelSearch();
     } else {
       search.attach();

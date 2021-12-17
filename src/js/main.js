@@ -3,6 +3,7 @@ import user from './modules/user';
 import formsModule from './modules/forms';
 import content from './modules/content';
 import api from './modules/api';
+import { PromptView } from './views/Popup/PromptView';
 
 const fetchRecipes = async (browser, forms) => {
   const resp = await fetch(api.ROUTES.RECIPE.ALL);
@@ -34,9 +35,8 @@ const main = async () => {
     await user.fetch(api.ROUTES.USER.ALL);
     await user.loadStorage();
     const recipes = await fetchRecipes(browser, forms);
-    
-    
-    user.getMyRecipes(recipes)
+
+    user.getMyRecipes(recipes);
     const USER = user.getUser();
     if (USER) {
       userMenu.profile.render(USER);
@@ -74,7 +74,7 @@ const main = async () => {
     }
   });
 
-  search.on.search(e => browser.search(e.target.value))
+  search.on.search(e => browser.search(e.target.value));
 
   // User menu click events.
   menu.on.userMenuClicked(() =>
@@ -97,18 +97,20 @@ const main = async () => {
 
   // LOGGED IN USER MENU EVENTS
   userMenu.logged.on.logoutClicked(() => {
-    user.dispose();
-    userMenu.logged.detach();
-    userMenu.anonymous.attach();
-    flash
-      .render({ message: 'You are now logged out', type: 'success', duration: 3000 })
-      .attach();
-    userMenu.detach();
-    browser.load();
+    new PromptView('Goodbye?', () => {
+      user.dispose();
+      userMenu.logged.detach();
+      userMenu.anonymous.attach();
+      flash
+        .render({ message: 'You are now logged out', type: 'success', duration: 3000 })
+        .attach();
+      userMenu.detach();
+      browser.load();
+    }).attach();
   });
   userMenu.logged.on.myRecipesClicked(() => {
     userMenu.detach();
-    browser.displayFromUser(user.getUser().id)
+    browser.displayFromUser(user.getUser().id);
   });
   userMenu.logged.on.newRecipeClicked(() => {
     userMenu.detach();
@@ -181,7 +183,7 @@ const main = async () => {
 
   forms.settings.onClose(() => {
     if (forms.settings.changes) location.reload();
-  })
+  });
   forms.settings.on.submitAvatar(async fields => {
     const USER = user.getUser();
     if (!USER) return;
@@ -196,9 +198,13 @@ const main = async () => {
       );
       if (response.ok) {
         forms.settings.changes = true;
-        flash.render({message: 'Avatar Updated', type: 'success', duration: 2000}).attach();
+        flash
+          .render({ message: 'Avatar Updated', type: 'success', duration: 2000 })
+          .attach();
       } else {
-        flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+        flash
+          .render({ message: 'Something Went Wrong...', type: 'error', duration: 2000 })
+          .attach();
       }
     }
   });
@@ -207,13 +213,18 @@ const main = async () => {
     const USER = user.getUser();
     if (!USER) return;
 
-    const body = { username: fields.username, email: fields.email }
-    const response = await fetch(api.ROUTES.USER.UPDATE, api.METHODS.PUT(body, USER.token))
+    const body = { username: fields.username, email: fields.email };
+    const response = await fetch(
+      api.ROUTES.USER.UPDATE,
+      api.METHODS.PUT(body, USER.token)
+    );
     if (response.ok) {
       forms.settings.changes = true;
-      flash.render({message: 'Info Updated', type: 'success', duration: 2000}).attach();
+      flash.render({ message: 'Info Updated', type: 'success', duration: 2000 }).attach();
     } else {
-      flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+      flash
+        .render({ message: 'Something Went Wrong...', type: 'error', duration: 2000 })
+        .attach();
     }
   });
 
@@ -221,14 +232,21 @@ const main = async () => {
     const USER = user.getUser();
     if (!USER) return;
 
-    const body = { password: fields.password, confirm: fields.confirm }
-    const response = await fetch(api.ROUTES.USER.PASSWORD, api.METHODS.PUT(body, USER.token))
+    const body = { password: fields.password, confirm: fields.confirm };
+    const response = await fetch(
+      api.ROUTES.USER.PASSWORD,
+      api.METHODS.PUT(body, USER.token)
+    );
     if (response.ok) {
-      flash.render({message: 'Password Updated', type: 'success', duration: 2000}).attach();
+      flash
+        .render({ message: 'Password Updated', type: 'success', duration: 2000 })
+        .attach();
     } else {
-      flash.render({message: 'Something Went Wrong...', type: 'error', duration: 2000}).attach();
+      flash
+        .render({ message: 'Something Went Wrong...', type: 'error', duration: 2000 })
+        .attach();
     }
-  })
+  });
 
   forms.recipe.on.submit(async fields => {
     const TOKEN = user.getUser().token;
@@ -271,11 +289,10 @@ const main = async () => {
     const textRes = await fetch(
       api.ROUTES.RECIPE.PUT(LOADED_ID),
       api.METHODS.PUT(textualData, TOKEN)
-      );
-      const recipe = await textRes.json();
-      console.log(recipe)
-      if (textRes.ok) {
-
+    );
+    const recipe = await textRes.json();
+    console.log(recipe);
+    if (textRes.ok) {
       if (files.length > 0) {
         const imgBody = new FormData();
         files.forEach(f => imgBody.append('img', f));
@@ -292,11 +309,9 @@ const main = async () => {
       }
       location.reload();
     } else {
-      flash
-        .render({ message: 'Update failed', type: 'error', duration: 3000 })
-        .attach();
+      flash.render({ message: 'Update failed', type: 'error', duration: 3000 }).attach();
     }
-  })
+  });
 
   forms.forkRecipe.on.submit(async fields => {
     const FORKED_ID = forms.forkRecipe.loadedRecipeId;
@@ -306,7 +321,7 @@ const main = async () => {
     delete textualData.files;
     textualData.forked_from = FORKED_ID;
 
-    console.log(textualData)
+    console.log(textualData);
 
     const textRes = await fetch(
       api.ROUTES.RECIPE.POST,
@@ -331,7 +346,7 @@ const main = async () => {
       }
       location.reload();
     }
-  })
+  });
 };
 
 window.onload = main;

@@ -159,7 +159,8 @@ export class RecipePostDetails extends View {
 
         const dateAndRemove = View.element('div', css('date-and-remove'), authAndDate);
         const date = View.element('span', css('comment-date'), dateAndRemove);
-        date.textContent = new Date(comment.createdAt).toLocaleDateString();
+        const datetime = new Date(comment.createdAt);
+        date.textContent = `${datetime.toLocaleDateString()} ${datetime.toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'})}`
 
         if (USER && (USER.id === comment.author_id || USER.admin)) {
           const remove = icon.plain(icon.type.CLOSE, icon.size.TINY, css('icon-hover'));

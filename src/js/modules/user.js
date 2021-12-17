@@ -23,10 +23,12 @@ import api from './api';
 const loadStorage = async () => {
   console.log('loading storage')
   __user = JSON.parse(localStorage.getItem('user'))
+  console.log(__user)
   if (__user) {
     const response = await fetch(api.ROUTES.USER.PRIVATE(__user.id), api.METHODS.GET(__user.token));
     const temp = await response.json();
     temp.token = __user.token;
+    temp.admin = __user.role === 1;
     __user = temp;
     console.log(__user.name, __user, 'active')
   }
@@ -38,7 +40,6 @@ const store = (user) => {
   user.forkCount = user.recipes.reduce((a,b) => (b.forked_from ? 1 : 0  + a), 0)
   localStorage.setItem('user', JSON.stringify(user));
   __user = user
-  __user.admin = user.role === 1;
 }
 
 const getUser = () => {

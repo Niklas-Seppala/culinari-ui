@@ -104,6 +104,10 @@ ol li {
 
 .content-page {
   margin-top: 2rem;
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 @media only screen and (min-width: 600px) {
@@ -118,4 +122,10 @@ ol li {
     background: rgba(38, 39, 39, 0.514);
     border-radius: 1rem;
   }
+  @media only screen and (min-width: 1200px) {
+    html {
+      font-size: 17px;
+    }
+  }
 }
+

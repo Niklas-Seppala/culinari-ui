@@ -4,6 +4,7 @@ import { RecipePostPanelView } from './RecipePostPanelView';
 import { RecipePostDetails } from './RecipePostDetails';
 import user from '../../modules/user';
 import api from '../../modules/api';
+import { PromptView } from '../Popup/PromptView';
 
 /**
  * View for users' recipe posts.
@@ -11,7 +12,7 @@ import api from '../../modules/api';
 export class RecipePostView extends View {
   constructor(parent, state) {
     super(parent);
-    this.state = state
+    this.state = state;
     this.#build();
   }
 
@@ -90,41 +91,41 @@ export class RecipePostView extends View {
     },
 
     edit: listener => {
-      if (this.editBtn)
-        this.delegate('click', listener, this.editBtn)
+      if (this.editBtn) this.delegate('click', listener, this.editBtn);
       return this;
-    }
+    },
   };
 
   /** @type {() => void} */
   #removedListener = undefined;
-  
+
   #build() {
     const USER = user.getUser();
     this.root = View.element('section', css('main-item', 'card'));
 
     if (USER && (USER.id === this.state.owner_id || USER.admin)) {
-
-      this.menuBar = View.element('div', css('delete'), this.root)
+      this.menuBar = View.element('div', css('delete'), this.root);
 
       const removeIcon = icon.plain(
         icon.type.CLOSE,
         icon.size.SMALL,
         css('delete', 'icon-hover')
       );
-      removeIcon.addEventListener('click', async () => {
-        const response = await fetch(
-          api.ROUTES.RECIPE.DELETE(this.state.id),
-          api.METHODS.DELETE({}, USER.token)
-        );
-        if (response.ok) {
-          console.log('ok', await response.json());
-          this.#removedListener?.call()
 
-        } else {
-          console.log(await response.json());
-        }
-      });
+      removeIcon.addEventListener('click', () =>
+        new PromptView('Delete This Post?', async () => {
+          const response = await fetch(
+            api.ROUTES.RECIPE.DELETE(this.state.id),
+            api.METHODS.DELETE({}, USER.token)
+          );
+          if (response.ok) {
+            console.log('ok', await response.json());
+            this.#removedListener?.call();
+          } else {
+            console.log(await response.json());
+          }
+        }).attach()
+      );
 
       this.editBtn = icon.plain(
         icon.type.EXPAND,

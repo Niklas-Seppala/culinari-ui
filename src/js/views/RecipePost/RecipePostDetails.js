@@ -2,6 +2,7 @@ import { View, ExpandableView, css, icon } from '../View';
 import { input } from '../Forms/inputs';
 import user from '../../modules/user';
 import api from '../../modules/api';
+import { PromptView } from '../Popup/PromptView';
 
 /**
  * SubView of RecipePostView of the extended content:
@@ -158,24 +159,27 @@ export class RecipePostDetails extends View {
 
         const dateAndRemove = View.element('div', css('date-and-remove'), authAndDate);
         const date = View.element('span', css('comment-date'), dateAndRemove);
-        date.textContent = new Date(comment.createdAt).toLocaleDateString();
+        const datetime = new Date(comment.createdAt);
+        date.textContent = `${datetime.toLocaleDateString()} ${datetime.toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'})}`
 
         if (USER && (USER.id === comment.author_id || USER.admin)) {
           const remove = icon.plain(icon.type.CLOSE, icon.size.TINY, css('icon-hover'));
           dateAndRemove.appendChild(remove);
-          remove.addEventListener('click', async () => {
-            console.log('delete comment', comment);
-            const response = await fetch(
-              api.ROUTES.COMMENT.REMOVE(comment.id),
-              api.METHODS.DELETE({}, USER.token)
-            );
-            if (response.ok) {
-              state.comment = state.comment.filter(c => c.id !== comment.id);
-              commentContainer.removeChild(root);
-            } else {
-              console.log(await response.json());
-            }
-          });
+
+          remove.addEventListener('click', () =>
+            new PromptView('Delete This Comment?', async () => {
+              const response = await fetch(
+                api.ROUTES.COMMENT.REMOVE(comment.id),
+                api.METHODS.DELETE({}, USER.token)
+              );
+              if (response.ok) {
+                state.comment = state.comment.filter(c => c.id !== comment.id);
+                commentContainer.removeChild(root);
+              } else {
+                console.log(await response.json());
+              }
+            }).attach()
+          );
         }
 
         // Comment text content.

@@ -36,3 +36,15 @@
   margin: 0;
 }
 
+.yes-no-prompt {
+  display: flex;
+  flex-direction: row;
+}
+
+.yes-no-prompt button {
+  padding: .5rem 1rem .5rem 1rem;
+}
+
+.yes-no-prompt :nth-child(2) {
+  margin-left: 1rem;
+}
